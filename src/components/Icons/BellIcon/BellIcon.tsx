@@ -1,4 +1,4 @@
-export const BellIcon = () => {
+const BellIcon = () => {
   return (
     <span>
       <svg
@@ -17,3 +17,5 @@ export const BellIcon = () => {
     </span>
   )
 }
+
+export default BellIcon

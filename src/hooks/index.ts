@@ -1,3 +1,3 @@
-export * from './useColorMode'
 export { default as useLocalStorage } from './useLocalStorage'
-export * from './useScrollLock'
+export { default as useColorMode } from './useColorMode'
+export { default as useScrollLock } from './useScrollLock'

@@ -1,4 +1,4 @@
-export const ContactIcon = () => {
+const ContactIcon = () => {
   return (
     <span>
       <svg
@@ -17,3 +17,5 @@ export const ContactIcon = () => {
     </span>
   )
 }
+
+export default ContactIcon

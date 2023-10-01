@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 const CardFour = () => {
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -25,13 +27,13 @@ const CardFour = () => {
         </svg>
       </div>
 
-      <div className='mt-4 flex items-end justify-between'>
+      <div className='flex items-end justify-between mt-4'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>3.456</h4>
+          <h4 className='text-title-md dark:text-white font-bold text-black'>3.456</h4>
           <span className='text-sm font-medium'>Total Users</span>
         </div>
 
-        <span className='flex items-center gap-1 text-sm font-medium text-meta-5'>
+        <span className='text-meta-5 flex items-center gap-1 text-sm font-medium'>
           0.95%
           <svg
             className='fill-meta-5'

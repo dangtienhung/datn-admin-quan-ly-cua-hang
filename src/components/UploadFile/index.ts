@@ -1,1 +1,1 @@
-export * from './UploadFile'
+export { default } from './UploadFile'

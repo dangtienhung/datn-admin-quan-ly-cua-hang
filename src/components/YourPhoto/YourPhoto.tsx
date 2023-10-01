@@ -1,4 +1,4 @@
-export const YourPhoto = () => {
+const YourPhoto = () => {
   return (
     <div className='col-span-5 xl:col-span-2'>
       <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -84,3 +84,5 @@ export const YourPhoto = () => {
     </div>
   )
 }
+
+export default YourPhoto

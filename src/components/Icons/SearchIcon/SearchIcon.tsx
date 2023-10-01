@@ -1,4 +1,4 @@
-export const SearchIcon = () => {
+const SearchIcon = () => {
   return (
     <span>
       <svg
@@ -25,3 +25,5 @@ export const SearchIcon = () => {
     </span>
   )
 }
+
+export default SearchIcon

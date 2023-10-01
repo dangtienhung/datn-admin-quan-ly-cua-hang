@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react'
 
-export const DropdownDefault = () => {
+const DropdownDefault = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const trigger = useRef<any>(null)
@@ -15,7 +16,7 @@ export const DropdownDefault = () => {
     }
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
-  })
+  }, [])
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -25,7 +26,7 @@ export const DropdownDefault = () => {
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
-  })
+  }, [])
 
   return (
     <div className='relative'>
@@ -108,3 +109,5 @@ export const DropdownDefault = () => {
     </div>
   )
 }
+
+export default DropdownDefault

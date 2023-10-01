@@ -21,13 +21,13 @@ const CardOne = () => {
         </svg>
       </div>
 
-      <div className='mt-4 flex items-end justify-between'>
+      <div className='flex items-end justify-between mt-4'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>$3.456K</h4>
+          <h4 className='text-title-md dark:text-white font-bold text-black'>$3.456K</h4>
           <span className='text-sm font-medium'>Total views</span>
         </div>
 
-        <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
+        <span className='text-meta-3 flex items-center gap-1 text-sm font-medium'>
           0.43%
           <svg
             className='fill-meta-3'

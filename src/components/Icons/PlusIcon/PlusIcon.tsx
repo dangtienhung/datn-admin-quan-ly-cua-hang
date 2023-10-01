@@ -1,9 +1,11 @@
 import { BsPlusLg } from 'react-icons/bs'
 
-export const PlusIcon = () => {
+const PlusIcon = () => {
   return (
     <span>
       <BsPlusLg />
     </span>
   )
 }
+
+export default PlusIcon

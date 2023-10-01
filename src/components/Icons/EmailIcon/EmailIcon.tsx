@@ -1,4 +1,4 @@
-export const EmailIcon = () => {
+const EmailIcon = () => {
   return (
     <span>
       <svg
@@ -21,3 +21,5 @@ export const EmailIcon = () => {
     </span>
   )
 }
+
+export default EmailIcon

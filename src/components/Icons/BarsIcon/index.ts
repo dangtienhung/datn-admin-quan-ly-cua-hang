@@ -1,1 +1,1 @@
-export * from './BarsIcon'
+export { default } from './BarsIcon'

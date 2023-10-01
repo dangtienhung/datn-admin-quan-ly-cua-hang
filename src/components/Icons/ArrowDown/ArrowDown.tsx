@@ -2,7 +2,7 @@ interface ArrowDownProps {
   dropdownOpen?: boolean
 }
 
-export const ArrowDown = ({ dropdownOpen }: ArrowDownProps) => {
+const ArrowDown = ({ dropdownOpen }: ArrowDownProps) => {
   return (
     <span>
       <svg
@@ -23,3 +23,5 @@ export const ArrowDown = ({ dropdownOpen }: ArrowDownProps) => {
     </span>
   )
 }
+
+export default ArrowDown

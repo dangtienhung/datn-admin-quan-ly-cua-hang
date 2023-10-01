@@ -1,4 +1,4 @@
-export const BarsIcon = () => {
+const BarsIcon = () => {
   return (
     <span>
       <svg
@@ -17,3 +17,5 @@ export const BarsIcon = () => {
     </span>
   )
 }
+
+export default BarsIcon

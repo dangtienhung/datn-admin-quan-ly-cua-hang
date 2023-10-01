@@ -1,4 +1,4 @@
-export const SettingIcon = () => {
+const SettingIcon = () => {
   return (
     <span>
       <svg
@@ -21,3 +21,5 @@ export const SettingIcon = () => {
     </span>
   )
 }
+
+export default SettingIcon

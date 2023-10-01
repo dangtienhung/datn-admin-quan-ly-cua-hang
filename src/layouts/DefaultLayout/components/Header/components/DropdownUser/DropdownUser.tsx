@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ArrowDown, ContactIcon, ProfileIcon, SettingIcon } from '~/components'
 import { useEffect, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
-export const DropdownUser = () => {
+const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const trigger = useRef<any>(null)
@@ -18,7 +19,7 @@ export const DropdownUser = () => {
     }
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
-  })
+  }, [])
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -28,20 +29,20 @@ export const DropdownUser = () => {
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
-  })
+  }, [])
 
   return (
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
-        <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium text-black dark:text-white'>Thomas Anree</span>
+        <span className='lg:block hidden text-right'>
+          <span className='dark:text-white block text-sm font-medium text-black'>Thomas Anree</span>
           <span className='block text-xs'>UX Designer</span>
         </span>
 
-        <span className='h-12 w-12 rounded-full'>
+        <span className='w-12 h-12 rounded-full'>
           <img
             src={`https://1.bp.blogspot.com/-6wptfQdSYb4/XVABmPVTAkI/AAAAAAAAQ5Q/xS0VuLwlPg8G8T2vPVQgohiUFP1DeS9GgCLcBGAs/s1600/hinh-nen-anime-girl-de-thuong-full-hd-cuc-dep-cho-dien-thoai-6.jpg`}
-            className='h-full w-full rounded-full object-cover'
+            className='object-cover w-full h-full rounded-full'
             alt='User'
           />
         </span>
@@ -112,3 +113,5 @@ export const DropdownUser = () => {
     </div>
   )
 }
+
+export default DropdownUser

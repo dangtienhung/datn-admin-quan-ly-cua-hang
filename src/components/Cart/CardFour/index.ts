@@ -1,1 +1,1 @@
-export { default as CardFour } from './CardFour'
+export { default } from './CardFour'

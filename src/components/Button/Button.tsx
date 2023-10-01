@@ -14,7 +14,7 @@ interface ButtonProps {
   href?: string
 }
 
-export const Button = ({
+const Button = ({
   styleClass,
   children,
   onClick,
@@ -26,44 +26,10 @@ export const Button = ({
   variant,
   href
 }: ButtonProps) => {
-  const classNames =
-    'flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10'
-
-  switch (size) {
-    case 'sm':
-      classNames.concat(' text-sm')
-      break
-    case 'md':
-      classNames.concat(' text-base')
-      break
-    case 'lg':
-      classNames.concat(' text-lg')
-      break
-    default:
-      classNames.concat(' text-base')
-      break
-  }
-
-  switch (variant) {
-    case 'primary':
-      classNames.concat(' bg-primary hover:bg-primary-dark')
-      break
-    case 'secondary':
-      classNames.concat(' bg-secondary hover:bg-secondary-dark')
-      break
-    case 'danger':
-      classNames.concat(' bg-danger hover:bg-danger-dark')
-      break
-    case 'warning':
-      classNames.concat(' bg-warning hover:bg-warning-dark')
-      break
-    case 'success':
-      classNames.concat(' bg-success hover:bg-success-dark')
-      break
-    default:
-      classNames.concat(' bg-primary hover:bg-primary-dark')
-      break
-  }
+  const classNames = clsxm({
+    'cursor-not-allowed bg-opacity-90': disabled,
+    'cursor-wait bg-opacity-90': loading
+  })
 
   if (href) {
     return (
@@ -71,11 +37,14 @@ export const Button = ({
         to={href}
         className={clsxm(
           `flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10`,
-          { 'pointer-events-none opacity-50': disabled },
+          { 'pointer-events-none opacity-50 bg-opacity-90': disabled },
           styleClass,
           classNames,
-          { 'bg-opacity-90': disabled }
+          size,
+          variant,
+          { 'cursor-wait bg-opacity-90': loading }
         )}
+        onClick={onClick}
       >
         {icon && icon}
         {children}
@@ -87,16 +56,19 @@ export const Button = ({
     <button
       className={clsxm(
         `flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10`,
-        { 'pointer-events-none opacity-50': disabled },
+        { 'pointer-events-none opacity-50 bg-opacity-90 cursor-not-allowed': disabled },
+        { 'cursor-wait bg-opacity-90': loading },
+        { 'bg-danger hover:bg-opacity-90': variant === 'danger' },
         styleClass,
-        classNames,
-        { 'bg-opacity-90': disabled },
-        { 'cursor-not-allowed': disabled },
-        { 'cursor-wait bg-opacity-90': loading }
+        size
       )}
+      onClick={onClick}
+      type={type}
     >
       {icon && icon}
       {children}
     </button>
   )
 }
+
+export default Button

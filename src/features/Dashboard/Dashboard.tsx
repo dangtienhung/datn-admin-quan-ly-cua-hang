@@ -1,16 +1,13 @@
-import {
-  AreaChart,
-  CardFour,
-  CardOne,
-  CardThree,
-  CardTwo,
-  ChatCard,
-  DoughnutChart,
-  GroupedBarChart,
-  VerticalBarChart
-} from '~/components'
+import { CardFour, CardThree, CardTwo } from '~/components'
 
-export const FeatureDashboard = () => {
+import { AreaChart } from '~/components/Charts'
+import { CardOne } from '~/components/Cart/CardOne'
+import ChatCard from '~/components/Cart/ChatCart/ChatCard'
+import { DoughnutChart } from '~/components/Charts/DoughnutChart'
+import { GroupedBarChart } from '~/components/Charts/GroupedBarChart'
+import { VerticalBarChart } from '~/components/Charts/VerticalBarChart'
+
+const FeatureDashboard = () => {
   return (
     <>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
@@ -31,3 +28,5 @@ export const FeatureDashboard = () => {
     </>
   )
 }
+
+export default FeatureDashboard
