@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useEffect, useRef, useState } from 'react'
 
 import { BarsIcon } from '~/components'
@@ -10,7 +12,7 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void
 }
 
-export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null)
   const sidebar = useRef<any>(null)
 
@@ -26,7 +28,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     }
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
-  })
+  }, [])
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -36,7 +38,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
-  })
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('sidebar-expanded', sidebarExpanded.toString())
@@ -55,7 +57,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
-      <div className='flex items-center justify-between gap-2 px-3 py-5 lg:py-6'>
+      <div className='lg:py-6 flex items-center justify-between gap-2 px-3 py-5'>
         <NavLink to='/'>
           <img src={`Logo`} alt='Logo' />
         </NavLink>
@@ -65,7 +67,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls='sidebar'
           aria-expanded={sidebarOpen}
-          className='block lg:hidden'
+          className='lg:hidden block'
         >
           <BarsIcon />
         </button>
@@ -74,9 +76,9 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
       <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
         {/* <!-- Sidebar Menu --> */}
-        <nav className='mt-5 px-3'>
+        <nav className='px-3 mt-5'>
           <div className='select-none'>
-            <h3 className='mb-4 select-none ml-4 text-sm font-semibold text-bodydark2'>MENU</h3>
+            <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
 
             <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
           </div>
@@ -85,3 +87,5 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     </aside>
   )
 }
+
+export default Sidebar

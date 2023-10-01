@@ -8,8 +8,15 @@
   }
 
   body {
-    @apply font-normal text-base text-body bg-whiten relative z-1;
+    @apply text-body bg-whiten z-1 relative text-base font-normal;
   }
+
+  /* ====================================== custome antd ====================================== */
+  :where(.css-dev-only-do-not-override-pr0fja).ant-btn-primary {
+    @apply !bg-primary hover:bg-primary-dark !border-none !shadow-none;
+  }
+
+  /* ====================================== end custome antd ====================================== */
 
   /* third-party libraries CSS */
 
@@ -127,7 +134,7 @@
   }
 
   .mapOne .jvm-zoom-btn {
-    @apply left-auto top-auto bottom-0;
+    @apply bottom-0 top-auto left-auto;
   }
 
   .mapOne .jvm-zoom-btn.jvm-zoomin {
@@ -139,7 +146,7 @@
   }
 
   .mapTwo .jvm-zoom-btn {
-    @apply top-auto bottom-0;
+    @apply bottom-0 top-auto;
   }
 
   .mapTwo .jvm-zoom-btn.jvm-zoomin {

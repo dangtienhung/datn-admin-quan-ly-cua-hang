@@ -1,7 +1,7 @@
 import { Breadcrumb } from '~/components'
-import { FeatureProducts } from '~/features/Products'
+import { FeatureProducts } from '~/features'
 
-export const ProductPage = () => {
+const ProductPage = () => {
   return (
     <div>
       <Breadcrumb pageName='products' />
@@ -9,3 +9,5 @@ export const ProductPage = () => {
     </div>
   )
 }
+
+export default ProductPage

@@ -1,4 +1,4 @@
-export const UploadFile = () => {
+const UploadFile = () => {
   return (
     <div>
       <label className='mb-3 block text-black dark:text-white'>Attach file</label>
@@ -9,3 +9,5 @@ export const UploadFile = () => {
     </div>
   )
 }
+
+export default UploadFile

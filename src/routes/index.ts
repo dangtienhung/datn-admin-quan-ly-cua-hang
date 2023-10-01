@@ -1,10 +1,10 @@
 // import { Dashboard } from '~/pages'
 
-import { ProductPage, ToppingPage } from '~/pages'
-
 import { lazy } from 'react'
 
 const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'))
+const ProductPage = lazy(() => import('../pages/ProductPage/ProductPage'))
+const ToppingPage = lazy(() => import('../pages/ToppingPage/ToppingPage'))
 
 const coreRoutes = [
   {

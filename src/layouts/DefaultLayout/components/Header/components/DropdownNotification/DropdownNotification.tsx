@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react'
 
 import { BellIcon } from '~/components'
 import { Link } from 'react-router-dom'
 
-export const DropdownNotification = () => {
+const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const trigger = useRef<any>(null)
@@ -17,7 +18,7 @@ export const DropdownNotification = () => {
     }
     document.addEventListener('click', clickHandler)
     return () => document.removeEventListener('click', clickHandler)
-  })
+  }, [])
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -27,7 +28,7 @@ export const DropdownNotification = () => {
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
-  })
+  }, [])
 
   return (
     <li className='relative'>
@@ -38,7 +39,7 @@ export const DropdownNotification = () => {
         className='relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white'
       >
         <span className='absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1'>
-          <span className='absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75'></span>
+          <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
         </span>
 
         <BellIcon />
@@ -53,17 +54,17 @@ export const DropdownNotification = () => {
         }`}
       >
         <div className='px-4.5 py-3'>
-          <h5 className='text-sm font-medium text-bodydark2'>Notification</h5>
+          <h5 className='text-bodydark2 text-sm font-medium'>Notification</h5>
         </div>
 
-        <ul className='flex h-auto flex-col overflow-y-auto'>
+        <ul className='flex flex-col h-auto overflow-y-auto'>
           <li>
             <Link
               className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
               to='#'
             >
               <p className='text-sm'>
-                <span className='text-black dark:text-white'>Edit your information in a swipe</span> Sint occaecat
+                <span className='dark:text-white text-black'>Edit your information in a swipe</span> Sint occaecat
                 cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.
               </p>
 
@@ -76,7 +77,7 @@ export const DropdownNotification = () => {
               to='#'
             >
               <p className='text-sm'>
-                <span className='text-black dark:text-white'>It is a long established fact</span> that a reader will be
+                <span className='dark:text-white text-black'>It is a long established fact</span> that a reader will be
                 distracted by the readable.
               </p>
 
@@ -89,7 +90,7 @@ export const DropdownNotification = () => {
               to='#'
             >
               <p className='text-sm'>
-                <span className='text-black dark:text-white'>There are many variations</span> of passages of Lorem Ipsum
+                <span className='dark:text-white text-black'>There are many variations</span> of passages of Lorem Ipsum
                 available, but the majority have suffered
               </p>
 
@@ -102,7 +103,7 @@ export const DropdownNotification = () => {
               to='#'
             >
               <p className='text-sm'>
-                <span className='text-black dark:text-white'>There are many variations</span> of passages of Lorem Ipsum
+                <span className='dark:text-white text-black'>There are many variations</span> of passages of Lorem Ipsum
                 available, but the majority have suffered
               </p>
 
@@ -114,3 +115,5 @@ export const DropdownNotification = () => {
     </li>
   )
 }
+
+export default DropdownNotification

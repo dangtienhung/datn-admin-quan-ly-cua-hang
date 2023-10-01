@@ -1,1 +1,1 @@
-export * from './ChatIcon'
+export { default } from './ChatIcon'

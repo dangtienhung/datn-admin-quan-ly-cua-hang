@@ -1,4 +1,4 @@
-export const ProfileIcon = () => {
+const ProfileIcon = () => {
   return (
     <span>
       <svg
@@ -21,3 +21,5 @@ export const ProfileIcon = () => {
     </span>
   )
 }
+
+export default ProfileIcon

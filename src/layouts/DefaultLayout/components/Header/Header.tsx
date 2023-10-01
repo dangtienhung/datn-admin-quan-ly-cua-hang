@@ -1,17 +1,14 @@
-import { DropdownMessage, DropdownNotification, DropdownUser, SearchIcon } from '~/components'
+import { DarkModeSwitcher, DropdownMessage, DropdownNotification, DropdownUser } from './components'
 
-import { DarkModeSwitcher } from './components'
 import { Link } from 'react-router-dom'
 import Logo from '../../../../assets/images/logo/logo.svg'
+import SearchIcon from '~/components/Icons/SearchIcon/SearchIcon'
 
-export const Header = (props: {
-  sidebarOpen: string | boolean | undefined
-  setSidebarOpen: (arg0: boolean) => void
-}) => {
+const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOpen: (arg0: boolean) => void }) => {
   return (
-    <header className='sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none'>
-      <div className='flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11'>
-        <div className='flex items-center gap-2 sm:gap-4 lg:hidden'>
+    <header className='z-999 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none sticky top-0 flex w-full bg-white'>
+      <div className='shadow-2 md:px-6 2xl:px-11 flex items-center justify-between flex-grow px-4 py-4'>
+        <div className='sm:gap-4 lg:hidden flex items-center gap-2'>
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
             aria-controls='sidebar'
@@ -22,7 +19,7 @@ export const Header = (props: {
             className='z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden'
           >
             <span className='relative block h-5.5 w-5.5 cursor-pointer'>
-              <span className='du-block absolute right-0 h-full w-full'>
+              <span className='du-block absolute right-0 w-full h-full'>
                 <span
                   className={`relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-[0] duration-200 ease-in-out dark:bg-white ${
                     !props.sidebarOpen && '!w-full delay-300'
@@ -39,7 +36,7 @@ export const Header = (props: {
                   }`}
                 ></span>
               </span>
-              <span className='absolute right-0 h-full w-full rotate-45'>
+              <span className='absolute right-0 w-full h-full rotate-45'>
                 <span
                   className={`absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out dark:bg-white ${
                     !props.sidebarOpen && '!h-0 !delay-[0]'
@@ -55,29 +52,29 @@ export const Header = (props: {
           </button>
           {/* <!-- Hamburger Toggle BTN --> */}
 
-          <Link className='block flex-shrink-0 lg:hidden' to='/'>
+          <Link className='lg:hidden flex-shrink-0 block' to='/'>
             <img src={Logo} alt='Logo' />
           </Link>
         </div>
 
-        <div className='hidden sm:block'>
+        <div className='sm:block hidden'>
           <form>
             <div className='relative'>
-              <button className='absolute top-1/2 left-0 -translate-y-1/2'>
+              <button className='top-1/2 absolute left-0 -translate-y-1/2'>
                 <SearchIcon />
               </button>
 
               <input
                 type='text'
                 placeholder='Type to search...'
-                className='w-full bg-transparent pr-4 pl-9 focus:outline-none'
+                className='pl-9 focus:outline-none w-full pr-4 bg-transparent'
               />
             </div>
           </form>
         </div>
 
-        <div className='flex items-center gap-3 2xsm:gap-7'>
-          <ul className='flex items-center gap-2 2xsm:gap-4'>
+        <div className='2xsm:gap-7 flex items-center gap-3'>
+          <ul className='2xsm:gap-4 flex items-center gap-2'>
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
 
@@ -95,3 +92,5 @@ export const Header = (props: {
     </header>
   )
 }
+
+export default Header

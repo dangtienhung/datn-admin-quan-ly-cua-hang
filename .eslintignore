@@ -16,3 +16,6 @@
 # others
 /code-stages
 /scripts
+
+# IDE
+/src/stories

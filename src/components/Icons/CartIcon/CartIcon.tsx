@@ -1,4 +1,4 @@
-export const CartIcon = () => {
+const CartIcon = () => {
   return (
     <span>
       <svg
@@ -25,3 +25,5 @@ export const CartIcon = () => {
     </span>
   )
 }
+
+export default CartIcon

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const useScrollLock = () => {
+const useScrollLock = () => {
   const lockScroll = React.useCallback(() => {
     document.body.style.overflow = 'hidden'
   }, [])
@@ -14,3 +14,5 @@ export const useScrollLock = () => {
     unlockScroll
   }
 }
+
+export default useScrollLock

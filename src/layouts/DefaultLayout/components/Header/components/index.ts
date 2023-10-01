@@ -1,4 +1,4 @@
-export * from './DarkModeSwitcher'
-export * from './DropdownMessage'
-export * from './DropdownNotification'
-export * from './DropdownUser'
+export { default as DarkModeSwitcher } from './DarkModeSwitcher'
+export { default as DropdownMessage } from './DropdownMessage'
+export { default as DropdownNotification } from './DropdownNotification'
+export { default as DropdownUser } from './DropdownUser'
