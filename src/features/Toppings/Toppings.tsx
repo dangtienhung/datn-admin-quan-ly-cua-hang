@@ -1,16 +1,13 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { Drawer, Space } from 'antd'
-import { useEffect, useState } from 'react'
+import { setOpenDrawer, setToppingsList } from '~/store/slices'
 
 import { ITopping } from '~/types'
 import { Tabs } from 'antd'
+import { ToppingAdd } from './components'
 import { items } from './data'
-import { setToppingsList } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
-
-const style = {
-  color: '#fff'
-}
+import { useAppSelector } from '~/store/hooks'
+import { useEffect } from 'react'
 
 interface ToppingFeatureProps {
   data: ITopping[]
@@ -18,49 +15,30 @@ interface ToppingFeatureProps {
 
 const ToppingFeature = ({ data }: ToppingFeatureProps) => {
   const dispatch = useAppDispatch()
+  const { openDrawer } = useAppSelector((state) => state.drawer)
+  // const [open, setOpen] = useState<boolean>(false)
 
-  const [open, setOpen] = useState<boolean>(false)
-
-  const showDrawer = () => {
-    setOpen(true)
-  }
-
-  const onClose = () => {
-    setOpen(false)
-  }
-
+  /* lưu data lên redux toolkit để quản lý */
   useEffect(() => {
     dispatch(setToppingsList(data))
-  }, [dispatch, data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, data, setToppingsList])
+
+  /* open drawer with redux */
 
   return (
     <div>
       <Breadcrumb pageName='Toppings'>
-        <Button icon={<PlusIcon />} onClick={showDrawer}>
+        <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
           Thêm
         </Button>
       </Breadcrumb>
+
+      {/* ==================== body table ==================== */}
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
-      <Drawer
-        style={style}
-        className='dark:!text-white dark:bg-black'
-        title='Multi-level drawer'
-        width={720}
-        closable={false}
-        onClose={onClose}
-        open={open}
-        extra={
-          <Space>
-            <Button onClick={onClose} size='md'>
-              Cancel
-            </Button>
-            <Button onClick={onClose}>Submit</Button>
-          </Space>
-        }
-      >
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam possimus provident cupiditate commodi hic
-        temporibus facere quaerat atque vero suscipit.
-      </Drawer>
+
+      {/* ==================== Add Topping ==================== */}
+      <ToppingAdd open={openDrawer} />
     </div>
   )
 }

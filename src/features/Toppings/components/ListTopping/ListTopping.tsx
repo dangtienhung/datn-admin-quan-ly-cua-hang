@@ -1,27 +1,36 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Popconfirm, Space, Table, message } from 'antd'
+import { RootState, useAppDispatch } from '~/store/store'
+import { setOpenDrawer, setToppingId } from '~/store/slices'
 
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ITopping } from '~/types'
-import { RootState } from '~/store/store'
 import { cancelDelete } from '../..'
 import { formatCurrency } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteToppingMutation } from '~/store/services'
 
 const ToppingList = () => {
-  const { toppingsList } = useAppSelector((state: RootState) => state.toppings)
-  const [deleteTopping, _] = useDeleteToppingMutation()
+  const dispatch = useAppDispatch()
 
+  const { toppingsList } = useAppSelector((state: RootState) => state.toppings)
+  const [deleteTopping] = useDeleteToppingMutation()
+
+  /* topping delete */
   const handleDelete = async (id: string) => {
     try {
-      await deleteTopping(id).then(() => {
+      await deleteTopping({ id }).then(() => {
         message.success('Xoá thành công!')
       })
     } catch (error) {
       message.error('Xoá thất bại!')
     }
+  }
+
+  /* edit topping */
+  const saveToppingId = (id: string) => {
+    dispatch(setToppingId(id))
   }
 
   const columns: ColumnsType<ITopping> = [
@@ -39,12 +48,20 @@ const ToppingList = () => {
       width: 300,
       render: (_, topping: ITopping) => (
         <Space size='middle'>
-          <Button icon={<BsFillPencilFill />}>Sửa</Button>
+          <Button
+            icon={<BsFillPencilFill />}
+            onClick={() => {
+              dispatch(setOpenDrawer(true)), saveToppingId(topping._id)
+            }}
+          >
+            Sửa
+          </Button>
           <Popconfirm
             title='Bạn có muốn xóa topping này?'
             description='Are you sure to delete this task?'
             onConfirm={() => handleDelete(topping._id)}
             onCancel={cancelDelete}
+            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
             okText='Có'
             cancelText='Không'
           >
@@ -61,7 +78,15 @@ const ToppingList = () => {
 
   return (
     <div className='dark:bg-graydark'>
-      <Table columns={columns} dataSource={toppings} />
+      <Table
+        columns={columns}
+        dataSource={toppings}
+        pagination={{
+          pageSize: 5,
+          showSizeChanger: false,
+          pageSizeOptions: ['5', '10', '15', '20']
+        }}
+      />
     </div>
   )
 }
