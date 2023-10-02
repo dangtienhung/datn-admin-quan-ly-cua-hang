@@ -1,6 +1,3 @@
-import ToppingList from '../components/ToppingList/ToppingList'
+import ToppingList from '../components/ListTopping/ListTopping'
 
-export const items = [
-  { key: '1', label: 'Tất cả toppings', children: <ToppingList /> },
-  { key: '2', label: 'Topping đã bị xóa', children: 'Content of Tab Pane 2' }
-]
+export const items = [{ key: '1', label: 'Tất cả toppings', children: <ToppingList /> }]

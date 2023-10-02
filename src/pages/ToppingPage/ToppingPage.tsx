@@ -1,5 +1,3 @@
-import { Breadcrumb, Button, PlusIcon } from '~/components'
-
 import { NotFound } from '..'
 import { ToppingFeature } from '~/features'
 import { useGetAllToppingsQuery } from '~/store/services'
@@ -17,7 +15,7 @@ const ToppingPage = () => {
 
   return (
     <>
-      <ToppingFeature data={toppingData?.data} />
+      <ToppingFeature data={toppingData.data} />
     </>
   )
 }

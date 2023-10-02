@@ -27,7 +27,7 @@ export const items: MenuProps['items'] = [
   //   getItem('Item 2', 'g2', null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group')
   // ]),
 
-  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
+  getItem(<NavLink to={`/`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
 
   getItem('Sản phẩm', 'products', <AppstoreOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),

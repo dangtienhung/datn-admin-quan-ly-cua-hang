@@ -8,7 +8,7 @@ const ToppingPage = lazy(() => import('../pages/ToppingPage/ToppingPage'))
 
 const coreRoutes = [
   {
-    path: '/dashboard',
+    path: '/',
     title: 'Dashboard',
     component: Dashboard
   },

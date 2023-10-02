@@ -1,6 +1,7 @@
+import { drawerReducers, toppingReducers } from './slices'
+
 import { configureStore } from '@reduxjs/toolkit'
 import { toppingApi } from './services'
-import { toppingReducers } from './slices'
 import { useDispatch } from 'react-redux'
 
 const middlewares = [toppingApi.middleware]
@@ -11,6 +12,7 @@ export const store = configureStore({
     [toppingApi.reducerPath]: toppingApi.reducer,
 
     /* redux toolkit */
+    drawer: drawerReducers,
     toppings: toppingReducers
   },
   // Adding the api middleware enables caching, invalidation, polling,

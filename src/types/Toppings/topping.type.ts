@@ -14,3 +14,8 @@ export interface IDocsToppings {
   message: string
   data: ITopping[]
 }
+
+export interface IFormTopping {
+  name: string
+  price: number
+}
