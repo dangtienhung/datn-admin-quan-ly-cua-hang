@@ -3,7 +3,7 @@ import clsxm from '~/utils/clsxm'
 
 interface ButtonProps {
   styleClass?: string
-  children: React.ReactNode
+  children?: React.ReactNode
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
