@@ -5,6 +5,7 @@ import DefaultLayout from './layouts/DefaultLayout'
 import { Loader } from './common'
 import { Suspense } from 'react'
 import routes from './routes'
+import UserPage from './pages/UserPage'
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           />
         ))} */}
         <Route path='/manager/toppings' element={<ToppingPage />} />
+        <Route path='/manager/users' element={<UserPage />} />
       </Route>
     </Routes>
   )

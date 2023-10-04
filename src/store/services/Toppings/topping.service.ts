@@ -1,4 +1,4 @@
-import { IAddTopping, IDocsToppings, ITopping } from '~/types'
+import { IDocsToppings, ITopping } from '~/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const toppingApi = createApi({

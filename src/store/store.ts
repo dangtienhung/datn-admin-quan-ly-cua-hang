@@ -3,13 +3,15 @@ import { drawerReducers, toppingReducers } from './slices'
 import { configureStore } from '@reduxjs/toolkit'
 import { toppingApi } from './services'
 import { useDispatch } from 'react-redux'
+import { userApi } from './services/Users'
 
-const middlewares = [toppingApi.middleware]
+const middlewares = [toppingApi.middleware, userApi.middleware]
 
 export const store = configureStore({
   reducer: {
     /* redux toolkit query */
     [toppingApi.reducerPath]: toppingApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,

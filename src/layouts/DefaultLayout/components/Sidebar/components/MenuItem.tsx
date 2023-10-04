@@ -37,7 +37,7 @@ export const items: MenuProps['items'] = [
   ]),
 
   getItem('Người dùng', 'users', <AppstoreOutlined />, [
-    getItem('Khách hàng', 'customers'),
+    getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers'),
     getItem('Nhân viên', 'staffs')
     // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
   ]),
