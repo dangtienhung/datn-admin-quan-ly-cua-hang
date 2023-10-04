@@ -22,13 +22,13 @@ function getItem(
 }
 
 export const items: MenuProps['items'] = [
-  // getItem('Navigation One', 'sub1', <MailOutlined />, [
-  //   getItem('Item 1', 'g1', null, [getItem('Option 1', '1'), getItem('Option 2', '2')], 'group'),
-  //   getItem('Item 2', 'g2', null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group')
-  // ]),
+  // giao diên chính
+  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
 
-  getItem(<NavLink to={`/`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
+  // quản lý đơn hàng
+  getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <AppstoreOutlined />),
 
+  // quản lý sản phẩm
   getItem('Sản phẩm', 'products', <AppstoreOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
@@ -36,13 +36,11 @@ export const items: MenuProps['items'] = [
     // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
   ]),
 
+  // quản lý người dùng
   getItem('Người dùng', 'users', <AppstoreOutlined />, [
     getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers'),
     getItem('Nhân viên', 'staffs')
-    // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
   ]),
 
   getItem(<NavLink to={`/settings`}>Cài đặt</NavLink>, 'settings', <SettingOutlined />)
-
-  // getItem('Group', 'grp', null, [getItem('Option 13', '13'), getItem('Option 14', '14')], 'group')
 ]
