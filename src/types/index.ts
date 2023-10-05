@@ -1,1 +1,5 @@
 export * from './Toppings'
+export * from './Category'
+export * from './Image'
+export * from './Products'
+export * from './Size'
