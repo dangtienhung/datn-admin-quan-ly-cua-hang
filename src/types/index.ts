@@ -1,5 +1,6 @@
 export * from './Toppings'
-export * from './Category'
+export * from './Users'
+export * from './Categories'
 export * from './Image'
 export * from './Products'
 export * from './Size'

@@ -1,5 +1,7 @@
+import { CategoryFeature } from '~/features'
+
 const CategoryPage = () => {
-  return <div>CategoryPage</div>
+  return <CategoryFeature />
 }
 
 export default CategoryPage
