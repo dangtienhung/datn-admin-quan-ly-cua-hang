@@ -1,20 +1,26 @@
-import { drawerReducers, sizeReducers, toppingReducers } from './slices'
-import { sizeApi, toppingApi } from './services'
+import { categoryReducer, drawerReducers, toppingReducers, sizeReducers } from './slices'
 
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
+import { userApi } from './services/Users'
+import { categoryApi } from './services/Categories/category.service'
+import { sizeApi } from './services/Sizes'
+import { toppingApi } from './services'
 
-const middlewares = [toppingApi.middleware, sizeApi.middleware]
+const middlewares = [toppingApi.middleware, userApi.middleware, categoryApi.middleware, sizeApi.middleware]
 
 export const store = configureStore({
   reducer: {
     /* redux toolkit query */
     [toppingApi.reducerPath]: toppingApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
     [sizeApi.reducerPath]: sizeApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,
     toppings: toppingReducers,
+    categories: categoryReducer,
     sizes: sizeReducers
   },
   // Adding the api middleware enables caching, invalidation, polling,

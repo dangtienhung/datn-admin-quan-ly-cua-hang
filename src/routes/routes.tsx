@@ -1,6 +1,7 @@
 import { CategoryPage, Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
 
 import DefaultLayout from '~/layouts/DefaultLayout'
+import UserPage from '~/pages/UserPage'
 import { createBrowserRouter } from 'react-router-dom'
 
 const routers = createBrowserRouter([
