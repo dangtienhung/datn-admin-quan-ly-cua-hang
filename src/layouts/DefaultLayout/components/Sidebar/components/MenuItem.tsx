@@ -31,6 +31,7 @@ export const items: MenuProps['items'] = [
   // quản lý sản phẩm
   getItem('Sản phẩm', 'products', <AppstoreOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
+    getItem(<NavLink to={`/manager/categories`}>Danh mục sản phẩm</NavLink>, 'categories'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
     getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes')
   ]),

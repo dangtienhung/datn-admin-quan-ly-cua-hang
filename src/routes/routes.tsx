@@ -1,4 +1,4 @@
-import { Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
+import { CategoryPage, Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
 
 import DefaultLayout from '~/layouts/DefaultLayout'
 import { createBrowserRouter } from 'react-router-dom'
@@ -28,7 +28,7 @@ const routers = createBrowserRouter([
           { path: 'sizes', element: <SizePage /> },
           { path: 'users', element: '<Users />' },
           { path: 'vouchers', element: '<vouchers />' },
-          { path: 'categories', element: '<categories />' },
+          { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: '<orders />' }
         ]
       }
