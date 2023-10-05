@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import DefaultLayout from '~/layouts/DefaultLayout'
 import { Dashboard, NotFound, ToppingPage } from '~/pages'
+import CategoryPage from '~/pages/CategoryPage'
 import UserPage from '~/pages/UserPage'
 
 const routers = createBrowserRouter([
@@ -27,7 +28,7 @@ const routers = createBrowserRouter([
           { path: 'products', element: '<Products />' },
           { path: 'users', element: <UserPage /> },
           { path: 'vouchers', element: '<vouchers />' },
-          { path: 'categories', element: '<categories />' },
+          { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: '<orders />' }
         ]
       }

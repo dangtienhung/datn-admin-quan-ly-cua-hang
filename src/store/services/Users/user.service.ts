@@ -9,8 +9,16 @@ export const userApi = createApi({
     getAllUser: builder.query<IUserDocs, void>({
       query: () => `/users?page=1`,
       providesTags: ['User']
+    }),
+    addUser: builder.mutation<any, any>({
+      query: (user) => ({
+        url: '/users',
+        method: 'POST',
+        body: user
+      }),
+      invalidatesTags: ['User']
     })
   })
 })
 
-export const { useGetAllUserQuery } = userApi
+export const { useGetAllUserQuery, useAddUserMutation } = userApi

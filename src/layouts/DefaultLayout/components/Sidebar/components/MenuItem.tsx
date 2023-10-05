@@ -1,4 +1,11 @@
-import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons'
+import {
+  AppstoreOutlined,
+  SettingOutlined,
+  UserOutlined,
+  BarChartOutlined,
+  ReconciliationOutlined,
+  ShoppingOutlined
+} from '@ant-design/icons'
 
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
@@ -23,21 +30,23 @@ function getItem(
 
 export const items: MenuProps['items'] = [
   // giao diên chính
-  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
+  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <BarChartOutlined />),
 
   // quản lý đơn hàng
   getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <AppstoreOutlined />),
 
   // quản lý sản phẩm
-  getItem('Sản phẩm', 'products', <AppstoreOutlined />, [
+  getItem('Sản phẩm', 'products', <ShoppingOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
+    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'category'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
     getItem('Size', 'size')
+
     // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
   ]),
 
   // quản lý người dùng
-  getItem('Người dùng', 'users', <AppstoreOutlined />, [
+  getItem('Người dùng', 'users', <UserOutlined />, [
     getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers'),
     getItem('Nhân viên', 'staffs')
   ]),

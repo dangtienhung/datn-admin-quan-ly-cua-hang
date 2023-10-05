@@ -1,10 +1,12 @@
-import { Drawer, Form, Input, InputNumber, Select } from 'antd'
+import { Drawer, Form, Input, Select } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingId } from '~/store/slices'
 // import { useEffect, useState } from 'react'
 
 import { Button } from '~/components'
-// import toast from 'react-hot-toast'
+import UploadFile from '~/components/UploadFile'
+import { useAddUserMutation } from '~/store/services/Users'
+import toast from 'react-hot-toast'
 // import { useAppSelector } from '~/store/hooks'
 // import { values } from 'lodash'
 
@@ -15,9 +17,19 @@ type FormUserProps = {
 export const FormUser = ({ open }: FormUserProps) => {
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
+  const [addUser] = useAddUserMutation()
 
   const onFinish = async (values: any) => {
     console.log(values)
+    // return
+    try {
+      await addUser(values).then(() => {
+        toast.success('Thêm người dùng thành công')
+        dispatch(setOpenDrawer(false))
+      })
+    } catch (error) {
+      toast.error('Thêm người dùng thất bại!')
+    }
   }
   return (
     <Drawer
@@ -44,45 +56,49 @@ export const FormUser = ({ open }: FormUserProps) => {
         <Form.Item
           className='dark:text-white'
           label='Tên người dùng'
-          name='name'
+          name='username'
           rules={[{ required: true, message: 'Không được bỏ trống tên người dùng!' }]}
         >
           <Input size='large' placeholder='Tên người dùng' />
         </Form.Item>
         <Form.Item
           className='dark:text-white'
-          label='Quyền'
-          name='role'
-          rules={[{ required: true, message: 'Không được bỏ trống quyền người dùng!' }]}
+          label='Tài khoản'
+          name='account'
+          rules={[
+            { required: true, message: 'Không được bỏ trống tài khoản!' },
+            { type: 'email', message: 'Email sai định dạng' }
+          ]}
         >
-          <Select
-            size='large'
-            className='w-full'
-            // defaultValue='lucy'
-            placeholder='Chức vụ'
-            // style={{ width: 120 }}
-            // onChange={handleChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true }
-            ]}
-          />
+          <Input type='email' size='large' placeholder='Tài khoản' />
+        </Form.Item>
+        <Form.Item
+          className='dark:text-white'
+          label='Mật khẩu'
+          name='password'
+          rules={[
+            { required: true, message: 'Không được bỏ trống mật khẩu!' },
+            {
+              min: 6,
+              message: 'Mật khẩu phải nhiều hơn 6 ký tự'
+            }
+          ]}
+        >
+          <Input.Password placeholder='Mật khẩu' size='large' />
         </Form.Item>
 
         <Form.Item
           className='dark:text-white'
-          label='Giá topping'
-          name='price'
-          rules={[{ required: true, message: 'Không được bỏ trống giá toppping!' }]}
+          label='Địa chỉ'
+          name='address'
+          rules={[{ required: true, message: 'Không được bỏ trống giá địa chỉ!' }]}
         >
-          <InputNumber size='large' placeholder='Giá topping' className='w-full' />
+          <Input size='large' placeholder='Địa chỉ' className='w-full' />
         </Form.Item>
 
         <Form.Item>
           <Button styleClass='!w-full mt-5 py-2' type='submit'>
-            Thêm topping
+            Thêm người dùng
           </Button>
         </Form.Item>
       </Form>
