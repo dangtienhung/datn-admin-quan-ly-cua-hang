@@ -1,19 +1,21 @@
-import { drawerReducers, toppingReducers } from './slices'
+import { drawerReducers, sizeReducers, toppingReducers } from './slices'
+import { sizeApi, toppingApi } from './services'
 
 import { configureStore } from '@reduxjs/toolkit'
-import { toppingApi } from './services'
 import { useDispatch } from 'react-redux'
 
-const middlewares = [toppingApi.middleware]
+const middlewares = [toppingApi.middleware, sizeApi.middleware]
 
 export const store = configureStore({
   reducer: {
     /* redux toolkit query */
     [toppingApi.reducerPath]: toppingApi.reducer,
+    [sizeApi.reducerPath]: sizeApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,
-    toppings: toppingReducers
+    toppings: toppingReducers,
+    sizes: sizeReducers
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

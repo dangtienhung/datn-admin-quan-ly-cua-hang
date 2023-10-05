@@ -3,3 +3,25 @@ export interface ISizeRefProduct {
   name: string
   price: number
 }
+
+export interface ISize {
+  _id: string
+  name: string
+  price: number
+  productId: string[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IDocSize {
+  docs: ISize[]
+  totalDocs: number
+  limit: number
+  totalPages: number
+  page: number
+  pagingCounter: number
+  hasPrevPage: boolean
+  hasNextPage: boolean
+  prevPage: null | number
+  nextPage: null | number
+}
