@@ -1,4 +1,4 @@
-import { IAddTopping, IDocsToppings, ITopping } from '~/types'
+import { IDocsToppings, ITopping } from '~/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const toppingApi = createApi({
@@ -23,7 +23,7 @@ export const toppingApi = createApi({
 
     /* delete topping */
     deleteTopping: builder.mutation<ITopping, { id: string }>({
-      query: (id) => ({
+      query: ({ id }) => ({
         url: `/topping/${id}`,
         method: 'DElETE'
       }),

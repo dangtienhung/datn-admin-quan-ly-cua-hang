@@ -1,6 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { CategoryPage, Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
+
 import DefaultLayout from '~/layouts/DefaultLayout'
-import { Dashboard, NotFound, ToppingPage } from '~/pages'
+import { createBrowserRouter } from 'react-router-dom'
 
 const routers = createBrowserRouter([
   {
@@ -23,10 +24,11 @@ const routers = createBrowserRouter([
         element: <DefaultLayout />,
         children: [
           { path: 'toppings', element: <ToppingPage /> },
-          { path: 'products', element: '<Products />' },
+          { path: 'products', element: <ProductPage /> },
+          { path: 'sizes', element: <SizePage /> },
           { path: 'users', element: '<Users />' },
           { path: 'vouchers', element: '<vouchers />' },
-          { path: 'categories', element: '<categories />' },
+          { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: '<orders />' }
         ]
       }
