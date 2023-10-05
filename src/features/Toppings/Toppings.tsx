@@ -16,15 +16,12 @@ interface ToppingFeatureProps {
 const ToppingFeature = ({ data }: ToppingFeatureProps) => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
-  // const [open, setOpen] = useState<boolean>(false)
 
   /* lưu data lên redux toolkit để quản lý */
   useEffect(() => {
     dispatch(setToppingsList(data))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, data, setToppingsList])
-
-  /* open drawer with redux */
 
   return (
     <div>

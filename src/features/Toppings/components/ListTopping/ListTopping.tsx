@@ -19,6 +19,7 @@ const ToppingList = () => {
 
   /* topping delete */
   const handleDelete = async (id: string) => {
+    console.log('🚀 ~ file: ListTopping.tsx:22 ~ handleDelete ~ id:', id)
     try {
       await deleteTopping({ id }).then(() => {
         message.success('Xoá thành công!')
