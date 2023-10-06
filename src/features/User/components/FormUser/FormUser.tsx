@@ -1,14 +1,12 @@
-import { Drawer, Form, Input, Select } from 'antd'
+import { Drawer, Form, Input } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingId } from '~/store/slices'
 // import { useEffect, useState } from 'react'
 
 import { Button } from '~/components'
-import UploadFile from '~/components/UploadFile'
 import { useAddUserMutation } from '~/store/services/Users'
 import toast from 'react-hot-toast'
 // import { useAppSelector } from '~/store/hooks'
-// import { values } from 'lodash'
 
 type FormUserProps = {
   open: boolean

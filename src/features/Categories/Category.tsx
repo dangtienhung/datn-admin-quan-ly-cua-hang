@@ -19,8 +19,8 @@ const Category = () => {
           Thêm
         </Button>
       </Breadcrumb>
-      <FormCategory open={openDrawer} />
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      <FormCategory open={openDrawer} />
     </div>
   )
 }

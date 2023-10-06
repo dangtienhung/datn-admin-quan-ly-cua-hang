@@ -3,27 +3,31 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { ISize } from '~/types'
 
 interface SizeState {
-  sizeList: ISize[]
-  size: ISize | null
-  sizeId: string | null
+  sizeData: {
+    _id: string
+    name: string
+    price: number
+  }
 }
 
 const initialState: SizeState = {
-  sizeList: [],
-  size: null,
-  sizeId: null
+  sizeData: {
+    _id: '',
+    name: '',
+    price: 0
+  }
 }
 
 export const sizeSlice = createSlice({
   name: 'sizes',
   initialState,
   reducers: {
-    setSizes: (state, action: PayloadAction<ISize[]>) => {
-      state.sizeList = action.payload
+    setSize: (state, action: PayloadAction<ISize>) => {
+      state.sizeData = action.payload
     }
   }
 })
 
-export const { setSizes } = sizeSlice.actions
+export const { setSize } = sizeSlice.actions
 
 export const sizeReducers = sizeSlice.reducer
