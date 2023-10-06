@@ -8,9 +8,9 @@ export interface ISize {
   _id: string
   name: string
   price: number
-  productId: string[]
-  createdAt: string
-  updatedAt: string
+  productId?: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface IDocSize {
