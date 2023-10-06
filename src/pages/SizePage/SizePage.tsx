@@ -3,7 +3,7 @@ import { NotFound } from '..'
 import { useGetAllSizesQuery } from '~/store/services'
 
 const SizePage = () => {
-  const { isError: errorSize, isLoading: loadingSize, data: dataSize } = useGetAllSizesQuery()
+  const { isError: errorSize, isLoading: loadingSize, data: dataSize } = useGetAllSizesQuery(1)
 
   if (loadingSize) {
     return <div>Loading...</div>
@@ -13,7 +13,7 @@ const SizePage = () => {
     return <NotFound />
   }
 
-  return <FeatureSize data={dataSize} />
+  return <FeatureSize />
 }
 
 export default SizePage

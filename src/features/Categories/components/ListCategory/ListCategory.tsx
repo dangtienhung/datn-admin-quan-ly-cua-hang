@@ -9,9 +9,11 @@ import { ICategory } from '~/types'
 import { cancelDelete } from '../..'
 import { NotFound } from '~/pages'
 import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '~/store/services'
+import { useState } from 'react'
 
 const ListCategory = () => {
-  const { data: categories, isError, isLoading } = useGetAllCategoryQuery()
+  const [currentPage, setCurrentPage] = useState(1)
+  const { data: categories, isError, isLoading } = useGetAllCategoryQuery(currentPage)
   const [deleteCategory] = useDeleteCategoryMutation()
   const dispatch = useAppDispatch()
 
@@ -21,6 +23,7 @@ const ListCategory = () => {
       .then(() => message.success('Xóa thành công'))
       .catch(() => cancelDelete())
   }
+
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   const columns: ColumnsType<ICategory> = [
@@ -80,10 +83,16 @@ const ListCategory = () => {
         columns={columns}
         dataSource={categorriesData}
         pagination={{
-          pageSize: 5,
-          showSizeChanger: false,
-          pageSizeOptions: ['5', '10', '15', '20']
+          pageSize: categories && categories.limit,
+          // showSizeChanger: true,
+          // pageSizeOptions: ['5', '10', '15', '20'],
+          total: categories && categories?.totalDocs,
+          onChange(page) {
+            setCurrentPage(page)
+          }
         }}
+        scroll={{ y: '50vh' }}
+        bordered
       />
     </div>
   )

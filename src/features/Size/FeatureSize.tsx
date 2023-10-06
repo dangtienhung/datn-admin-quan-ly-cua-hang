@@ -1,22 +1,15 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { setOpenDrawer, setSizes } from '~/store/slices'
+import { setOpenDrawer } from '~/store/slices'
 
-import { IDocSize } from '~/types'
 import { Tabs } from 'antd'
 import { items } from './data'
 import { useAppDispatch } from '~/store/store'
-import { useEffect } from 'react'
+import { FormSIze } from './components'
+import { useAppSelector } from '~/store/hooks'
 
-export interface FeatureSizeProps {
-  data: IDocSize
-}
-
-const FeatureSize = ({ data }: FeatureSizeProps) => {
+const FeatureSize = () => {
   const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(setSizes(data.docs))
-  }, [dispatch, data])
+  const { openDrawer } = useAppSelector((state) => state.drawer)
 
   return (
     <div>
@@ -28,6 +21,7 @@ const FeatureSize = ({ data }: FeatureSizeProps) => {
 
       {/* ==================== body table ==================== */}
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      <FormSIze open={openDrawer} />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { setCategory, setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
 import { useAddCategoryMutation, useUpdateCategoryMutation } from '~/store/services'
+import { messageAlert } from '~/utils/messageAlert'
 
 type FormCategoryProps = {
   open: boolean
@@ -26,11 +27,10 @@ const FormCategory = ({ open }: FormCategoryProps) => {
       updateCategory({ _id: cateData._id, ...values })
         .unwrap()
         .then(() => {
-          message.success('Cập nhật danh mục thành công')
-          dispatch(setOpenDrawer(false))
-          form.resetFields()
+          messageAlert('Cập nhật danh mục thành công', 'success')
+          onClose()
         })
-        .catch(() => message.error('Cập nhật danh mục thất bại'))
+        .catch(() => messageAlert('Cập nhật danh mục thất bại', 'error'))
       return
     }
     addCategory(values)
@@ -42,16 +42,17 @@ const FormCategory = ({ open }: FormCategoryProps) => {
       })
       .catch(() => message.error('Thêm danh mục thất bại'))
   }
+  const onClose = () => {
+    dispatch(setOpenDrawer(false))
+    dispatch(setCategory({ _id: '', name: '' }))
+    form.resetFields()
+  }
   return (
     <Drawer
       title={cateData._id ? 'Cập nhật danh mục' : 'Thêm danh mục mới'}
       width={376}
       destroyOnClose
-      onClose={() => {
-        dispatch(setOpenDrawer(false))
-        dispatch(setCategory({ _id: '', name: '' }))
-        form.resetFields()
-      }}
+      onClose={onClose}
       getContainer={false}
       open={open}
     >

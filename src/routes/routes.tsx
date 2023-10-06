@@ -27,7 +27,7 @@ const routers = createBrowserRouter([
           { path: 'toppings', element: <ToppingPage /> },
           { path: 'products', element: <ProductPage /> },
           { path: 'sizes', element: <SizePage /> },
-          { path: 'users', element: '<Users />' },
+          { path: 'users', element: <UserPage /> },
           { path: 'vouchers', element: '<vouchers />' },
           { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: '<orders />' }
