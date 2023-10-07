@@ -1,14 +1,15 @@
-import Loading from '~/components/Loading/Loading'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Popconfirm, Space, Table, message } from 'antd'
-import { useAppDispatch } from '~/store/store'
 import { setCategory, setOpenDrawer } from '~/store/slices'
+import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '~/store/services'
+
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
-import { cancelDelete } from '../..'
+import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '~/store/services'
+import { cancelDelete } from '../..'
+import { useAppDispatch } from '~/store/store'
 import { useState } from 'react'
 
 const ListCategory = () => {
@@ -29,7 +30,9 @@ const ListCategory = () => {
   const columns: ColumnsType<ICategory> = [
     {
       title: '#',
-      dataIndex: 'index'
+      dataIndex: 'index',
+      key: 'index',
+      width: 50
     },
     {
       title: 'Tên danh mục',

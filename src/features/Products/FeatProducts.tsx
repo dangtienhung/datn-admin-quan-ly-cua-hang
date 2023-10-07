@@ -1,10 +1,23 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { RootState, useAppDispatch } from '~/store/store'
 
+import { IProduct } from '~/types'
+import { Tabs } from 'antd'
+import { items } from './data/data'
 import { setOpenDrawer } from '~/store/slices'
+import { setProductsList } from '~/store/slices/Products/product.slice'
+import { useAppDispatch } from '~/store/store'
+import { useEffect } from 'react'
 
-const FeatureProducts = () => {
+interface FeatureProductsProps {
+  data: IProduct[]
+}
+
+const FeatureProducts = ({ data }: FeatureProductsProps) => {
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(setProductsList(data))
+  }, [dispatch, data])
 
   return (
     <div>
@@ -13,6 +26,7 @@ const FeatureProducts = () => {
           Thêm
         </Button>
       </Breadcrumb>
+      <Tabs defaultActiveKey='1' items={items} />
     </div>
   )
 }
