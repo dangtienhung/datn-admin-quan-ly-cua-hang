@@ -1,4 +1,4 @@
-import { CategoryPage, Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
+import { CategoryPage, Dashboard, NotFound, OrderPage, ProductPage, SizePage, ToppingPage } from '~/pages'
 
 import DefaultLayout from '~/layouts/DefaultLayout'
 import UserPage from '~/pages/UserPage'
@@ -30,7 +30,7 @@ const routers = createBrowserRouter([
           { path: 'users', element: <UserPage /> },
           { path: 'vouchers', element: '<vouchers />' },
           { path: 'categories', element: <CategoryPage /> },
-          { path: 'orders', element: '<orders />' }
+          { path: 'orders', element: <OrderPage /> }
         ]
       }
     ]

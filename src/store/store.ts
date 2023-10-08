@@ -6,8 +6,16 @@ import { userApi } from './services/Users'
 import { categoryApi } from './services/Categories/category.service'
 import { sizeApi } from './services/Sizes'
 import { toppingApi } from './services'
+import { orderApi } from './services/Orders'
+import { orderReducer } from './slices/Orders/order.slice'
 
-const middlewares = [toppingApi.middleware, userApi.middleware, categoryApi.middleware, sizeApi.middleware]
+const middlewares = [
+  toppingApi.middleware,
+  userApi.middleware,
+  categoryApi.middleware,
+  sizeApi.middleware,
+  orderApi.middleware
+]
 
 export const store = configureStore({
   reducer: {
@@ -16,12 +24,14 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [sizeApi.reducerPath]: sizeApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,
     toppings: toppingReducers,
     categories: categoryReducer,
-    sizes: sizeReducers
+    sizes: sizeReducers,
+    orders: orderReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
