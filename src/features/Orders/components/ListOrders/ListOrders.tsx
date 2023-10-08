@@ -101,16 +101,15 @@ const ListOrders = () => {
       fixed: 'right',
       render: (_: any, order) => (
         <Space size='middle'>
-          {order.status !== 'canceled' ||
-            (order.status !== 'confirmed' && (
-              <Button
-                variant='success'
-                icon={<CheckCircleFilled />}
-                onClick={() => {
-                  onConfirmOrder(order.key)
-                }}
-              />
-            ))}
+          {order.status === 'pending' && (
+            <Button
+              variant='success'
+              icon={<CheckCircleFilled />}
+              onClick={() => {
+                onConfirmOrder(order.key)
+              }}
+            />
+          )}
 
           <Button
             icon={<EyeFilled />}
@@ -120,16 +119,15 @@ const ListOrders = () => {
               dispatch(setOrderData({ ...order }))
             }}
           />
-          {order.status === 'pending' ||
-            (order.status === 'confirmed' && (
-              <Popconfirm
-                title='Bạn có muốn hủy đơn hàng này?'
-                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                onConfirm={() => onCancelOrder(order.key)}
-              >
-                <Button variant='danger' icon={<CloseCircleFilled />} />
-              </Popconfirm>
-            ))}
+          {order.status === 'pending' && (
+            <Popconfirm
+              title='Bạn có muốn hủy đơn hàng này?'
+              okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+              onConfirm={() => onCancelOrder(order.key)}
+            >
+              <Button variant='danger' icon={<CloseCircleFilled />} />
+            </Popconfirm>
+          )}
         </Space>
       )
     }
