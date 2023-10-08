@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux'
 import { userApi } from './services/Users'
 import { categoryApi } from './services/Categories/category.service'
 import { sizeApi } from './services/Sizes'
+import { orderApi } from './services/Orders'
+import { orderReducer } from './slices/Orders/order.slice'
 import { VoucherApi, toppingApi } from './services'
 
 const middlewares = [
@@ -12,6 +14,7 @@ const middlewares = [
   userApi.middleware,
   categoryApi.middleware,
   sizeApi.middleware,
+  orderApi.middleware,
   VoucherApi.middleware
 ]
 
@@ -22,6 +25,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [sizeApi.reducerPath]: sizeApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
 
     /* redux toolkit */
@@ -29,6 +33,7 @@ export const store = configureStore({
     toppings: toppingReducers,
     categories: categoryReducer,
     sizes: sizeReducers,
+    orders: orderReducer,
     vouchers: voucherReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
