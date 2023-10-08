@@ -16,6 +16,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@reduxjs/toolkit": "^1.9.6",
     "@tailwindcss/line-clamp": "^0.4.4",
     "antd": "^5.9.4",
