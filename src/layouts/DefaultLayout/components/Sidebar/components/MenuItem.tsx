@@ -40,7 +40,8 @@ export const items: MenuProps['items'] = [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
     getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
-    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes')
+    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes'),
+    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers')
   ]),
 
   // quản lý người dùng
