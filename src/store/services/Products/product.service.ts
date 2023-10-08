@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { IProduct } from '~/types'
 import { IProductDocs } from './../../../../../react-du-an-framework2/src/interfaces/products.type'
 
 export const productApi = createApi({
@@ -21,8 +22,14 @@ export const productApi = createApi({
         }
         return [{ type: 'Product', id: 'LIST' }]
       }
+    }),
+
+    /* get one */
+    getOneProduct: builder.query<{ message: string; data: IProduct }, { id: string }>({
+      query: ({ id }) => `post/${id}`,
+      providesTags: (result, error, _id) => [{ type: 'Product', _id }]
     })
   })
 })
 
-export const { useGetAllProductsQuery } = productApi
+export const { useGetAllProductsQuery, useGetOneProductQuery } = productApi
