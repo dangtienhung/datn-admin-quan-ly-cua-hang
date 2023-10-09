@@ -11,19 +11,21 @@ import { cancelDelete } from '~/features/Toppings'
 import { useState } from 'react'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
+import { messageAlert } from '~/utils/messageAlert'
 
 export const ListSizes = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: sizeList, isLoading, isError } = useGetAllSizesQuery(currentPage)
+  const { data: sizeList, isError, isLoading } = useGetAllSizesQuery(currentPage)
 
   const [deleteSize] = useDeleteSizeMutation()
   const handleDelete = (id: string) => {
     deleteSize(id)
       .unwrap()
-      .then(() => message.success('Xóa thành công'))
-      .catch(() => message.error('Xóa thất bại'))
+      .then(() => messageAlert('Xóa thành công', 'success'))
+      .catch(() => messageAlert('Xóa thất bại', 'error'))
   }
+
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   const columns = [

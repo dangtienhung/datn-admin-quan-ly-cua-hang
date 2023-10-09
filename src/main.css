@@ -1,7 +1,0 @@
-.ant-drawer-inline {
-  position: fixed !important;
-  z-index: 99999 !important;
-}
-.ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
-  background: unset;
-}
