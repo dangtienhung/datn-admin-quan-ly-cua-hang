@@ -1,4 +1,11 @@
-import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons'
+import {
+  AppstoreOutlined,
+  SettingOutlined,
+  UserOutlined,
+  BarChartOutlined,
+  ReconciliationOutlined,
+  ShoppingOutlined
+} from '@ant-design/icons'
 
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
@@ -22,27 +29,26 @@ function getItem(
 }
 
 export const items: MenuProps['items'] = [
-  // getItem('Navigation One', 'sub1', <MailOutlined />, [
-  //   getItem('Item 1', 'g1', null, [getItem('Option 1', '1'), getItem('Option 2', '2')], 'group'),
-  //   getItem('Item 2', 'g2', null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group')
-  // ]),
+  // giao diên chính
+  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <BarChartOutlined />),
 
-  getItem(<NavLink to={`/dashboard`}>Dasbboard</NavLink>, 'dashboard', <AppstoreOutlined />),
+  // quản lý đơn hàng
+  getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <AppstoreOutlined />),
 
-  getItem('Sản phẩm', 'products', <AppstoreOutlined />, [
+  // quản lý sản phẩm
+  getItem('Sản phẩm', 'products', <ShoppingOutlined />, [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
+    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
-    getItem('Size', 'size')
-    // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
+    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes'),
+    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers')
   ]),
 
-  getItem('Người dùng', 'users', <AppstoreOutlined />, [
-    getItem('Khách hàng', 'customers'),
+  // quản lý người dùng
+  getItem('Người dùng', 'users', <UserOutlined />, [
+    getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers'),
     getItem('Nhân viên', 'staffs')
-    // getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')])
   ]),
 
   getItem(<NavLink to={`/settings`}>Cài đặt</NavLink>, 'settings', <SettingOutlined />)
-
-  // getItem('Group', 'grp', null, [getItem('Option 13', '13'), getItem('Option 14', '14')], 'group')
 ]

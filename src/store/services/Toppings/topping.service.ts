@@ -1,6 +1,5 @@
+import { IDocsToppings, ITopping } from '~/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { IDocsToppings } from '~/types'
 
 export const toppingApi = createApi({
   reducerPath: 'toppingApi',
@@ -23,14 +22,55 @@ export const toppingApi = createApi({
     }),
 
     /* delete topping */
-    deleteTopping: builder.mutation({
-      query: (id: string) => ({
+    deleteTopping: builder.mutation<ITopping, { id: string }>({
+      query: ({ id }) => ({
         url: `/topping/${id}`,
         method: 'DElETE'
       }),
-      invalidatesTags: (_, __, id) => [{ type: 'Topping', id }]
+      invalidatesTags: [{ type: 'Topping', id: 'LIST' }]
+    }),
+
+    /* thêm mới topping */
+    addTopping: builder.mutation<ITopping, Partial<ITopping>>({
+      query(body) {
+        return {
+          url: `/topping`,
+          method: 'POST',
+          body
+        }
+      },
+      // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
+      // that newly created post could show up in any lists.
+      invalidatesTags: [{ type: 'Topping', id: 'LIST' }]
+    }),
+
+    /* update topping */
+    updateTopping: builder.mutation<ITopping, Partial<ITopping>>({
+      query(data) {
+        const { _id, ...body } = data
+        return {
+          url: `/topping/${_id}`,
+          method: 'PUT',
+          body
+        }
+      },
+      // Invalidates all queries that subscribe to this Post `id` only.
+      // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
+      invalidatesTags: (_, error, { _id }) => [{ type: 'Topping', _id }]
+    }),
+
+    /* get topping by id */
+    getToppingDetail: builder.query<ITopping, string>({
+      query: (id: string) => `/topping/${id}`,
+      providesTags: (_, error, id) => [{ type: 'Topping', _id: id }]
     })
   })
 })
 
-export const { useGetAllToppingsQuery, useDeleteToppingMutation } = toppingApi
+export const {
+  useGetAllToppingsQuery,
+  useDeleteToppingMutation,
+  useAddToppingMutation,
+  useUpdateToppingMutation,
+  useGetToppingDetailQuery
+} = toppingApi

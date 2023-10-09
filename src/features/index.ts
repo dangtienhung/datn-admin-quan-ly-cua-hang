@@ -1,3 +1,8 @@
 export { default as FeatureDashboard } from './Dashboard'
 export { default as FeatureProducts } from './Products'
 export { default as ToppingFeature } from './Toppings'
+export { default as UserFeature } from './User'
+export { default as CategoryFeature } from './Categories'
+export { default as FeatureSize } from './Size'
+export { default as OrderFeature } from './Orders'
+export { default as FeatureVoucher } from './Voucher'

@@ -1,10 +1,10 @@
-import { Breadcrumb } from '~/components'
 import { FeatureProducts } from '~/features'
 
 const ProductPage = () => {
+  // const {data: dataProducts} = usej
+
   return (
     <div>
-      <Breadcrumb pageName='products' />
       <FeatureProducts />
     </div>
   )

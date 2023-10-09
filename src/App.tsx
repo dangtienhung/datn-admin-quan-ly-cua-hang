@@ -1,33 +1,17 @@
-import { Dashboard, ToppingPage } from './pages'
-import { Route, Routes } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 
-import DefaultLayout from './layouts/DefaultLayout'
+import routers from './routes/routes'
+import './App.css'
+import { useState } from 'react'
 import { Loader } from './common'
-import { Suspense } from 'react'
-import routes from './routes'
-
+import { pause } from './utils/pause'
 const App = () => {
-  return (
-    <Routes>
-      {/* <Route path='/auth/signin' element={<SignIn />} />
-          <Route path='/auth/signup' element={<SignUp />} /> */}
-      <Route element={<DefaultLayout />}>
-        <Route index element={<Dashboard />} />
-        {/* {routes.map(({ path, component: Component }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <Suspense fallback={<Loader />}>
-                <Component />
-              </Suspense>
-            }
-          />
-        ))} */}
-        <Route path='/manager/toppings' element={<ToppingPage />} />
-      </Route>
-    </Routes>
-  )
+  const [isLoading, setIsLoading] = useState(true)
+  pause(1000).then(() => {
+    setIsLoading(false)
+  })
+  if (isLoading) return <Loader />
+  return <RouterProvider router={routers} />
 }
 
 export default App

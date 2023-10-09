@@ -3,7 +3,7 @@ import clsxm from '~/utils/clsxm'
 
 interface ButtonProps {
   styleClass?: string
-  children: React.ReactNode
+  children?: React.ReactNode
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
@@ -55,10 +55,11 @@ const Button = ({
   return (
     <button
       className={clsxm(
-        `flex items-center justify-center gap-2.5 rounded-md py-3 px-6 bg-primary text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10`,
+        `flex items-center justify-center gap-2.5 rounded-md py-3 px-5 bg-primary text-center font-medium text-white hover:bg-opacity-90`,
         { 'pointer-events-none opacity-50 bg-opacity-90 cursor-not-allowed': disabled },
         { 'cursor-wait bg-opacity-90': loading },
         { 'bg-danger hover:bg-opacity-90': variant === 'danger' },
+        { 'bg-meta-3 hover:bg-opacity-90': variant === 'success' },
         styleClass,
         size
       )}

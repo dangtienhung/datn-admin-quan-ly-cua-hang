@@ -1,17 +1,40 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { toppingApi } from './services'
-import { toppingReducers } from './slices'
-import { useDispatch } from 'react-redux'
+import { categoryReducer, drawerReducers, toppingReducers, sizeReducers, voucherReducer } from './slices'
 
-const middlewares = [toppingApi.middleware]
+import { configureStore } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+import { userApi } from './services/Users'
+import { categoryApi } from './services/Categories/category.service'
+import { sizeApi } from './services/Sizes'
+import { orderApi } from './services/Orders'
+import { orderReducer } from './slices/Orders/order.slice'
+import { VoucherApi, toppingApi } from './services'
+
+const middlewares = [
+  toppingApi.middleware,
+  userApi.middleware,
+  categoryApi.middleware,
+  sizeApi.middleware,
+  orderApi.middleware,
+  VoucherApi.middleware
+]
 
 export const store = configureStore({
   reducer: {
     /* redux toolkit query */
     [toppingApi.reducerPath]: toppingApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [sizeApi.reducerPath]: sizeApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
+    [VoucherApi.reducerPath]: VoucherApi.reducer,
 
     /* redux toolkit */
-    toppings: toppingReducers
+    drawer: drawerReducers,
+    toppings: toppingReducers,
+    categories: categoryReducer,
+    sizes: sizeReducers,
+    orders: orderReducer,
+    vouchers: voucherReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
