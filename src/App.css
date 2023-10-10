@@ -50,3 +50,10 @@
 .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
   background: unset;
 }
+
+.background-content {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(/north_background_login_desktop.png) no-repeat;
+  object-fit: cover;
+}
