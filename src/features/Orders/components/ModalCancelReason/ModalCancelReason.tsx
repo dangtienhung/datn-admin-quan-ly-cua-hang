@@ -5,7 +5,6 @@ import { useAppSelector } from '~/store/hooks'
 import { setOpenModal } from '~/store/slices/Modal'
 import { useAppDispatch } from '~/store/store'
 import { messageAlert } from '~/utils/messageAlert'
-import { RootState } from '@reduxjs/toolkit/query'
 
 const ModalCancelReason = () => {
   const dispatch = useAppDispatch()

@@ -10,8 +10,9 @@ import { EyeFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/ico
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
-import { setOrderData } from '~/store/slices/Orders/order.slice'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
 import { messageAlert } from '~/utils/messageAlert'
+import { setOpenModal } from '~/store/slices/Modal'
 
 const ListPendingOrders = () => {
   const dispatch = useAppDispatch()
@@ -104,13 +105,14 @@ const ListPendingOrders = () => {
           />
           <Button variant='success' icon={<CheckCircleFilled />} onClick={() => onConfirmOrder(order.key)} />
 
-          <Popconfirm
-            title='Bạn có muốn hủy đơn hàng này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onConfirm={() => onCancelOrder(order.key)}
-          >
-            <Button variant='danger' icon={<CloseCircleFilled />} />
-          </Popconfirm>
+          <Button
+            variant='danger'
+            icon={<CloseCircleFilled />}
+            onClick={() => {
+              dispatch(setOpenModal(true))
+              dispatch(setIdOrderCancel(order.key))
+            }}
+          />
         </Space>
       )
     }
@@ -120,7 +122,7 @@ const ListPendingOrders = () => {
 
   const ordersData = orders?.docs.map((item: any, index: number) => ({
     user: {
-      username: item.inforOrderShipping.name,
+      username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address

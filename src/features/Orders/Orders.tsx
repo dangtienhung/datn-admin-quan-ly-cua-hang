@@ -1,11 +1,11 @@
 import { Breadcrumb } from '~/components'
-import { setOpenDrawer } from '~/store/slices'
 import { DatePicker } from 'antd'
 
 import { Tabs } from 'antd'
 import { items } from './data'
 import { useAppSelector } from '~/store/hooks'
 import DetailOrder from './components/DetailOrder/DetailOrder'
+import ModalCancelReason from './components/ModalCancelReason/ModalCancelReason'
 
 const Orders = () => {
   const { openDrawer } = useAppSelector((state) => state.drawer)
@@ -16,6 +16,7 @@ const Orders = () => {
       </Breadcrumb>
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
       <DetailOrder open={openDrawer} />
+      <ModalCancelReason />
     </div>
   )
 }

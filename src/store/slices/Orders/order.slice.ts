@@ -17,6 +17,7 @@ interface IOrderDetail {
       address: string
     }
   }
+  id: string
 }
 
 const initialState: IOrderDetail = {
@@ -35,7 +36,8 @@ const initialState: IOrderDetail = {
       username: '',
       address: ''
     }
-  }
+  },
+  id: ''
 }
 
 export const orderSlice = createSlice({
@@ -44,9 +46,12 @@ export const orderSlice = createSlice({
   reducers: {
     setOrderData: (state, action: PayloadAction<any>) => {
       state.orderData = action.payload
+    },
+    setIdOrderCancel: (state, action: PayloadAction<string>) => {
+      state.id = action.payload
     }
   }
 })
 
-export const { setOrderData } = orderSlice.actions
+export const { setOrderData, setIdOrderCancel } = orderSlice.actions
 export const orderReducer = orderSlice.reducer

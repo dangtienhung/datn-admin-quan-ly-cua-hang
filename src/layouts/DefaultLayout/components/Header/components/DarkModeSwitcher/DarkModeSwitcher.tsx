@@ -1,9 +1,11 @@
 import { SunIcon } from '~/components'
 import { useColorMode } from '~/hooks'
+import { setTheme } from '~/store/slices/Theme/theme.slice'
+import { useAppDispatch } from '~/store/store'
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode()
-
+  const dispatch = useAppDispatch()
   return (
     <li>
       <label
@@ -14,6 +16,7 @@ const DarkModeSwitcher = () => {
           onChange={() => {
             if (typeof setColorMode === 'function') {
               setColorMode(colorMode === 'light' ? 'dark' : 'light')
+              dispatch(setTheme(colorMode === 'light' ? 'dark' : 'light'))
             }
           }}
           className='dur absolute top-0 z-50 w-full h-full m-0 opacity-0 cursor-pointer'
