@@ -71,3 +71,9 @@
 :where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
   background: #1a222c;
 }
+.background-content {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(/north_background_login_desktop.png) no-repeat;
+  object-fit: cover;
+}
