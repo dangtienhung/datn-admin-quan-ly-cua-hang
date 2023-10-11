@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { RootState, useAppDispatch } from '~/store/store'
+import { useAppDispatch } from '~/store/store'
 
 import { setOpenDrawer } from '~/store/slices'
 

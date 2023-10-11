@@ -3,11 +3,12 @@ import DefaultLayout from '~/layouts/DefaultLayout'
 import UserPage from '~/pages/UserPage'
 import { createBrowserRouter } from 'react-router-dom'
 import BlogPage from '~/pages/BlogPage'
+import SignIn from '~/pages/SignIn'
 
 const routers = createBrowserRouter([
   {
     path: '/',
-    element: 'Login'
+    element: <SignIn />
   },
   {
     path: '/dashboard',
