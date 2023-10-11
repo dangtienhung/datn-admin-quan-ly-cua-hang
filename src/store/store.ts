@@ -7,7 +7,7 @@ import { categoryApi } from './services/Categories/category.service'
 import { sizeApi } from './services/Sizes'
 import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
-import { VoucherApi, toppingApi } from './services'
+import { VoucherApi, blogApi, toppingApi } from './services'
 
 const middlewares = [
   toppingApi.middleware,
@@ -15,7 +15,8 @@ const middlewares = [
   categoryApi.middleware,
   sizeApi.middleware,
   orderApi.middleware,
-  VoucherApi.middleware
+  VoucherApi.middleware,
+  blogApi.middleware
 ]
 
 export const store = configureStore({
@@ -27,6 +28,7 @@ export const store = configureStore({
     [sizeApi.reducerPath]: sizeApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
+    [blogApi.reducerPath]: blogApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,

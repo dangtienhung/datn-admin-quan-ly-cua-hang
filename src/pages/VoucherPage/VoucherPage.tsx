@@ -1,6 +1,7 @@
 import { useGetAllVouchersQuery } from '~/store/services'
 import { NotFound } from '..'
 import VoucherFeature from '~/features/Voucher/Voucher'
+import Loading from '~/components/Loading/Loading'
 
 const VoucherPage = () => {
   const { isError: errorVoucher, isFetching: fetchingVoucher, data: voucherData } = useGetAllVouchersQuery(0)
@@ -10,7 +11,7 @@ const VoucherPage = () => {
     return <NotFound />
   }
   if (fetchingVoucher) {
-    return <div>Loading...</div>
+    return <Loading />
   }
   return (
     <>

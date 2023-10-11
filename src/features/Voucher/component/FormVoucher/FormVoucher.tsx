@@ -53,6 +53,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
     dispatch(setVoucher({ _id: '', code: '', discount: 0, sale: 0 }))
     form.resetFields()
   }
+
   return (
     <Drawer
       title={voucherData._id ? 'Cập nhật voucher' : 'Thêm voucher mới'}
@@ -80,17 +81,37 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         </Form.Item>
         <Form.Item
           className='dark:text-white'
-          label='Giảm giá voucher (%)'
+          label='Số lượng'
           name='discount'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value < 0) {
+                  return Promise.reject('Số lượng không được âm!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
-          <Input size='large' placeholder='Giảm giá voucher voucher' />
+          <Input size='large' placeholder='Số lượng voucher' />
         </Form.Item>
         <Form.Item
           className='dark:text-white'
-          label='Giảm giá voucher (vnd)'
+          label='Giảm giá voucher'
           name='sale'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value < 1000) {
+                  return Promise.reject('Giảm giá không được nhỏ hơn 1000đ!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <InputNumber size='large' placeholder='Giảm giá voucher voucher(vnd)' className='w-full' />
         </Form.Item>

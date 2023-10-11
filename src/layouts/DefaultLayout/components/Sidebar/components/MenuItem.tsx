@@ -41,7 +41,8 @@ export const items: MenuProps['items'] = [
     getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories'),
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
     getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes'),
-    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers')
+    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers'),
+    getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'Blogs')
   ]),
 
   // quản lý người dùng
