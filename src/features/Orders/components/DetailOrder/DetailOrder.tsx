@@ -4,6 +4,8 @@ import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
 import { useCancelOrderMutation, useConfirmOrderMutation } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
+import { setOpenModal } from '~/store/slices/Modal'
+import { setIdOrderCancel } from '~/store/slices/Orders'
 import { useAppDispatch } from '~/store/store'
 import { ITopping } from '~/types'
 import { formatCurrency } from '~/utils'
@@ -148,19 +150,17 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
             Xác nhận
           </Button>
 
-          <Popconfirm
-            title='Bạn có muốn hủy đơn hàng này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onConfirm={() => onCancelOrder(orderData.key)}
+          <Button
+            styleClass={orderData.status === 'canceled' || orderData.status === 'done' ? 'hidden' : ''}
+            variant='danger'
+            size='sm'
+            onClick={() => {
+              dispatch(setOpenModal(true))
+              dispatch(setIdOrderCancel(orderData.key))
+            }}
           >
-            <Button
-              styleClass={orderData.status === 'canceled' || orderData.status === 'done' ? 'hidden' : ''}
-              variant='danger'
-              size='sm'
-            >
-              Hủy đơn
-            </Button>
-          </Popconfirm>
+            Hủy đơn
+          </Button>
         </Space>
       }
     >

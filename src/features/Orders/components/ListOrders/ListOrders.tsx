@@ -10,8 +10,9 @@ import { EyeFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/ico
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
-import { setOrderData } from '~/store/slices/Orders/order.slice'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
 import { messageAlert } from '~/utils/messageAlert'
+import { setOpenModal } from '~/store/slices/Modal'
 
 const ListOrders = () => {
   const dispatch = useAppDispatch()
@@ -51,7 +52,7 @@ const ListOrders = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Thông tin  người đặt',
+      title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
       rowScope: 'row',
@@ -119,22 +120,24 @@ const ListOrders = () => {
               dispatch(setOrderData({ ...order }))
             }}
           />
-          {order.status === 'pending' && (
-            <Popconfirm
-              title='Bạn có muốn hủy đơn hàng này?'
-              okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-              onConfirm={() => onCancelOrder(order.key)}
-            >
-              <Button variant='danger' icon={<CloseCircleFilled />} />
-            </Popconfirm>
-          )}
+          {order.status === 'pending' ||
+            (order.status === 'confirmed' && (
+              <Button
+                variant='danger'
+                icon={<CloseCircleFilled />}
+                onClick={() => {
+                  dispatch(setOpenModal(true))
+                  dispatch(setIdOrderCancel(order.key))
+                }}
+              />
+            ))}
         </Space>
       )
     }
   ]
   const ordersData = orders?.docs.map((item: any, index: number) => ({
     user: {
-      username: item.inforOrderShipping.name,
+      username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address

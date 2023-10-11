@@ -1,4 +1,12 @@
-import { categoryReducer, drawerReducers, toppingReducers, sizeReducers, voucherReducer } from './slices'
+import {
+  categoryReducer,
+  drawerReducers,
+  toppingReducers,
+  sizeReducers,
+  voucherReducer,
+  modalReducer,
+  themeReducer
+} from './slices'
 
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
@@ -33,6 +41,8 @@ export const store = configureStore({
 
     /* redux toolkit */
     drawer: drawerReducers,
+    modal: modalReducer,
+    theme: themeReducer,
     toppings: toppingReducers,
     categories: categoryReducer,
     sizes: sizeReducers,

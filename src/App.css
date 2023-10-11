@@ -40,6 +40,9 @@
 .read-the-docs {
   color: #888;
 } */
+
+/*overwrite css antd*/
+
 .ant-drawer-inline {
   position: fixed !important;
   z-index: 9999 !important;
@@ -47,10 +50,27 @@
 .ant-popconfirm {
   z-index: 10000 !important;
 }
+.ant-modal-root .ant-modal-wrap,
+.ant-modal-root .ant-modal-mask {
+  z-index: 10001 !important;
+}
+.ant-message {
+  z-index: 10002 !important;
+}
 .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
   background: unset;
 }
-
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-thead > tr > th,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-thead > tr > td,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-tbody > tr > th,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table:hover,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-cell-fix-left,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-cell-fix-right,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper td.ant-table-column-sort,
+:where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
+  background: #1a222c;
+}
 .background-content {
   background:
     linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
