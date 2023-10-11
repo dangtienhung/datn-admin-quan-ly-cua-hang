@@ -82,7 +82,7 @@ const ListDoneOrders = () => {
   ]
   const ordersData = orders?.docs.map((item: any, index: number) => ({
     user: {
-      username: item.inforOrderShipping.name,
+      username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address

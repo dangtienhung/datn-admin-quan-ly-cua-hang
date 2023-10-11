@@ -1,4 +1,12 @@
-import { categoryReducer, drawerReducers, toppingReducers, sizeReducers, voucherReducer } from './slices'
+import {
+  categoryReducer,
+  drawerReducers,
+  toppingReducers,
+  sizeReducers,
+  voucherReducer,
+  modalReducer,
+  themeReducer
+} from './slices'
 
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
@@ -8,7 +16,6 @@ import { sizeApi } from './services/Sizes'
 import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
 import { VoucherApi, toppingApi } from './services'
-
 const middlewares = [
   toppingApi.middleware,
   userApi.middleware,
@@ -30,6 +37,8 @@ export const store = configureStore({
 
     /* redux toolkit */
     drawer: drawerReducers,
+    modal: modalReducer,
+    theme: themeReducer,
     toppings: toppingReducers,
     categories: categoryReducer,
     sizes: sizeReducers,

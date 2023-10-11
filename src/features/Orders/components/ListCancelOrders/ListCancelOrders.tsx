@@ -1,6 +1,5 @@
 import Loading from '~/components/Loading/Loading'
 import { Space, Table } from 'antd'
-
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
@@ -84,7 +83,7 @@ const ListCancelOrders = () => {
   ]
   const ordersData = orders?.docs.map((item: any, index: number) => ({
     user: {
-      username: item.inforOrderShipping.name,
+      username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address
