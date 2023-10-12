@@ -1,13 +1,13 @@
-import { CategoryPage, Dashboard, NotFound, ProductPage, SizePage, ToppingPage } from '~/pages'
-
+import { CategoryPage, Dashboard, NotFound, OrderPage, ProductPage, SizePage, ToppingPage, VoucherPage } from '~/pages'
 import DefaultLayout from '~/layouts/DefaultLayout'
 import UserPage from '~/pages/UserPage'
 import { createBrowserRouter } from 'react-router-dom'
+import SignIn from '~/pages/SignIn'
 
 const routers = createBrowserRouter([
   {
     path: '/',
-    element: 'Login'
+    element: <SignIn />
   },
   {
     path: '/dashboard',
@@ -28,9 +28,9 @@ const routers = createBrowserRouter([
           { path: 'products', element: <ProductPage /> },
           { path: 'sizes', element: <SizePage /> },
           { path: 'users', element: <UserPage /> },
-          { path: 'vouchers', element: '<vouchers />' },
+          { path: 'vouchers', element: <VoucherPage /> },
           { path: 'categories', element: <CategoryPage /> },
-          { path: 'orders', element: '<orders />' }
+          { path: 'orders', element: <OrderPage /> }
         ]
       }
     ]
