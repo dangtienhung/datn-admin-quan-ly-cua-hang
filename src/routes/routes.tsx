@@ -12,6 +12,7 @@ import {
 import DefaultLayout from '~/layouts/DefaultLayout'
 import CustomerPage from '~/pages/CustomerPage'
 import { createBrowserRouter } from 'react-router-dom'
+import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
 
 const routers = createBrowserRouter([
@@ -41,7 +42,8 @@ const routers = createBrowserRouter([
           { path: 'staffs', element: <StaffPage /> },
           { path: 'vouchers', element: <VoucherPage /> },
           { path: 'categories', element: <CategoryPage /> },
-          { path: 'orders', element: <OrderPage /> }
+          { path: 'orders', element: <OrderPage /> },
+          { path: 'blogs', element: <BlogPage /> }
         ]
       }
     ]
