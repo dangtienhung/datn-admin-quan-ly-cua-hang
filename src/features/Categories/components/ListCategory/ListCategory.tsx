@@ -1,6 +1,6 @@
 import Loading from '~/components/Loading/Loading'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Popconfirm, Space, Table, message } from 'antd'
+import { Popconfirm, Space, Table } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setCategory, setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
@@ -8,19 +8,22 @@ import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
 import { cancelDelete } from '../..'
 import { NotFound } from '~/pages'
-import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '~/store/services'
+import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
 import { useState } from 'react'
+import { pause } from '~/utils/pause'
+import { messageAlert } from '~/utils/messageAlert'
 
 const ListCategory = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const { data: categories, isError, isLoading } = useGetAllCategoryQuery(currentPage)
-  const [deleteCategory] = useDeleteCategoryMutation()
+  const [deleteFakeCategory] = useDeleteFakeMutation()
   const dispatch = useAppDispatch()
 
-  const handleDelete = (id: string) => {
-    deleteCategory(id)
+  const handleDelete = async (id: string) => {
+    await pause(2000)
+    deleteFakeCategory(id)
       .unwrap()
-      .then(() => message.success('Xóa thành công'))
+      .then(() => messageAlert('Xóa thành công', 'success'))
       .catch(() => cancelDelete())
   }
 
@@ -56,12 +59,10 @@ const ListCategory = () => {
           </Button>
           <Popconfirm
             title='Bạn có muốn xóa danh mục này?'
-            description='Are you sure to delete this task?'
+            description='Bạn chắc chắn muốn xóa danh mục này?'
             okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
             onCancel={cancelDelete}
             onConfirm={() => handleDelete(category._id)}
-            okText='Có'
-            cancelText='Không'
           >
             <Button variant='danger' icon={<BsFillTrashFill />}>
               Xóa

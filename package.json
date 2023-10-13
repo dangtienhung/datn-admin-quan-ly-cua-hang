@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "@tailwindcss/line-clamp": "^0.4.4",
     "antd": "^5.9.4",
+    "antd-img-crop": "^4.13.0",
     "apexcharts": "^3.42.0",
     "axios": "^1.5.1",
     "clsx": "^2.0.0",

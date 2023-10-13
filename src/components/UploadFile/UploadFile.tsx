@@ -1,11 +1,76 @@
-const UploadFile = () => {
+import { PlusOutlined } from '@ant-design/icons'
+import { Modal, Upload } from 'antd'
+import { UploadFile } from 'antd/lib'
+import { RcFile } from 'antd/lib/upload'
+import { useState } from 'react'
+import getBase64 from '~/utils/getBase64'
+import { messageAlert } from '~/utils/messageAlert'
+import ImgCrop from 'antd-img-crop'
+
+type UploadFileProps = {
+  fileList: UploadFile[]
+  setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
+}
+
+const UploadFile = ({ fileList, setFileList }: UploadFileProps) => {
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+
+  const handleCancel = () => setPreviewOpen(false)
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile)
+    }
+    setPreviewImage(file.url || (file.preview as string))
+    setPreviewOpen(true)
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+  }
+  // const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList)
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+    </div>
+  )
+  console.log(fileList)
+
   return (
     <div>
-      <label className='mb-3 block text-black dark:text-white'>Attach file</label>
-      <input
-        type='file'
-        className='w-full rounded-md border border-stroke p-3 outline-none transition file:mr-4 file:rounded file:border-[0.5px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2.5 file:text-sm file:font-medium focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-strokedark dark:file:bg-white/30 dark:file:text-white'
-      />
+      <ImgCrop
+        showGrid
+        rotationSlider
+        beforeCrop={(file) => {
+          const isPNG =
+            file.type === 'image/png' ||
+            file.type === 'image/jpeg' ||
+            file.type === 'image/jpg' ||
+            file.type === 'image/gif'
+          if (!isPNG) {
+            messageAlert(`${file.name} không phải là file jpg, png, jpeg!`, 'error')
+          }
+
+          return isPNG ? true : Upload.LIST_IGNORE
+        }}
+      >
+        <Upload
+          listType='picture-card'
+          fileList={fileList}
+          onPreview={handlePreview}
+          defaultFileList={fileList}
+          onRemove={() => setFileList([])}
+          beforeUpload={(file) => {
+            setFileList([{ originFileObj: file, name: file.name } as any])
+            return false
+          }}
+        >
+          {fileList.length >= 1 ? null : uploadButton}
+        </Upload>
+      </ImgCrop>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt='example' style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </div>
   )
 }

@@ -5,7 +5,8 @@ import {
   sizeReducers,
   voucherReducer,
   modalReducer,
-  themeReducer
+  themeReducer,
+  blogReducer
 } from './slices'
 
 import { configureStore } from '@reduxjs/toolkit'
@@ -15,8 +16,9 @@ import { categoryApi } from './services/Categories/category.service'
 import { sizeApi } from './services/Sizes'
 import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
-import { VoucherApi, toppingApi } from './services'
+import { VoucherApi, blogApi, toppingApi } from './services'
 import { AuthApi } from './services/Auth'
+import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
   toppingApi.middleware,
@@ -25,6 +27,7 @@ const middlewares = [
   sizeApi.middleware,
   orderApi.middleware,
   VoucherApi.middleware,
+  blogApi.middleware,
   AuthApi.middleware
 ]
 
@@ -37,6 +40,7 @@ export const store = configureStore({
     [sizeApi.reducerPath]: sizeApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
+    [blogApi.reducerPath]: blogApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
 
     /* redux toolkit */
@@ -47,7 +51,9 @@ export const store = configureStore({
     categories: categoryReducer,
     sizes: sizeReducers,
     orders: orderReducer,
-    vouchers: voucherReducer
+    vouchers: voucherReducer,
+    blogs: blogReducer,
+    user: userReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
