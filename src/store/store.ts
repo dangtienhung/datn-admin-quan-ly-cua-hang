@@ -5,7 +5,8 @@ import {
   sizeReducers,
   voucherReducer,
   modalReducer,
-  themeReducer
+  themeReducer,
+  blogReducer
 } from './slices'
 
 import { configureStore } from '@reduxjs/toolkit'
@@ -49,7 +50,8 @@ export const store = configureStore({
     categories: categoryReducer,
     sizes: sizeReducers,
     orders: orderReducer,
-    vouchers: voucherReducer
+    vouchers: voucherReducer,
+    blogs: blogReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

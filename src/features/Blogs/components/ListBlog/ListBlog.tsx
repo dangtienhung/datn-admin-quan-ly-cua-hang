@@ -4,8 +4,8 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useGetAllBlogsQuery } from '~/store/services'
-import { setOpenDrawer } from '~/store/slices'
+import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
+import { setBlog, setOpenDrawer } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
 import { IBlogs } from '~/types'
 import { truncateDescription } from '../../utils'
@@ -16,7 +16,17 @@ const ListBlog = () => {
   const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
+  const [deleteBlog] = useDeleteBlogMutation()
   console.log(BlogData)
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteBlog({ id }).then(() => {
+        message.success('Xóa thành công!')
+      })
+    } catch (error) {
+      message.error('Xoá thất bại!')
+    }
+  }
   const blogs = BlogData?.docs?.map((blog) => ({
     ...blog,
     key: blog._id
@@ -47,14 +57,14 @@ const ListBlog = () => {
       title: 'Tên blog',
       dataIndex: 'name',
       key: 'name',
-      with: '20%',
+      // with: '20%',
       render: (name: string) => <span className='uppercase'>{name}</span>
     },
     {
       title: 'Ảnh blog',
       dataIndex: 'images',
-      key: 'discount',
-      with: '20%',
+      key: 'images',
+      // with: '20%',
 
       render: (image: any) => <img className='w-full max-w-[350px]' src={image[0]?.url} alt='' />
     },
@@ -62,19 +72,19 @@ const ListBlog = () => {
       title: 'Mô tả blog',
       dataIndex: 'description',
       key: 'description',
-      with: '20%',
+      // with: '20%',
       render: (text: string) => <p>{truncateDescription(text, 100)}</p>
     },
     {
       title: 'Action',
       key: 'action',
-      with: '20%',
-      render: (_: any, blogs: IBlogs) => (
+      width: 300,
+      render: (_: any, blog: IBlogs) => (
         <Space size='middle'>
           <Button
             icon={<BsFillPencilFill />}
             onClick={() => {
-              // dispatch(setBlog(blogs))
+              dispatch(setBlog(blog))
               dispatch(setOpenDrawer(true))
             }}
           >
@@ -87,7 +97,7 @@ const ListBlog = () => {
             okText='Có'
             cancelText='Không'
             // onCancel={cancelDelete}
-            // onConfirm={() => handleDelete(blogs._id!)}
+            onConfirm={() => handleDelete(blog._id!)}
           >
             <Button variant='danger' icon={<BsFillTrashFill />}>
               Xóa
@@ -112,13 +122,13 @@ const ListBlog = () => {
         rowSelection={rowSelection}
       />
 
-      <span style={{ marginLeft: 8 }}>
+      <span className='ml-2'>
         {hasSelected ? (
           <Button variant='danger' onClick={start} disabled={!hasSelected} loading={loading}>
             Xóa tất cả
           </Button>
         ) : (
-          ''
+          <></>
         )}
       </span>
     </div>

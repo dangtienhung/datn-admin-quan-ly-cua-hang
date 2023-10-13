@@ -75,7 +75,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
           className='dark:text-white'
           label='Tên voucher'
           name='code'
-          rules={[{ required: true, message: 'Không được bỏ trống tên size!' }]}
+          rules={[{ required: true, message: 'Không được bỏ trống tên voucher!' }]}
         >
           <Input size='large' placeholder='Tên voucher' />
         </Form.Item>
