@@ -17,6 +17,7 @@ import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
 import { VoucherApi, toppingApi } from './services'
 import { AuthApi } from './services/Auth'
+import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
   toppingApi.middleware,
@@ -47,7 +48,8 @@ export const store = configureStore({
     categories: categoryReducer,
     sizes: sizeReducers,
     orders: orderReducer,
-    vouchers: voucherReducer
+    vouchers: voucherReducer,
+    user: userReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

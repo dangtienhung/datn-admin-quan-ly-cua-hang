@@ -88,7 +88,13 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
             }
           ]}
         >
-          <InputNumber size='large' placeholder='Tên size' className='w-full' />
+          <InputNumber
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+            parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
+            size='large'
+            placeholder='Tên size'
+            className='w-full'
+          />
         </Form.Item>
 
         <Form.Item>

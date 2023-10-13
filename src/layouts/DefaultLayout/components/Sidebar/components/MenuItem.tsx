@@ -43,8 +43,8 @@ export const items: MenuProps['items'] = [
 
   // quản lý người dùng
   getItem('Người dùng', 'users', <UserOutlined />, [
-    getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />),
-    getItem('Nhân viên', 'staffs', <FaUserEdit />)
+    getItem(<NavLink to={`/manager/customers`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />),
+    getItem(<NavLink to={`/manager/staffs`}>Nhân viên</NavLink>, 'staffs', <FaUserEdit />)
   ]),
 
   getItem(<NavLink to={`/settings`}>Cài đặt</NavLink>, 'settings', <SettingOutlined />)

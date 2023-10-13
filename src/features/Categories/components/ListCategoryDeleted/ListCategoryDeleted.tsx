@@ -1,34 +1,37 @@
 import Loading from '~/components/Loading/Loading'
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { BsFillTrashFill } from 'react-icons/bs'
+import { RedoOutlined } from '@ant-design/icons'
 import { Popconfirm, Space, Table } from 'antd'
-import { useAppDispatch } from '~/store/store'
-import { setCategory, setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
-import { cancelDelete } from '../..'
 import { NotFound } from '~/pages'
-import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
+import { useDeleteRealMutation, useGetAllCategoryDeletedQuery, useRestoreCategoryMutation } from '~/store/services'
 import { useState } from 'react'
 import { pause } from '~/utils/pause'
 import { messageAlert } from '~/utils/messageAlert'
 
-const ListCategory = () => {
+const ListCategoryDeleted = () => {
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: categories, isError, isLoading } = useGetAllCategoryQuery(currentPage)
-  const [deleteFakeCategory] = useDeleteFakeMutation()
-  const dispatch = useAppDispatch()
+  const { data: categories, isError, isLoading } = useGetAllCategoryDeletedQuery(currentPage)
+  const [deleteRealCategory] = useDeleteRealMutation()
+  const [restoreCategory] = useRestoreCategoryMutation()
 
-  const handleDelete = async (id: string) => {
+  const handleRestore = async (id: string) => {
     await pause(2000)
-    deleteFakeCategory(id)
+    restoreCategory(id)
       .unwrap()
-      .then(() => messageAlert('Xóa thành công', 'success'))
-      .catch(() => cancelDelete())
+      .then(() => messageAlert('Khôi phục thành công', 'success'))
+      .catch(() => messageAlert('Khôi phục thất bại', 'error'))
   }
 
-  if (isLoading) return <Loading />
-  if (isError) return <NotFound />
+  const handleDeleteReal = async (id: string) => {
+    await pause(2000)
+    deleteRealCategory(id)
+      .unwrap()
+      .then(() => messageAlert('Xóa thành công', 'success'))
+      .catch(() => messageAlert('Xóa thất bại', 'error'))
+  }
   const columns: ColumnsType<ICategory> = [
     {
       title: '#',
@@ -48,21 +51,19 @@ const ListCategory = () => {
       width: 300,
       render: (_, category) => (
         <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
           <Popconfirm
-            title='Bạn có muốn xóa danh mục này?'
-            description='Bạn chắc chắn muốn xóa danh mục này?'
+            title='Bạn muốn khôi phục lại danh mục này?'
+            description='Bạn thực sự muốn khôi phục lại danh mục này?'
+            onConfirm={() => handleRestore(category._id)}
+          >
+            <Button icon={<RedoOutlined />}>Khôi phục</Button>
+          </Popconfirm>
+          <Popconfirm
+            title='Bạn có muốn xóa VĨNH VIỄN danh mục này?'
+            description='Hành động này sẽ không thể khôi phục lại!'
             okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(category._id)}
+            // onCancel={cancelDelete}
+            onConfirm={() => handleDeleteReal(category._id)}
           >
             <Button variant='danger' icon={<BsFillTrashFill />}>
               Xóa
@@ -72,12 +73,14 @@ const ListCategory = () => {
       )
     }
   ]
-
   const categorriesData = categories?.docs.map((item: ICategory, index) => ({
     ...item,
     key: item._id,
     index: index + 1
   }))
+
+  if (isLoading) return <Loading />
+  if (isError) return <NotFound />
   return (
     <div className='dark:bg-graydark'>
       <Table
@@ -99,4 +102,4 @@ const ListCategory = () => {
   )
 }
 
-export default ListCategory
+export default ListCategoryDeleted
