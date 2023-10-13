@@ -46,7 +46,7 @@ const ModalCancelReason = () => {
         <Button hidden={!reason} key='cancel' onClick={onCancel}>
           Hủy
         </Button>,
-        <Button key='submit' className='bg-[#D34053] text-white hover:!text-white' onClick={onOK}>
+        <Button hidden={!reason} key='submit' className='bg-[#D34053] text-white hover:!text-white' onClick={onOK}>
           Xác nhận
         </Button>
       ]}

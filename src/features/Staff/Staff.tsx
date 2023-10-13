@@ -1,32 +1,25 @@
 import { Tabs } from 'antd'
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { items } from './data'
 import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import { setOpenDrawer } from '~/store/slices'
-import { FormUser } from './components/FormUser'
+import { items } from './data'
+import { FormStaff } from './components'
 
-type UserFeatureProps = {
-  data: any
-}
-
-const UserFeature = ({ data }: UserFeatureProps) => {
-  console.log(data)
+const StaffFeature = () => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
-
   return (
     <div>
-      <Breadcrumb pageName='Người dùng'>
+      <Breadcrumb pageName='Customers'>
         <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
           Thêm
         </Button>
       </Breadcrumb>
 
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
-      <FormUser open={openDrawer} />
+      <FormStaff open={openDrawer} />
     </div>
   )
 }
-
-export default UserFeature
+export default StaffFeature
