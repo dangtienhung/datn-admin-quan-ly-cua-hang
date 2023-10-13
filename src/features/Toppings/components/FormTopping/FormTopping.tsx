@@ -99,7 +99,13 @@ export const ToppingAdd = ({ open }: ToppingAddProps) => {
           name='price'
           rules={[{ required: true, message: 'Không được bỏ trống giá toppping!' }]}
         >
-          <InputNumber size='large' placeholder='Giá topping' className='w-full' />
+          <InputNumber
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+            parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
+            size='large'
+            placeholder='Giá topping'
+            className='w-full'
+          />
         </Form.Item>
 
         <Form.Item>

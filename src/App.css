@@ -45,7 +45,7 @@
 
 .ant-drawer-inline {
   position: fixed !important;
-  z-index: 9999 !important;
+  z-index: 999 !important;
 }
 .ant-popconfirm {
   z-index: 10000 !important;
@@ -71,6 +71,15 @@
 :where(.css-dev-only-do-not-override-yi1l0y).ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
   background: #1a222c;
 }
+.ant-btn-primary {
+  background-color: #1677ff;
+}
+
+.ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select {
+  width: 100%;
+  border: 2px dashed #d9d9d9;
+}
+
 .background-content {
   background:
     linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),

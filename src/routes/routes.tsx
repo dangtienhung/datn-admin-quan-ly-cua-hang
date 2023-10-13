@@ -1,6 +1,16 @@
-import { CategoryPage, Dashboard, NotFound, OrderPage, ProductPage, SizePage, ToppingPage, VoucherPage } from '~/pages'
+import {
+  CategoryPage,
+  Dashboard,
+  NotFound,
+  OrderPage,
+  ProductPage,
+  SizePage,
+  StaffPage,
+  ToppingPage,
+  VoucherPage
+} from '~/pages'
 import DefaultLayout from '~/layouts/DefaultLayout'
-import UserPage from '~/pages/UserPage'
+import CustomerPage from '~/pages/CustomerPage'
 import { createBrowserRouter } from 'react-router-dom'
 import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
@@ -28,7 +38,8 @@ const routers = createBrowserRouter([
           { path: 'toppings', element: <ToppingPage /> },
           { path: 'products', element: <ProductPage /> },
           { path: 'sizes', element: <SizePage /> },
-          { path: 'users', element: <UserPage /> },
+          { path: 'customers', element: <CustomerPage /> },
+          { path: 'staffs', element: <StaffPage /> },
           { path: 'vouchers', element: <VoucherPage /> },
           { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: <OrderPage /> },

@@ -1,6 +1,10 @@
 export interface IImage {
-  _id: string
-  url: string
+  url?: string
   publicId?: string
+  _id?: string
   filename?: string
+}
+
+export interface IResImage {
+  urls: IImage[]
 }
