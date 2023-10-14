@@ -1,5 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table } from 'antd'
+import { Space, Table } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
@@ -20,6 +20,7 @@ const ListOrders = () => {
     page: 1,
     limit: 10
   })
+  const { data: orders, isLoading, isError } = useGetAllOrderQuery(options)
   const [confirmOrder] = useConfirmOrderMutation()
   const [cancelOrder] = useCancelOrderMutation()
   const onConfirmOrder = (id: string) => {
@@ -39,7 +40,6 @@ const ListOrders = () => {
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
-  const { data: orders, isLoading, isError } = useGetAllOrderQuery(options)
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
@@ -65,6 +65,7 @@ const ListOrders = () => {
       title: 'Ghi chú',
       dataIndex: 'note',
       key: 'note'
+
       // render: (name: string) => <span className='capitalize'>{name}</span>
     },
     {
@@ -85,7 +86,28 @@ const ListOrders = () => {
         >
           {status}
         </span>
-      )
+      ),
+      filters: [
+        {
+          text: 'Hoàn thành',
+          value: 'done'
+        },
+        {
+          text: 'Đang chờ',
+          value: 'pending'
+        },
+        {
+          text: 'Đã hủy',
+          value: 'canceled'
+        },
+        {
+          text: 'Đã xác nhận',
+          value: 'confirmed'
+        }
+      ],
+      onFilter(value, record) {
+        return record.status.startsWith(value)
+      }
     },
     {
       title: 'Thời gian đặt hàng',

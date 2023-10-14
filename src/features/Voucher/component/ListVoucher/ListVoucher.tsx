@@ -44,7 +44,7 @@ const ListVoucher = () => {
       title: 'DISCOUNT',
       dataIndex: 'discount',
       key: 'discount',
-      render: (discount: number) => `${discount}%`
+      render: (discount: number) => `${discount}`
     },
     {
       title: 'SALE',
