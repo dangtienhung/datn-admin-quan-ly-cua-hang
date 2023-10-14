@@ -1,5 +1,5 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Popconfirm, Space, Table, message } from 'antd'
+import { Popconfirm, Space, Table } from 'antd'
 import { useAppDispatch } from '~/store/store'
 
 import { Button } from '~/components'
@@ -12,6 +12,7 @@ import { useState } from 'react'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { messageAlert } from '~/utils/messageAlert'
+import { pause } from '~/utils/pause'
 
 export const ListSizes = () => {
   const dispatch = useAppDispatch()
@@ -19,10 +20,13 @@ export const ListSizes = () => {
   const { data: sizeList, isError, isLoading } = useGetAllSizesQuery(currentPage)
 
   const [deleteSize] = useDeleteSizeMutation()
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await pause(2000)
     deleteSize(id)
       .unwrap()
-      .then(() => messageAlert('Xóa thành công', 'success'))
+      .then(() => {
+        messageAlert('Xóa thành công', 'success')
+      })
       .catch(() => messageAlert('Xóa thất bại', 'error'))
   }
 
@@ -62,10 +66,8 @@ export const ListSizes = () => {
           </Button>
           <Popconfirm
             title='Bạn có muốn xóa topping này?'
-            description='Are you sure to delete this task?'
+            description='Bạn chắc chắn muốn xóa đi size này?'
             okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
             onCancel={cancelDelete}
             onConfirm={() => handleDelete(size._id)}
           >

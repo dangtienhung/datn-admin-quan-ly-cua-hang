@@ -1,23 +1,25 @@
-import { productApi, toppingApi, VoucherApi } from './services'
+import { VoucherApi, blogApi, productApi, toppingApi } from './services'
 import {
+  blogReducer,
   categoryReducer,
   drawerReducers,
-  toppingReducers,
-  sizeReducers,
-  voucherReducer,
   modalReducer,
-  themeReducer
+  sizeReducers,
+  themeReducer,
+  toppingReducers,
+  voucherReducer
 } from './slices'
 
-import { configureStore } from '@reduxjs/toolkit'
-import { productReducers } from './slices/Products/product.slice'
-import { useDispatch } from 'react-redux'
-import { userApi } from './services/Users'
+import { AuthApi } from './services/Auth'
 import { categoryApi } from './services/Categories/category.service'
-import { sizeApi } from './services/Sizes'
+import { configureStore } from '@reduxjs/toolkit'
 import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
-import { AuthApi } from './services/Auth'
+import { productReducers } from './slices/Products/product.slice'
+import { sizeApi } from './services/Sizes'
+import { useDispatch } from 'react-redux'
+import { userApi } from './services/Users'
+import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
   toppingApi.middleware,
@@ -27,6 +29,7 @@ const middlewares = [
   productApi.middleware,
   orderApi.middleware,
   VoucherApi.middleware,
+  blogApi.middleware,
   AuthApi.middleware
 ]
 
@@ -40,6 +43,7 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
+    [blogApi.reducerPath]: blogApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
 
     /* redux toolkit */
@@ -51,7 +55,9 @@ export const store = configureStore({
     sizes: sizeReducers,
     products: productReducers,
     orders: orderReducer,
-    vouchers: voucherReducer
+    vouchers: voucherReducer,
+    blogs: blogReducer,
+    user: userReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

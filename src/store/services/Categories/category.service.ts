@@ -13,8 +13,22 @@ export const categoryApi = createApi({
           ? [...result.docs.map(({ _id }) => ({ type: 'Category', _id }) as const), { type: 'Category', _id: 'LIST' }]
           : [{ type: 'Category', id: 'LIST' }]
     }),
+    getAllCategoryDeleted: builder.query<ICategoryDocs, number>({
+      query: (page) => `/categories-isDeleted?_page=${page}`,
+      providesTags: (result) =>
+        result
+          ? [...result.docs.map(({ _id }) => ({ type: 'Category', _id }) as const), { type: 'Category', _id: 'LIST' }]
+          : [{ type: 'Category', id: 'LIST' }]
+    }),
 
-    deleteCategory: builder.mutation({
+    deleteFake: builder.mutation({
+      query: (id: string) => ({
+        url: `/category-deleteFake/${id}`,
+        method: 'PUT'
+      }),
+      invalidatesTags: ['Category']
+    }),
+    deleteReal: builder.mutation({
       query: (id: string) => ({
         url: `/category/${id}`,
         method: 'DELETE'
@@ -38,9 +52,24 @@ export const categoryApi = createApi({
         body: { name: category.name }
       }),
       invalidatesTags: ['Category']
+    }),
+
+    restoreCategory: builder.mutation({
+      query: (id: string) => ({
+        url: `/category-restore/${id}`,
+        method: 'PUT'
+      }),
+      invalidatesTags: ['Category']
     })
   })
 })
 
-export const { useGetAllCategoryQuery, useDeleteCategoryMutation, useAddCategoryMutation, useUpdateCategoryMutation } =
-  categoryApi
+export const {
+  useGetAllCategoryQuery,
+  useDeleteFakeMutation,
+  useAddCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteRealMutation,
+  useGetAllCategoryDeletedQuery,
+  useRestoreCategoryMutation
+} = categoryApi
