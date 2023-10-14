@@ -33,12 +33,13 @@ export const items: MenuProps['items'] = [
   getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <FaClipboardList />),
 
   // quản lý sản phẩm
-  getItem('Quản lý', 'manager', <AiOutlineControl className='!text-base' />, [
-    getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product', <ShoppingOutlined />),
-    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories', <BiSolidCategoryAlt />),
-    getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping', <HiCollection />),
-    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes', <AiOutlineFontSize />),
-    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers', <IoTicket />)
+  getItem('Sản phẩm', 'products', <ShoppingOutlined />, [
+    getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
+    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories'),
+    getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
+    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes'),
+    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers'),
+    getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'Blogs')
   ]),
 
   // quản lý người dùng
