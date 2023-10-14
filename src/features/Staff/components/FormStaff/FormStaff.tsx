@@ -197,7 +197,7 @@ export const FormStaff = ({ open }: FormStaffProps) => {
           label='Tải ảnh lên'
           // rules={[{ required: true, message: 'Không được bỏ trống giá địa chỉ!' }]}
         >
-          <UploadFile fileList={fileList} setFileList={setFileList} />
+          <UploadFile fileList={fileList} setFileList={setFileList} useCrop />
         </Form.Item>
 
         <Form.Item>
