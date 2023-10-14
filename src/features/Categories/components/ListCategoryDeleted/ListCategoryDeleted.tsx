@@ -56,7 +56,7 @@ const ListCategoryDeleted = () => {
             description='Bạn thực sự muốn khôi phục lại danh mục này?'
             onConfirm={() => handleRestore(category._id)}
           >
-            <Button icon={<RedoOutlined />}>Khôi phục</Button>
+            <Button icon={<RedoOutlined className='text-lg' />}>Khôi phục</Button>
           </Popconfirm>
           <Popconfirm
             title='Bạn có muốn xóa VĨNH VIỄN danh mục này?'
