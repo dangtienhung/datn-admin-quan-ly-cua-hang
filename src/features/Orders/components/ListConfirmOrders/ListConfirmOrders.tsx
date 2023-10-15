@@ -4,14 +4,13 @@ import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
 import { useState } from 'react'
-import { useCancelOrderMutation, useGetAllOrderConfirmQuery } from '~/store/services/Orders'
+import { useGetAllOrderConfirmQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, CloseCircleFilled } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
-import { messageAlert } from '~/utils/messageAlert'
 import { setOpenModal } from '~/store/slices/Modal'
 
 const ListConfirmOrders = () => {
@@ -20,16 +19,6 @@ const ListConfirmOrders = () => {
     page: 1,
     limit: 10
   })
-
-  const [cancelOrder] = useCancelOrderMutation()
-  const onCancelOrder = (id: string) => {
-    cancelOrder(id)
-      .unwrap()
-      .then(() => {
-        messageAlert('Thay đổi trạng thái thành công', 'success', 4)
-      })
-      .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
-  }
 
   const { data: orders, isError, isLoading } = useGetAllOrderConfirmQuery(options)
 

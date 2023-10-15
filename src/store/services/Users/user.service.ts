@@ -38,6 +38,15 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['User']
     }),
+
+    deleteUser: builder.mutation({
+      query: (id: string) => ({
+        url: `/users/${id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['User']
+    }),
+
     upLoadAvartaUser: builder.mutation<IResImage, FormData>({
       query: (file) => ({
         url: '/uploadImages',
@@ -53,5 +62,6 @@ export const {
   useAddUserMutation,
   useGetAllUserByRoleQuery,
   useUpLoadAvartaUserMutation,
-  useUpdateUserMutation
+  useUpdateUserMutation,
+  useDeleteUserMutation
 } = userApi

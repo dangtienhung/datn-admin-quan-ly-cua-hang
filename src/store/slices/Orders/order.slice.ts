@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface IOrderDetail {
   orderData: {
-    _id: string
     key: string
     priceShip: number
     totalPrice: number
@@ -16,13 +15,13 @@ interface IOrderDetail {
       avatar: string
       address: string
     }
+    reasonCancelOrder?: string
   }
   id: string
 }
 
 const initialState: IOrderDetail = {
   orderData: {
-    _id: '',
     key: '',
     priceShip: 0,
     totalPrice: 0,
@@ -35,7 +34,8 @@ const initialState: IOrderDetail = {
       phone: '',
       username: '',
       address: ''
-    }
+    },
+    reasonCancelOrder: ''
   },
   id: ''
 }
