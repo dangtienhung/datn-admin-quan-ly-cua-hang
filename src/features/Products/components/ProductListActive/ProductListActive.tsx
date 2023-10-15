@@ -1,30 +1,30 @@
-import { Button, DeleteIcon, EditIcon } from '~/components'
+import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
 import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
 
+import { AiOutlineUndo } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
-import { useAppSelector } from '~/store/hooks'
+import { useGetAllProductActiveQuery } from '~/store/services'
 import { useState } from 'react'
 
-const ProductList = () => {
-  const dispatch = useAppDispatch()
-  const { productsList } = useAppSelector((state: RootState) => state.products)
-
+export const ProductListActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
+  const { data } = useGetAllProductActiveQuery({
+    _page: 1,
+    _limit: 10
+  })
 
-  const products = productsList.map((product: IProduct, index: number) => ({
+  const products = data?.docs.map((product: any, index: number) => ({
     ...product,
     key: product._id,
     index: index + 1
   }))
-  console.log('🚀 ~ file: ProductList.tsx:48 ~ products ~ products:', products)
 
   const start = () => {
     setLoading(true)
@@ -136,16 +136,13 @@ const ProductList = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <ButtonAntd
-            icon={<EditIcon />}
-            className='bg-primary hover:text-white flex items-center justify-center text-white'
-          />
-          <Popconfirm
-            title='Bạn có chắc chắn muốn xóa sản phẩm này không?'
-            onConfirm={() => {}}
-            okText='Yes'
-            cancelText='No'
-          >
+          <Tooltip title='Khôi phục sản phẩm'>
+            <ButtonAntd
+              icon={<AiOutlineUndo />}
+              className='bg-primary hover:text-white flex items-center justify-center text-white'
+            />
+          </Tooltip>
+          <Popconfirm title='Xóa sản phẩm?' onConfirm={() => {}} okText='Yes' cancelText='No'>
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
@@ -156,7 +153,6 @@ const ProductList = () => {
       )
     }
   ]
-
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
@@ -170,5 +166,3 @@ const ProductList = () => {
     </div>
   )
 }
-
-export default ProductList
