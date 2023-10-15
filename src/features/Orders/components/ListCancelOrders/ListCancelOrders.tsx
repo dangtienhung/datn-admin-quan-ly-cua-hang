@@ -97,7 +97,8 @@ const ListCancelOrders = () => {
     status: item.status,
     timeOrder: item.createdAt,
     key: item._id,
-    index: index + 1
+    index: index + 1,
+    reasonCancelOrder: item?.reasonCancelOrder ? item.reasonCancelOrder : ''
   }))
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

@@ -4,7 +4,7 @@ import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
 import { useState } from 'react'
-import { useCancelOrderMutation, useConfirmOrderMutation, useGetAllOrderQuery } from '~/store/services/Orders'
+import { useConfirmOrderMutation, useGetAllOrderQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
@@ -22,18 +22,8 @@ const ListOrders = () => {
   })
   const { data: orders, isLoading, isError } = useGetAllOrderQuery(options)
   const [confirmOrder] = useConfirmOrderMutation()
-  const [cancelOrder] = useCancelOrderMutation()
   const onConfirmOrder = (id: string) => {
     confirmOrder(id)
-      .unwrap()
-      .then(() => {
-        messageAlert('Thay đổi trạng thái thành công', 'success', 4)
-      })
-      .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
-  }
-
-  const onCancelOrder = (id: string) => {
-    cancelOrder(id)
       .unwrap()
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
@@ -173,7 +163,8 @@ const ListOrders = () => {
     status: item.status,
     timeOrder: item.createdAt,
     key: item._id,
-    index: index + 1
+    index: index + 1,
+    reasonCancelOrder: item?.reasonCancelOrder ? item.reasonCancelOrder : ''
   }))
 
   return (

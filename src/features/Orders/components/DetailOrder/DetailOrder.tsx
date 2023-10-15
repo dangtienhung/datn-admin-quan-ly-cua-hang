@@ -1,11 +1,12 @@
-import { Col, Drawer, Popconfirm, Row, Space, Table } from 'antd'
+import { Col, Drawer, Row, Space, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { Button } from '~/components'
+import Loading from '~/components/Loading/Loading'
 import { useAppSelector } from '~/store/hooks'
-import { useCancelOrderMutation, useConfirmOrderMutation } from '~/store/services/Orders'
+import { useConfirmOrderMutation } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
 import { setOpenModal } from '~/store/slices/Modal'
-import { setIdOrderCancel } from '~/store/slices/Orders'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders'
 import { useAppDispatch } from '~/store/store'
 import { ITopping } from '~/types'
 import { formatCurrency } from '~/utils'
@@ -17,8 +18,7 @@ type DetailOrderProps = {
 const DetailOrder = ({ open }: DetailOrderProps) => {
   const dispatch = useAppDispatch()
   const { orderData } = useAppSelector((state) => state.orders)
-  const [confirmOrder] = useConfirmOrderMutation()
-  const [cancelOrder] = useCancelOrderMutation()
+  const [confirmOrder, { isLoading: isConfirming }] = useConfirmOrderMutation()
   console.log(orderData, 'detail')
 
   const onClose = () => {
@@ -29,16 +29,8 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       .unwrap()
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
-        onClose()
-      })
-      .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
-  }
-  const onCancelOrder = (id: string) => {
-    cancelOrder(id)
-      .unwrap()
-      .then(() => {
-        messageAlert('Thay đổi trạng thái thành công', 'success', 4)
-        onClose()
+        dispatch(setOrderData({ ...orderData, status: 'confirmed' }))
+        // onClose()
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
@@ -164,18 +156,19 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         </Space>
       }
     >
+      {isConfirming && <Loading overlay />}
       <Row className='mb-5' gutter={[0, 24]}>
         <Col span={24}>
-          <h1 className='text-xl font-semibold text-black'>Thông tin khách hàng</h1>
+          <h1 className='text-xl font-semibold text-black dark:text-white'>Thông tin khách hàng</h1>
         </Col>
         <Col span={10}>
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-5'>
               <img className='w-[100px] h-[100px]' src={orderData?.user?.avatar} alt='' />
-              <span className='font-semibold text-lg'>{orderData.user.username}</span>
+              <span className='font-semibold text-lg dark:text-white'>{orderData.user.username}</span>
             </div>
             <div>
-              <span className='font-medium text-black'>Điện thoại: {orderData.user?.phone}</span>
+              <span className='font-medium text-black dark:text-white'>Điện thoại: {orderData.user?.phone}</span>
             </div>
           </div>
         </Col>
@@ -183,11 +176,11 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-2 text-base'>
               <span>Địa chỉ: </span>
-              <span className='font-semibold text-black'>{orderData.user.address}</span>
+              <span className='font-semibold text-black dark:text-white'>{orderData.user.address}</span>
             </div>
             <div>
               <span>Thanh toán: </span>
-              <span className='uppercase font-semibold text-black'>{orderData?.payment}</span>
+              <span className='uppercase font-semibold text-black dark:text-white'>{orderData?.payment}</span>
             </div>
           </div>
         </Col>
@@ -195,7 +188,12 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-2 text-base'>
               {/* <span className=''></span> */}
-              <span>Ghi chú: {orderData.note ? orderData.note : 'Không có ghi chú!'}</span>
+              <div className='flex gap-x-2'>
+                <span className='min-w-max'>Ghi chú: </span>
+                <span className=' font-semibold text-base text-black dark:text-white'>
+                  {orderData.note || orderData.note === ' ' ? orderData.note : 'Không có ghi chú!'}
+                </span>
+              </div>
             </div>
             <div className='flex gap-x-2 text-base items-center'>
               <span>Trạng thái:</span>
@@ -213,6 +211,14 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
                 {orderData.status}
               </span>
             </div>
+            {orderData?.reasonCancelOrder && (
+              <div className='flex gap-x-2'>
+                <span className='min-w-max '>Lý do hủy: </span>
+                <span className=' font-semibold text-base text-black dark:text-white'>
+                  {orderData?.reasonCancelOrder}
+                </span>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

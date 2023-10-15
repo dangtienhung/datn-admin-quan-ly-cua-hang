@@ -1,7 +1,7 @@
 import { Image, Popconfirm, Space, Table } from 'antd'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useGetAllUserByRoleQuery } from '~/store/services/Users'
+import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
 import { Button } from '~/components'
 import { cancelDelete } from '~/features/Toppings'
 import { useState } from 'react'
@@ -12,16 +12,26 @@ import { setOpenDrawer } from '~/store/slices'
 import { setUser } from '~/store/slices/User/user.slice'
 import { IUser } from '~/types'
 import { ColumnsType } from 'antd/es/table'
+import { messageAlert } from '~/utils/messageAlert'
 
 export const ListStaffs = () => {
   const dispatch = useAppDispatch()
+  const [deleteUser] = useDeleteUserMutation()
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     roleName: 'staff' as 'customer' | 'staff'
   })
   const { data: staffData, isLoading, isError } = useGetAllUserByRoleQuery(options)
-  console.log(staffData)
+
+  const handleDelete = async (id: string) => {
+    await deleteUser(id)
+      .unwrap()
+      .then(() => {
+        messageAlert('Xóa thành công', 'success')
+      })
+      .catch(() => messageAlert('Xóa thất bại!', 'error'))
+  }
   const columns: ColumnsType<any> = [
     {
       title: '#',
@@ -79,10 +89,8 @@ export const ListStaffs = () => {
           <Popconfirm
             title='Bạn có muốn xóa nhân viên này?'
             okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
             onCancel={cancelDelete}
-            // onConfirm={() => handleDelete(size._id)}
+            onConfirm={() => handleDelete(staff._id!)}
           >
             <Button variant='danger' icon={<BsFillTrashFill />}>
               Xóa
