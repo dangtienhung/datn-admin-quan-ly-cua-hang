@@ -143,7 +143,11 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           </Button>
 
           <Button
-            styleClass={orderData.status === 'canceled' || orderData.status === 'done' ? 'hidden' : ''}
+            styleClass={
+              orderData.status === 'canceled' || orderData.status === 'done' || orderData.status === 'confirmed'
+                ? 'hidden'
+                : ''
+            }
             variant='danger'
             size='sm'
             onClick={() => {

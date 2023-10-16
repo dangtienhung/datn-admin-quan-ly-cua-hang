@@ -6,12 +6,11 @@ import { NotFound } from '~/pages'
 import { useState } from 'react'
 import { useGetAllOrderConfirmQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
-import { EyeFilled, CloseCircleFilled } from '@ant-design/icons'
+import { EyeFilled } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
-import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
-import { setOpenModal } from '~/store/slices/Modal'
+import { setOrderData } from '~/store/slices/Orders/order.slice'
 
 const ListConfirmOrders = () => {
   const dispatch = useAppDispatch()
@@ -67,7 +66,6 @@ const ListConfirmOrders = () => {
       title: 'Action',
       key: 'action',
       fixed: 'right',
-
       render: (_: any, order) => (
         <Space size='middle'>
           <Button
@@ -76,15 +74,6 @@ const ListConfirmOrders = () => {
               // dispatch(setCategory({ _id: category._id, name: category.name }))
               dispatch(setOpenDrawer(true))
               dispatch(setOrderData({ ...order }))
-            }}
-          />
-
-          <Button
-            variant='danger'
-            icon={<CloseCircleFilled />}
-            onClick={() => {
-              dispatch(setOpenModal(true))
-              dispatch(setIdOrderCancel(order.key))
             }}
           />
         </Space>

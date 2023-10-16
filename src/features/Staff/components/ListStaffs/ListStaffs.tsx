@@ -66,12 +66,6 @@ export const ListStaffs = () => {
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: 'Chức vụ',
-      dataIndex: 'role',
-      key: 'role',
-      render: (role: string) => <span className='capitalize'>{role && 'Nhân viên'}</span>
-    },
-    {
       title: 'Action',
       key: 'action',
       width: 300,
