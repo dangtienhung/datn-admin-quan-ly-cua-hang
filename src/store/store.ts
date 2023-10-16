@@ -1,23 +1,24 @@
+import { VoucherApi, blogApi, productApi, toppingApi } from './services'
 import {
+  blogReducer,
   categoryReducer,
   drawerReducers,
-  toppingReducers,
-  sizeReducers,
-  voucherReducer,
   modalReducer,
+  sizeReducers,
   themeReducer,
-  blogReducer
+  toppingReducers,
+  voucherReducer
 } from './slices'
 
-import { configureStore } from '@reduxjs/toolkit'
-import { useDispatch } from 'react-redux'
-import { userApi } from './services/Users'
+import { AuthApi } from './services/Auth'
 import { categoryApi } from './services/Categories/category.service'
-import { sizeApi } from './services/Sizes'
+import { configureStore } from '@reduxjs/toolkit'
 import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
-import { VoucherApi, blogApi, toppingApi } from './services'
-import { AuthApi } from './services/Auth'
+import { productReducers } from './slices/Products/product.slice'
+import { sizeApi } from './services/Sizes'
+import { useDispatch } from 'react-redux'
+import { userApi } from './services/Users'
 import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
@@ -25,6 +26,7 @@ const middlewares = [
   userApi.middleware,
   categoryApi.middleware,
   sizeApi.middleware,
+  productApi.middleware,
   orderApi.middleware,
   VoucherApi.middleware,
   blogApi.middleware,
@@ -38,6 +40,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [sizeApi.reducerPath]: sizeApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
     [blogApi.reducerPath]: blogApi.reducer,
@@ -50,6 +53,7 @@ export const store = configureStore({
     toppings: toppingReducers,
     categories: categoryReducer,
     sizes: sizeReducers,
+    products: productReducers,
     orders: orderReducer,
     vouchers: voucherReducer,
     blogs: blogReducer,
