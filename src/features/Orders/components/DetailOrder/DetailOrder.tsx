@@ -3,7 +3,7 @@ import { ColumnsType } from 'antd/es/table'
 import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
 import { useAppSelector } from '~/store/hooks'
-import { useConfirmOrderMutation } from '~/store/services/Orders'
+import { useConfirmOrderMutation, useDoneOrderMutation } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
 import { setOpenModal } from '~/store/slices/Modal'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders'
@@ -19,10 +19,21 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
   const dispatch = useAppDispatch()
   const { orderData } = useAppSelector((state) => state.orders)
   const [confirmOrder, { isLoading: isConfirming }] = useConfirmOrderMutation()
-  console.log(orderData, 'detail')
+  const [doneOrder, { isLoading: isDoning }] = useDoneOrderMutation()
 
   const onClose = () => {
     dispatch(setOpenDrawer(false))
+  }
+
+  const onDoneOrder = (id: string) => {
+    doneOrder(id)
+      .unwrap()
+      .then(() => {
+        messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+        dispatch(setOrderData({ ...orderData, status: 'done' }))
+        // onClose()
+      })
+      .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
   const onConfirmOrder = (id: string) => {
     confirmOrder(id)
@@ -130,6 +141,14 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       extra={
         <Space>
           <Button
+            styleClass={orderData.status === 'confirmed' ? '' : 'hidden'}
+            variant='success'
+            size='sm'
+            onClick={() => onDoneOrder(orderData.key)}
+          >
+            Hoàn thành
+          </Button>
+          <Button
             styleClass={
               orderData.status === 'confirmed' || orderData.status === 'done' || orderData.status === 'canceled'
                 ? 'hidden'
@@ -143,7 +162,11 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           </Button>
 
           <Button
-            styleClass={orderData.status === 'canceled' || orderData.status === 'done' ? 'hidden' : ''}
+            styleClass={
+              orderData.status === 'canceled' || orderData.status === 'done' || orderData.status === 'confirmed'
+                ? 'hidden'
+                : ''
+            }
             variant='danger'
             size='sm'
             onClick={() => {
@@ -156,7 +179,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         </Space>
       }
     >
-      {isConfirming && <Loading overlay />}
+      {(isConfirming || isDoning) && <Loading overlay />}
       <Row className='mb-5' gutter={[0, 24]}>
         <Col span={24}>
           <h1 className='text-xl font-semibold text-black dark:text-white'>Thông tin khách hàng</h1>
@@ -203,7 +226,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
                     ? 'bg-meta-1'
                     : orderData.status === 'pending'
                     ? 'bg-meta-6'
-                    : orderData.status === 'done' || orderData.status === 'confirmed'
+                    : orderData.status === 'done'
                     ? 'bg-meta-3'
                     : 'bg-meta-5'
                 } rounded inline-block px-2 py-1`}

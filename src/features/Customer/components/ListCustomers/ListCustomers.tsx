@@ -12,6 +12,7 @@ import { setUser } from '~/store/slices/User/user.slice'
 import { setOpenDrawer } from '~/store/slices'
 import { ColumnsType } from 'antd/es/table'
 import { messageAlert } from '~/utils/messageAlert'
+import { pause } from '~/utils/pause'
 
 // type Props = {}
 
@@ -24,9 +25,9 @@ export const ListCustomers = () => {
     roleName: 'customer' as 'customer' | 'staff'
   })
   const { data: customersData, isLoading, isError } = useGetAllUserByRoleQuery(options)
-
   const handleDelete = async (id: string) => {
-    await deleteUser(id)
+    await pause(1000)
+    deleteUser(id)
       .unwrap()
       .then(() => {
         messageAlert('Xóa thành công', 'success')
@@ -67,12 +68,6 @@ export const ListCustomers = () => {
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: 'Chức vụ',
-      dataIndex: 'role',
-      key: 'role',
-      render: (role: string) => <span className='capitalize'>{role && 'Khách hàng'}</span>
-    },
-    {
       title: 'Action',
       key: 'action',
       width: 300,
@@ -107,7 +102,6 @@ export const ListCustomers = () => {
     key: customer._id,
     index: index + 1
   }))
-  console.log(customers)
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

@@ -22,3 +22,13 @@ export interface IInforOrderShipping {
 export interface IOrderDetailResponse {
   order: IOrder
 }
+
+export interface IOrderDataType {
+  key: string
+  index: number | string
+  orderCode: string
+  user: any
+  note: string
+  status: string
+  timeOrder: string
+}

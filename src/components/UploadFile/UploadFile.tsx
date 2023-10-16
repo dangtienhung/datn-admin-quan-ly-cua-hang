@@ -35,7 +35,6 @@ const UploadFile = ({ fileList, setFileList, useCrop }: UploadFileProps) => {
       <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
     </div>
   )
-  console.log(fileList)
 
   return (
     <div>

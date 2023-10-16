@@ -13,7 +13,6 @@ const ModalCancelReason = () => {
   const { openModal } = useAppSelector((state) => state.modal)
   const { orderData } = useAppSelector((state) => state.orders)
   const { id } = useAppSelector((state) => state.orders)
-  console.log(orderData, 'modal ccancel', orderData.key)
 
   const [cancelOrder] = useCancelOrderMutation()
 
