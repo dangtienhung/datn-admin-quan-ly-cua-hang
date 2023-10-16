@@ -1,16 +1,25 @@
 import Loading from '~/components/Loading/Loading'
-import { Space, Table } from 'antd'
+import { Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useState } from 'react'
-import { useGetAllOrderConfirmQuery } from '~/store/services/Orders'
+import { useState, useRef } from 'react'
+import { useDoneOrderMutation, useGetAllOrderConfirmQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
-import { EyeFilled } from '@ant-design/icons'
+import { EyeFilled, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
+import { messageAlert } from '~/utils/messageAlert'
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5'
+import type { InputRef } from 'antd'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { IOrderDataType } from '~/types'
+import { ColumnType } from 'antd/lib/table'
+import Highlighter from 'react-highlight-words'
+
+type DataIndex = keyof IOrderDataType
 
 const ListConfirmOrders = () => {
   const dispatch = useAppDispatch()
@@ -19,8 +28,110 @@ const ListConfirmOrders = () => {
     limit: 10
   })
 
-  const { data: orders, isError, isLoading } = useGetAllOrderConfirmQuery(options)
+  /*Search */
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const searchInput = useRef<InputRef>(null)
 
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IOrderDataType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm mã đơn hàng`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <ButtonAnt
+            type='primary'
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size='small'
+            style={{ width: 90 }}
+          >
+            Tìm kiếm
+          </ButtonAnt>
+          <ButtonAnt onClick={() => clearFilters && handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+            Làm mới
+          </ButtonAnt>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100)
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      )
+  })
+  /*End Search */
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const { data: orders, isError, isLoading } = useGetAllOrderConfirmQuery(options)
+  const [doneOrder] = useDoneOrderMutation()
+
+  const onDoneOrder = (id: string) => {
+    doneOrder(id)
+      .unwrap()
+      .then(() => {
+        messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+      })
+      .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
+  }
+  const onDoneOrderMany = () => {
+    selectedRowKeys.forEach((selectItem) => {
+      doneOrder(selectItem as string)
+        .unwrap()
+        .then(() => {
+          messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+          // onClose()
+        })
+        .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
+    })
+    setSelectedRowKeys([])
+  }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange
+  }
+  const hasSelected = selectedRowKeys.length > 1
   const columns: ColumnsType<any> = [
     {
       title: '#',
@@ -28,6 +139,13 @@ const ListConfirmOrders = () => {
       width: 50,
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.index - b.index
+    },
+    {
+      title: 'Mã đơn hàng',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      width: 250,
+      ...getColumnSearchProps('orderCode')
     },
     {
       title: 'Thông tin người đặt',
@@ -49,8 +167,9 @@ const ListConfirmOrders = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: string) => (
-        <span className={`text-white capitalize font-semibold bg-meta-3 rounded inline-block px-2 py-1`}>{status}</span>
+        <span className={`text-white capitalize font-semibold bg-meta-5 rounded inline-block px-2 py-1`}>{status}</span>
       )
     },
     {
@@ -76,6 +195,13 @@ const ListConfirmOrders = () => {
               dispatch(setOrderData({ ...order }))
             }}
           />
+          <Button
+            icon={<IoCheckmarkDoneCircleSharp />}
+            variant='success'
+            onClick={() => {
+              onDoneOrder(order.key)
+            }}
+          />
         </Space>
       )
     }
@@ -96,29 +222,46 @@ const ListConfirmOrders = () => {
     status: item.status,
     timeOrder: item.createdAt,
     key: item._id,
-    index: index + 1
+    index: index + 1,
+    orderCode: item._id.toUpperCase()
   }))
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   return (
-    <div className='dark:bg-graydark'>
-      <Table
-        columns={columns}
-        dataSource={ordersData}
-        pagination={{
-          pageSize: orders && orders.limit,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '15', '20', '25'],
-          total: orders && orders?.totalDocs,
-          onChange(page, pageSize) {
-            setoptions((prev) => ({ ...prev, page, limit: pageSize }))
-          }
-        }}
-        scroll={{ y: '50vh' }}
-        bordered
-      />
-    </div>
+    <>
+      {hasSelected && (
+        <Space>
+          <Popconfirm
+            title='Bạn muốn hoàn thành tất cả đơn hàng này?'
+            onConfirm={onDoneOrderMany}
+            onCancel={() => setSelectedRowKeys([])}
+          >
+            <Button variant='success' styleClass='mb-4'>
+              Hoàn thành tất cả
+            </Button>
+          </Popconfirm>
+        </Space>
+      )}
+      <div className='dark:bg-graydark'>
+        <Table
+          columns={columns}
+          dataSource={ordersData}
+          pagination={{
+            pageSize: orders && orders.limit,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '15', '20', '25'],
+            total: orders && orders?.totalDocs,
+            onChange(page, pageSize) {
+              setoptions((prev) => ({ ...prev, page, limit: pageSize }))
+            }
+          }}
+          scroll={{ y: '50vh' }}
+          bordered
+          rowSelection={rowSelection}
+        />
+      </div>
+    </>
   )
 }
 

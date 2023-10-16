@@ -25,7 +25,6 @@ export const ListCustomers = () => {
     roleName: 'customer' as 'customer' | 'staff'
   })
   const { data: customersData, isLoading, isError } = useGetAllUserByRoleQuery(options)
-
   const handleDelete = async (id: string) => {
     await pause(1000)
     deleteUser(id)
@@ -103,7 +102,6 @@ export const ListCustomers = () => {
     key: customer._id,
     index: index + 1
   }))
-  console.log(customers)
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

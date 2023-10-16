@@ -1,23 +1,102 @@
 import Loading from '~/components/Loading/Loading'
-import { Space, Table } from 'antd'
+import { Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useGetAllOrderCancelQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
-import { EyeFilled } from '@ant-design/icons'
+import { EyeFilled, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
+import type { InputRef } from 'antd'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { IOrderDataType } from '~/types'
+import { ColumnType } from 'antd/lib/table'
+import Highlighter from 'react-highlight-words'
 
+type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
   const dispatch = useAppDispatch()
   const [options, setoptions] = useState({
     page: 1,
     limit: 10
   })
+
+  /*Search */
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const searchInput = useRef<InputRef>(null)
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IOrderDataType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm mã đơn hàng`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <ButtonAnt
+            type='primary'
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size='small'
+            style={{ width: 90 }}
+          >
+            Tìm kiếm
+          </ButtonAnt>
+          <ButtonAnt onClick={() => clearFilters && handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+            Làm mới
+          </ButtonAnt>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100)
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      )
+  })
+  /*End Search */
+
   const { data: orders, isError, isLoading } = useGetAllOrderCancelQuery(options)
 
   const columns: ColumnsType<any> = [
@@ -27,6 +106,12 @@ const ListCancelOrders = () => {
       width: 50,
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.index - b.index
+    },
+    {
+      title: 'Mã đơn hàng',
+      dataIndex: 'orderCode',
+      width: 250,
+      ...getColumnSearchProps('orderCode')
     },
     {
       title: 'Thông tin người đặt',
@@ -98,7 +183,8 @@ const ListCancelOrders = () => {
     timeOrder: item.createdAt,
     key: item._id,
     index: index + 1,
-    reasonCancelOrder: item?.reasonCancelOrder ? item.reasonCancelOrder : ''
+    reasonCancelOrder: item?.reasonCancelOrder ? item.reasonCancelOrder : '',
+    orderCode: item._id.toUpperCase()
   }))
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

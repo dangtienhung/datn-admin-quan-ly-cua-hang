@@ -10,9 +10,11 @@ import { useDeleteRealMutation, useGetAllCategoryDeletedQuery, useRestoreCategor
 import { useState } from 'react'
 import { pause } from '~/utils/pause'
 import { messageAlert } from '~/utils/messageAlert'
+import { cancelDelete } from '../..'
 
 const ListCategoryDeleted = () => {
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { data: categories, isError, isLoading } = useGetAllCategoryDeletedQuery(currentPage)
   const [deleteRealCategory] = useDeleteRealMutation()
   const [restoreCategory] = useRestoreCategoryMutation()
@@ -32,6 +34,37 @@ const ListCategoryDeleted = () => {
       .then(() => messageAlert('Xóa thành công', 'success'))
       .catch(() => messageAlert('Xóa thất bại', 'error'))
   }
+  const handleDeleteMany = () => {
+    selectedRowKeys.forEach((selectedItem) => {
+      deleteRealCategory(selectedItem as string)
+        .unwrap()
+        .then(() => {
+          messageAlert('Xóa thành công', 'success')
+        })
+        .catch(() => cancelDelete())
+    })
+    setSelectedRowKeys([])
+  }
+
+  const handleRestoreMany = () => {
+    selectedRowKeys.forEach((selectedItem) => {
+      restoreCategory(selectedItem as string)
+        .unwrap()
+        .then(() => {
+          messageAlert('Khôi phục thành công', 'success')
+        })
+        .catch(() => messageAlert('Khôi phục thất bại', 'error'))
+    })
+    setSelectedRowKeys([])
+  }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange
+  }
+  const hasSelected = selectedRowKeys.length > 1
   const columns: ColumnsType<ICategory> = [
     {
       title: '#',
@@ -82,23 +115,49 @@ const ListCategoryDeleted = () => {
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   return (
-    <div className='dark:bg-graydark'>
-      <Table
-        columns={columns}
-        dataSource={categorriesData}
-        pagination={{
-          pageSize: categories && categories.limit,
-          // showSizeChanger: true,
-          // pageSizeOptions: ['5', '10', '15', '20'],
-          total: categories && categories?.totalDocs,
-          onChange(page) {
-            setCurrentPage(page)
-          }
-        }}
-        scroll={{ y: '50vh' }}
-        bordered
-      />
-    </div>
+    <>
+      {hasSelected && (
+        <Space>
+          <Popconfirm
+            title='Bạn thực sự muốn khôi phục những danh mục này?'
+            description='Hành động này sẽ khôi phục những danh mục đang được chọn!'
+            onConfirm={handleRestoreMany}
+          >
+            <Button variant='primary' styleClass='mb-4'>
+              Khôi phục tất cả
+            </Button>
+          </Popconfirm>
+          <Popconfirm
+            title='Bạn thực sự muốn xóa VĨNH VIỄN những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+          >
+            <Button variant='danger' styleClass='mb-4'>
+              Xóa tất cả
+            </Button>
+          </Popconfirm>
+        </Space>
+      )}
+
+      <div className='dark:bg-graydark'>
+        <Table
+          columns={columns}
+          dataSource={categorriesData}
+          pagination={{
+            pageSize: categories && categories.limit,
+            // showSizeChanger: true,
+            // pageSizeOptions: ['5', '10', '15', '20'],
+            total: categories && categories?.totalDocs,
+            onChange(page) {
+              setCurrentPage(page)
+            }
+          }}
+          scroll={{ y: '50vh' }}
+          bordered
+          rowSelection={rowSelection}
+        />
+      </div>
+    </>
   )
 }
 
