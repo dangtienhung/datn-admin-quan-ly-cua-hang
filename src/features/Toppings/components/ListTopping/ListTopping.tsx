@@ -10,6 +10,7 @@ import { cancelDelete } from '../..'
 import { formatCurrency } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteToppingMutation } from '~/store/services'
+import { useState } from 'react'
 
 const ToppingList = () => {
   const dispatch = useAppDispatch()
@@ -32,6 +33,26 @@ const ToppingList = () => {
   /* edit topping */
   const saveToppingId = (id: string) => {
     dispatch(setToppingId(id))
+  }
+
+  const [loading, setLoading] = useState(false)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const start = () => {
+    setLoading(true)
+    setTimeout(() => {
+      message.error('Chưa xóa được tất cả :))')
+      setLoading(false)
+    }, 1000)
+  }
+
+  const hasSelected = selectedRowKeys.length > 0
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange
   }
 
   const columns: ColumnsType<ITopping> = [
@@ -78,8 +99,21 @@ const ToppingList = () => {
   const toppings = toppingsList.map((topping) => ({ ...topping, key: topping._id }))
 
   return (
-    <div className='dark:bg-graydark'>
+    <div>
+      <Space>
+        <Popconfirm
+          title='Bạn thực sự muốn xóa những danh mục này?'
+          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          // onConfirm={handleDeleteMany}
+          className='ml-[10px]'
+        >
+          <Button variant='danger' onClick={start} disabled={!hasSelected} loading={loading}>
+            Xóa tất cả
+          </Button>
+        </Popconfirm>
+      </Space>
       <Table
+        className='dark:bg-graydark'
         columns={columns}
         dataSource={toppings}
         pagination={{
@@ -87,6 +121,7 @@ const ToppingList = () => {
           showSizeChanger: false,
           pageSizeOptions: ['5', '10', '15', '20']
         }}
+        rowSelection={rowSelection}
       />
     </div>
   )
