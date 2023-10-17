@@ -21,8 +21,8 @@ export const blogApi = createApi({
         return [{ type: 'Blogs', id: 'LIST' }]
       }
     }),
-    deleteBlog: builder.mutation<IBlogs, { id: string }>({
-      query: ({ id }) => ({
+    deleteBlog: builder.mutation<IBlogs,number | string>({
+      query: (id) => ({
         url: `/newsBlog-remove/${id}`,
         method: 'DElETE'
       }),
