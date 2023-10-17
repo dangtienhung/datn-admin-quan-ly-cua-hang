@@ -1,4 +1,4 @@
 import ListVoucher from './ListVoucher'
 import FormVoucher from './FormVoucher'
-
-export { ListVoucher, FormVoucher }
+import ListVoucherActive from './ListVoucherActive'
+export { ListVoucher, FormVoucher, ListVoucherActive }

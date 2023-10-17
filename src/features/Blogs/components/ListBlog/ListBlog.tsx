@@ -37,10 +37,9 @@ const ListBlog = () => {
         })
     })
   }
-  const blogs = BlogData?.docs?.map((blog, index) => ({
+  const blogs = BlogData?.docs?.map((blog) => ({
     ...blog,
-    key: blog._id,
-    index: index + 1
+    key: blog._id
   }))
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -56,11 +55,6 @@ const ListBlog = () => {
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   const columns = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index'
-    },
     {
       title: 'Tên blog',
       dataIndex: 'name',
