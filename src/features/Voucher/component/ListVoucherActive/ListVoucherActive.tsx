@@ -8,7 +8,7 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
+import { useDeleteVoucherMutation, useGetAllVouchersActiveQuery } from '~/store/services'
 import { setOpenDrawer, setVoucher } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
 import { IVoucher } from '~/types'
@@ -16,15 +16,16 @@ import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 
-const ListVoucher = () => {
+const ListVoucherActive = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: voucherData, isLoading, isError } = useGetAllVouchersQuery(currentPage)
+  const { data: VoucherActive, isLoading, isError } = useGetAllVouchersActiveQuery(currentPage)
+  console.log(VoucherActive)
+
   const [deleteVoucher] = useDeleteVoucherMutation()
 
-  console.log(voucherData)
   const handleDelete = async (id: string) => {
-    console.log('🚀 ~ file: ListVoucher.tsx:19 ~ handleDelete ~ id:', id)
+    console.log('🚀 ~ file: ListVoucherActive.tsx:19 ~ handleDelete ~ id:', id)
     try {
       await deleteVoucher({ id }).then(() => {
         message.success('Xoá thành công!')
@@ -70,7 +71,7 @@ const ListVoucher = () => {
     clearFilters()
     setSearchText('')
   }
-
+  //search
   const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -200,7 +201,7 @@ const ListVoucher = () => {
       )
     }
   ]
-  const vouchers = voucherData?.data?.docs?.map((voucher, index) => ({
+  const vouchers = VoucherActive?.data?.docs?.map((voucher, index) => ({
     ...voucher,
     key: voucher._id,
     index: index + 1
@@ -224,8 +225,8 @@ const ListVoucher = () => {
         columns={columns}
         dataSource={vouchers}
         pagination={{
-          pageSize: voucherData && voucherData?.data?.limit,
-          total: voucherData && voucherData?.data?.totalDocs,
+          pageSize: VoucherActive && VoucherActive?.data?.limit,
+          total: VoucherActive && VoucherActive?.data?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
           }
@@ -238,4 +239,4 @@ const ListVoucher = () => {
   )
 }
 
-export default ListVoucher
+export default ListVoucherActive
