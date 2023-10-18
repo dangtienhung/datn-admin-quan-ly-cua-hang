@@ -35,3 +35,8 @@ export interface IProductDocs {
   prevPage: number | null
   nextPage: number | null
 }
+
+export interface IProductData extends IProduct {
+  index: number
+  key: string
+}

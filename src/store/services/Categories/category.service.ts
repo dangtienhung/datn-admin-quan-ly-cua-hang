@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
 import { ICategoryDocs } from '~/types'
 
 export const categoryApi = createApi({
@@ -6,8 +7,8 @@ export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API }),
   tagTypes: ['Category'],
   endpoints: (builder) => ({
-    getAllCategory: builder.query<ICategoryDocs, number>({
-      query: (page) => `/categories?_page=${page}`,
+    getAllCategory: builder.query<ICategoryDocs, { _page: number; _limit: number }>({
+      query: ({ _page, _limit }) => `/categories?_page=${_page}?_limit=${_limit}`,
       providesTags: (result) =>
         result
           ? [...result.docs.map(({ _id }) => ({ type: 'Category', _id }) as const), { type: 'Category', _id: 'LIST' }]

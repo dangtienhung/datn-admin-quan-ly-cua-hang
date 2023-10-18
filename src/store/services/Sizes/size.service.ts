@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
 import { IDocSize, ISize } from '~/types'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const sizeApi = createApi({
   reducerPath: 'sizeApi',
@@ -46,8 +45,23 @@ export const sizeApi = createApi({
         body: { name: size.name, price: size.price }
       }),
       invalidatesTags: ['Sizes']
+    }),
+
+    /* get all size is_default: true */
+    getAllSizeDefault: builder.query<{ message: string; data: ISize[] }, void>({
+      query: () => `/size/default`,
+      providesTags: (result) =>
+        result
+          ? [...result.data.map(({ _id }) => ({ type: 'Sizes', _id }) as const), { type: 'Sizes', _id: 'LIST' }]
+          : [{ type: 'Sizes', id: 'LIST' }]
     })
   })
 })
 
-export const { useGetAllSizesQuery, useAddSizeMutation, useDeleteSizeMutation, useUpdateSizeMutation } = sizeApi
+export const {
+  useGetAllSizesQuery,
+  useAddSizeMutation,
+  useDeleteSizeMutation,
+  useUpdateSizeMutation,
+  useGetAllSizeDefaultQuery
+} = sizeApi

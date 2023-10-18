@@ -1,8 +1,7 @@
 export interface IImage {
-  url?: string
-  publicId?: string
-  _id?: string
-  filename?: string
+  url: string
+  publicId: string
+  filename: string
 }
 
 export interface IResImage {
