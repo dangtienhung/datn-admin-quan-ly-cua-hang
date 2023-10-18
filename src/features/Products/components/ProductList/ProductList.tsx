@@ -24,7 +24,6 @@ const ProductList = () => {
     key: product._id,
     index: index + 1
   }))
-  console.log('🚀 ~ file: ProductList.tsx:48 ~ products ~ products:', products)
 
   const start = () => {
     setLoading(true)
@@ -95,8 +94,8 @@ const ProductList = () => {
           <div className='flex flex-col gap-1'>
             {sizes.slice(0, 2).map((size: ISize) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark pr-3 w-full uppercase border-r border-opacity-50'>{size.name}</p>
-                <p className='pl-3 w-full'>{formatCurrency(size.price)}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
+                <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
           </div>
@@ -114,8 +113,8 @@ const ProductList = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark pr-3 uppercase border-r w-full border-opacity-50'>{topping.name}</p>
-                <p className='pl-3 w-full'>{formatCurrency(topping.price)}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
+                <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
           </div>

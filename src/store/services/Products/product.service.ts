@@ -1,7 +1,5 @@
+import { IProduct, IProductDocs } from '~/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { IProduct } from '~/types'
-import { IProductDocs } from './../../../../../react-du-an-framework2/src/interfaces/products.type'
 
 export const productApi = createApi({
   reducerPath: 'productApi',
@@ -74,6 +72,16 @@ export const productApi = createApi({
         }
         return [{ type: 'Product', id: 'LIST' }]
       }
+    }),
+
+    /* thêm sản phẩm */
+    createProduct: builder.mutation<{ message: string; data: IProduct }, any>({
+      query: (product) => ({
+        url: '/create/product',
+        method: 'POST',
+        body: product
+      }),
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }]
     })
   })
 })
@@ -83,5 +91,6 @@ export const {
   useGetOneProductQuery,
   useGeAllProductDeletedTrueQuery,
   useGetAllProductActiveQuery,
-  useGetAllProductActiveFalseQuery
+  useGetAllProductActiveFalseQuery,
+  useCreateProductMutation
 } = productApi
