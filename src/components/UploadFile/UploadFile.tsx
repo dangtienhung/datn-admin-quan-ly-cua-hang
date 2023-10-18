@@ -10,10 +10,11 @@ import ImgCrop from 'antd-img-crop'
 type UploadFileProps = {
   fileList: UploadFile[]
   setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
-  useCrop: boolean
+  useCrop?: boolean
+  multiple?: boolean
 }
 
-const UploadFile = ({ fileList, setFileList, useCrop }: UploadFileProps) => {
+const UploadFile = ({ fileList, setFileList, useCrop, multiple }: UploadFileProps) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
@@ -35,11 +36,10 @@ const UploadFile = ({ fileList, setFileList, useCrop }: UploadFileProps) => {
       <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
     </div>
   )
-  console.log(fileList)
 
   return (
     <div>
-      {useCrop ? (
+      {useCrop && !multiple ? (
         <ImgCrop
           showGrid
           rotationSlider
@@ -74,6 +74,7 @@ const UploadFile = ({ fileList, setFileList, useCrop }: UploadFileProps) => {
         <Upload
           listType='picture-card'
           fileList={fileList}
+          multiple={multiple}
           onPreview={handlePreview}
           onChange={handleChange}
           beforeUpload={(file) => {

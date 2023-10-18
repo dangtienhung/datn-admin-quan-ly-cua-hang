@@ -9,36 +9,38 @@ import { setBlog, setOpenDrawer } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
 import { IBlogs } from '~/types'
 import { truncateDescription } from '../../utils'
+import { messageAlert } from '~/utils/messageAlert'
 
 const ListBlog = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
   const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [loading, setLoading] = useState(false)
   const [deleteBlog] = useDeleteBlogMutation()
   console.log(BlogData)
   const handleDelete = async (id: string) => {
     try {
-      await deleteBlog({ id }).then(() => {
+      await deleteBlog(id).then(() => {
         message.success('Xóa thành công!')
       })
     } catch (error) {
       message.error('Xoá thất bại!')
     }
   }
+  const handleDeleteMany = async () => {
+    selectedRowKeys.forEach((selectedItems) => {
+      deleteBlog(selectedItems)
+        .unwrap()
+        .then(() => {
+          messageAlert('Xóa thành công', 'success')
+          setSelectedRowKeys([])
+        })
+    })
+  }
   const blogs = BlogData?.docs?.map((blog) => ({
     ...blog,
     key: blog._id
   }))
-
-  const start = () => {
-    setLoading(true)
-    setTimeout(() => {
-      message.error('Chưa xóa được tất cả :))')
-      setLoading(false)
-    }, 1000)
-  }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
@@ -108,8 +110,21 @@ const ListBlog = () => {
     }
   ]
   return (
-    <div className='dark:bg-graydark'>
+    <div>
+      <Space>
+        <Popconfirm
+          title='Bạn thực sự muốn xóa những danh mục này?'
+          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          onConfirm={handleDeleteMany}
+          className='ml-[10px]'
+        >
+          <Button variant='danger' disabled={!hasSelected}>
+            Xóa tất cả
+          </Button>
+        </Popconfirm>
+      </Space>
       <Table
+        className='dark:bg-graydark mt-4'
         columns={columns}
         dataSource={blogs}
         pagination={{
@@ -120,17 +135,9 @@ const ListBlog = () => {
           }
         }}
         rowSelection={rowSelection}
+        scroll={{ y: '60vh' }}
+        bordered
       />
-
-      <span className='ml-2'>
-        {hasSelected ? (
-          <Button variant='danger' onClick={start} disabled={!hasSelected} loading={loading}>
-            Xóa tất cả
-          </Button>
-        ) : (
-          <></>
-        )}
-      </span>
     </div>
   )
 }

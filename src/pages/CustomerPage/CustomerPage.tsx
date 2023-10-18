@@ -1,7 +1,7 @@
 import { CustomerFeature } from '~/features'
 
-const UserPage = () => {
+const CustomerPage = () => {
   return <CustomerFeature />
 }
 
-export default UserPage
+export default CustomerPage

@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Select } from 'antd'
+import { Drawer, Form, Image, Input, Select } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
@@ -190,12 +190,18 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
           </Form.Item>
         )}
 
+        {fileList.length <= 0 && userData.avatar && (
+          <div className='my-5'>
+            <Image src={userData.avatar} width={100} height={100} />
+          </div>
+        )}
+
         <Form.Item
           className='dark:text-white'
           label='Tải ảnh lên'
           // rules={[{ required: true, message: 'Không được bỏ trống giá địa chỉ!' }]}
         >
-          <UploadFile fileList={fileList} setFileList={setFileList} useCrop />
+          <UploadFile fileList={fileList} setFileList={setFileList} useCrop multiple />
         </Form.Item>
         <Form.Item>
           <Button

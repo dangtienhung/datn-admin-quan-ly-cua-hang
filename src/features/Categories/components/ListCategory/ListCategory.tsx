@@ -1,21 +1,23 @@
-import Loading from '~/components/Loading/Loading'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Popconfirm, Space, Table } from 'antd'
-import { useAppDispatch } from '~/store/store'
 import { setCategory, setOpenDrawer } from '~/store/slices'
+import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
+
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
-import { cancelDelete } from '../..'
+import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
-import { useState } from 'react'
-import { pause } from '~/utils/pause'
+import { cancelDelete } from '../..'
 import { messageAlert } from '~/utils/messageAlert'
+import { pause } from '~/utils/pause'
+import { useAppDispatch } from '~/store/store'
+import { useState } from 'react'
 
 const ListCategory = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const { data: categories, isError, isLoading } = useGetAllCategoryQuery(currentPage)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteFakeCategory] = useDeleteFakeMutation()
   const dispatch = useAppDispatch()
 
@@ -26,13 +28,36 @@ const ListCategory = () => {
       .then(() => messageAlert('Xóa thành công', 'success'))
       .catch(() => cancelDelete())
   }
+  const handleDeleteMany = () => {
+    selectedRowKeys.forEach((selectedItem) => {
+      deleteFakeCategory(selectedItem as string)
+        .unwrap()
+        .then(() => {
+          messageAlert('Xóa thành công', 'success')
+          setSelectedRowKeys([])
+        })
+        .catch(() => cancelDelete())
+    })
+  }
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange
+  }
+  const hasSelected = selectedRowKeys.length > 1
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   const columns: ColumnsType<ICategory> = [
     {
       title: '#',
-      dataIndex: 'index'
+      dataIndex: 'index',
+      key: 'index',
+      width: 50
     },
     {
       title: 'Tên danh mục',
@@ -44,8 +69,8 @@ const ListCategory = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
-      width: 300,
+      // fixed: 'right',
+
       render: (_, category) => (
         <Space size='middle'>
           <Button
@@ -79,23 +104,40 @@ const ListCategory = () => {
     index: index + 1
   }))
   return (
-    <div className='dark:bg-graydark'>
-      <Table
-        columns={columns}
-        dataSource={categorriesData}
-        pagination={{
-          pageSize: categories && categories.limit,
-          // showSizeChanger: true,
-          // pageSizeOptions: ['5', '10', '15', '20'],
-          total: categories && categories?.totalDocs,
-          onChange(page) {
-            setCurrentPage(page)
-          }
-        }}
-        scroll={{ y: '50vh' }}
-        bordered
-      />
-    </div>
+    <>
+      {hasSelected && (
+        <Space>
+          <Popconfirm
+            title='Bạn thực sự muốn xóa những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
+          >
+            <Button variant='danger' styleClass='mb-4'>
+              Xóa tất cả
+            </Button>
+          </Popconfirm>
+        </Space>
+      )}
+      <div className='dark:bg-graydark'>
+        <Table
+          columns={columns}
+          dataSource={categorriesData}
+          pagination={{
+            pageSize: categories && categories.limit,
+            // showSizeChanger: true,
+            // pageSizeOptions: ['5', '10', '15', '20'],
+            total: categories && categories?.totalDocs,
+            onChange(page) {
+              setCurrentPage(page)
+            }
+          }}
+          scroll={{ y: '50vh', x: 650 }}
+          bordered
+          rowSelection={rowSelection}
+        />
+      </div>
+    </>
   )
 }
 

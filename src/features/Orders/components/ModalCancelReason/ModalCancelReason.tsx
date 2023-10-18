@@ -5,16 +5,21 @@ import { useAppSelector } from '~/store/hooks'
 import { setOpenModal } from '~/store/slices/Modal'
 import { useAppDispatch } from '~/store/store'
 import { messageAlert } from '~/utils/messageAlert'
+import { useCancelOrderMutation } from '~/store/services/Orders'
+import { setOrderData } from '~/store/slices/Orders'
 
 const ModalCancelReason = () => {
   const dispatch = useAppDispatch()
   const { openModal } = useAppSelector((state) => state.modal)
+  const { orderData } = useAppSelector((state) => state.orders)
   const { id } = useAppSelector((state) => state.orders)
+
+  const [cancelOrder] = useCancelOrderMutation()
 
   const [reason, setReason] = useState('')
 
   const listReason: string[] = [
-    'Không muốn sản phẩm nữa.',
+    'Không muốn mua sản phẩm này nữa.',
     'Sản phẩm bị hỏng khi nhận hàng.',
     'Sản phẩm không đúng mô tả trên trang web.',
     'Đã tìm thấy một sản phẩm tốt hơn ở nơi khác.',
@@ -28,9 +33,19 @@ const ModalCancelReason = () => {
     setReason(e.target.value)
   }
   const onOK = () => {
-    dispatch(setOpenModal(false))
-    messageAlert(`Đã hủy đơn với lý do: "${reason}"`, 'success', 5)
-    setReason('')
+    cancelOrder({ id, reasonCancelOrder: reason })
+      .unwrap()
+      .then(() => {
+        dispatch(setOpenModal(false))
+        messageAlert(`Đã hủy đơn với lý do: "${reason}"`, 'success', 5)
+        if (orderData.key) {
+          dispatch(setOrderData({ ...orderData, status: 'canceled', reasonCancelOrder: reason }))
+        }
+        setReason('')
+      })
+      .catch(() => {
+        messageAlert('Hủy đơn hàng thất bại.Hãy thử lại! ', 'error', 5)
+      })
   }
   const onCancel = () => {
     setReason('')

@@ -60,9 +60,10 @@ export const orderApi = createApi({
 
     /**Cap nhat trang thai -> canceled */
     cancelOrder: builder.mutation({
-      query: (id: string) => ({
-        url: `/order/canceled/${id}`,
-        method: 'PUT'
+      query: (order: { id: string; reasonCancelOrder: string }) => ({
+        url: `/order/canceled/${order.id}`,
+        method: 'PUT',
+        body: { reasonCancelOrder: order.reasonCancelOrder }
       }),
       invalidatesTags: ['Orders']
     })

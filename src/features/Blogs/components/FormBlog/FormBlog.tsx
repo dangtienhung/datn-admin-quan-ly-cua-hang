@@ -1,9 +1,9 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Drawer, Form, Input, Modal, Upload } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
+// import TextArea from 'antd/es/input/TextArea'
 import { RcFile } from 'antd/es/upload'
 import { UploadFile, UploadProps } from 'antd/lib'
-import { useState } from 'react'
+import { SetStateAction, useRef, useState } from 'react'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
 import { useAddBlogMutation, useUpdateBlogMutation } from '~/store/services'
@@ -11,6 +11,9 @@ import { setBlog, setOpenDrawer } from '~/store/slices'
 import { RootState, useAppDispatch } from '~/store/store'
 import { IBlogs } from '~/types'
 import { messageAlert } from '~/utils/messageAlert'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { container, formats } from '../../utils/ReactQuill'
 
 interface BlogFormProps {
   open: boolean
@@ -33,8 +36,13 @@ const FormBlog = ({ open }: BlogFormProps) => {
 
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const secureUrls = fileList?.map((file) => file.response?.secure_url)
-  console.log(secureUrls)
 
+  const [value, setvalue] = useState('')
+  const reactQuillRef = useRef<ReactQuill>(null)
+  // const handleQuillChange = (content: SetStateAction<string>) => {
+  //   setvalue(content) // Lưu nội dung vào state
+  // }
+  // console.log(value);
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
@@ -59,28 +67,32 @@ const FormBlog = ({ open }: BlogFormProps) => {
     })
 
   const onFinish = async (value: IBlogs) => {
-    if (blogData._id) {
-      updateBlog({ ...value, _id: blogData._id, images: blogData.images })
-        .unwrap()
-        .then(() => {
-          messageAlert('Cập nhật thành công', 'success')
-          onClose()
-        })
-        .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-      return
-      console.log('update:', { ...value, _id: blogData._id })
-    }
-    if (secureUrls) {
-      addBlog({ ...value, images: { url: `${secureUrls}` } })
-        .unwrap()
-        .then(() => {
-          messageAlert('Thêm bài viết thành công', 'success')
-          onClose()
-        })
-        .catch(() => messageAlert('Thêm bài viết thất bại!', 'error'))
-      // console.log('value add:', {...value , images: {url: secureUrls}})
-    }
+    // if (blogData._id) {
+    //   updateBlog({ ...value, _id: blogData._id, images: blogData.images })
+    //     .unwrap()
+    //     .then(() => {
+    //       messageAlert('Cập nhật thành công', 'success')
+    //       onClose()
+    //     })
+    //     .catch(() => messageAlert('Cập nhật thất bại', 'error'))
+    //   return
+    //   console.log('update:', { ...value, _id: blogData._id })
+    // }
+    // if (secureUrls) {
+    //   addBlog({ ...value, images: { url: `${secureUrls}` } as any })
+    //     .unwrap()
+    //     .then(() => {
+    //       messageAlert('Thêm bài viết thành công', 'success')
+    //       onClose()
+    //     })
+    //     .catch(() => messageAlert('Thêm bài viết thất bại!', 'error'))
+    // }
+    // console.log('value add:', {...value , images: {url: secureUrls}})
+    const editor = reactQuillRef.current
+    const content = editor?.getEditor().getContents()
+    console.log({ ...value, description: content?.ops, images: { url: `${secureUrls}` } as any })
   }
+
   const onClose = () => {
     dispatch(setOpenDrawer(false))
     dispatch(setBlog({ _id: '', name: '', description: '', images: [] }))
@@ -95,7 +107,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
   return (
     <Drawer
       title={blogData?._id ? 'Chỉnh sửa bài viết' : 'Thêm bài viết mới'}
-      width={576}
+      width={776}
       destroyOnClose
       onClose={onClose}
       getContainer={false}
@@ -143,12 +155,28 @@ const FormBlog = ({ open }: BlogFormProps) => {
           <Input size='large' placeholder='Tên bài viết' />
         </Form.Item>
         <Form.Item
-          className='dark:text-white'
+          className='dark:text-white mb-17'
           label='Mô tả bài viết'
           name='description'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
-          <TextArea rows={5} size='large' placeholder='Mô tả bài viết' className='w-full' />
+          <ReactQuill
+            className='h-[250px]'
+            ref={reactQuillRef}
+            theme='snow'
+            placeholder='Start writing...'
+            modules={{
+              toolbar: {
+                container: container
+              },
+              clipboard: {
+                matchVisual: false
+              }
+            }}
+            formats={formats}
+            value={value}
+            // onChange={onChange}
+          />
         </Form.Item>
         <Form.Item>
           <Button

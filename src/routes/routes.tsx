@@ -7,10 +7,11 @@ import {
   SizePage,
   StaffPage,
   ToppingPage,
-  VoucherPage
+  VoucherPage,
+  CustomerPage,
+  SliderPage
 } from '~/pages'
 import DefaultLayout from '~/layouts/DefaultLayout'
-import CustomerPage from '~/pages/CustomerPage'
 import { createBrowserRouter } from 'react-router-dom'
 import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
@@ -43,7 +44,8 @@ const routers = createBrowserRouter([
           { path: 'vouchers', element: <VoucherPage /> },
           { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: <OrderPage /> },
-          { path: 'blogs', element: <BlogPage /> }
+          { path: 'blogs', element: <BlogPage /> },
+          { path: 'sliders', element: <SliderPage /> }
         ]
       }
     ]
