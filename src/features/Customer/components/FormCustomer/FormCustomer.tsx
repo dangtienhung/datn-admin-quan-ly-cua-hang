@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Select } from 'antd'
+import { Drawer, Form, Image, Input, Select } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
@@ -188,6 +188,12 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
           >
             <Input.Password placeholder='Mật khẩu' size='large' />
           </Form.Item>
+        )}
+
+        {fileList.length <= 0 && userData.avatar && (
+          <div className='my-5'>
+            <Image src={userData.avatar} width={100} height={100} />
+          </div>
         )}
 
         <Form.Item

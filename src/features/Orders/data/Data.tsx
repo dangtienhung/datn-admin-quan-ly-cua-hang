@@ -5,7 +5,7 @@ import ListOrders from '../components/ListOrders/ListOrders'
 import ListPendingOrders from '../components/ListPendingOrders/ListPendingOrders'
 
 export const items = [
-  { key: '1', label: 'Tất cả đơn hàng', children: <ListOrders /> },
+  // { key: '1', label: 'Tất cả đơn hàng', children: <ListOrders /> },
   { key: '2', label: 'Chờ xác nhận', children: <ListPendingOrders /> },
   { key: '3', label: 'Đã xác nhận', children: <ListConfirmOrders /> },
   { key: '4', label: 'Hoàn thành', children: <ListDoneOrders /> },

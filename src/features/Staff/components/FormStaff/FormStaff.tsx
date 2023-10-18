@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, Select } from 'antd'
+import { Drawer, Form, Image, Input, Select } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingId } from '~/store/slices'
 // import { useEffect, useState } from 'react'
@@ -26,6 +26,7 @@ export const FormStaff = ({ open }: FormStaffProps) => {
   const [addUser, { isLoading: isAdding }] = useAddUserMutation()
   const [uploadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
+  console.log(userData, fileList)
 
   userData._id &&
     form.setFieldsValue({
@@ -162,6 +163,11 @@ export const FormStaff = ({ open }: FormStaffProps) => {
             ]}
           />
         </Form.Item>
+        {fileList.length <= 0 && userData.avatar && (
+          <div className='my-5'>
+            <Image src={userData.avatar} width={100} height={100} />
+          </div>
+        )}
         {!userData._id && (
           <Form.Item
             className='dark:text-white'
