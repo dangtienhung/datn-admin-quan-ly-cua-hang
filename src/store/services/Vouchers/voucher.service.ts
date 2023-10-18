@@ -22,6 +22,19 @@ export const VoucherApi = createApi({
         return [{ type: 'Vouchers', id: 'LIST' }]
       }
     }),
+    getAllVouchersActive: builder.query<IVoucherDocs, number | string>({
+      query: () => `/vouchers/active`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.data.docs.map(({ _id }) => ({ type: 'Vouchers' as const, _id })),
+            { type: 'Vouchers' as const, id: 'LIST' }
+          ]
+          return final
+        }
+        return [{ type: 'Vouchers', id: 'LIST' }]
+      }
+    }),
 
     addVoucher: builder.mutation<IVoucher, IVoucher>({
       query: (voucher: IVoucher) => ({
@@ -32,8 +45,8 @@ export const VoucherApi = createApi({
       invalidatesTags: ['Vouchers']
     }),
 
-    deleteVoucher: builder.mutation<IVoucher, number | string>({
-      query: (id: string) => ({
+    deleteVoucher: builder.mutation<IVoucher, { id: string | number }>({
+      query: ({ id }) => ({
         url: `/voucher/${id}`,
         method: 'DELETE'
       }),
@@ -56,5 +69,10 @@ export const VoucherApi = createApi({
   })
 })
 
-export const { useGetAllVouchersQuery, useAddVoucherMutation, useDeleteVoucherMutation, useUpdateVoucherMutation } =
-  VoucherApi
+export const {
+  useGetAllVouchersQuery,
+  useGetAllVouchersActiveQuery,
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useUpdateVoucherMutation
+} = VoucherApi

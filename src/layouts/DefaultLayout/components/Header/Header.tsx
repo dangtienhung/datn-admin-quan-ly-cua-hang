@@ -53,7 +53,7 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
           {/* <!-- Hamburger Toggle BTN --> */}
 
           <Link className='lg:hidden flex-shrink-0 block' to='/'>
-            <img src={Logo} alt='Logo' />
+            <img src='/logo_removebg.png' width={50} height={50} alt='Logo' />
           </Link>
         </div>
 

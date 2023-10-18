@@ -92,14 +92,14 @@ const ProductList = () => {
       render: (sizes: ISizeRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
-            {sizes.slice(0, 2).map((size: ISize) => (
+            {sizes.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
                 <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
           </div>
-          <p className=''>{sizes.length > 2 && '....'}</p>
+          <p className=''>{sizes?.length > 2 && '....'}</p>
         </>
       )
     },
@@ -118,7 +118,7 @@ const ProductList = () => {
               </div>
             ))}
           </div>
-          <p className=''>{toppings.length > 2 && '....'}</p>
+          <p className=''>{toppings?.length > 2 && '....'}</p>
         </>
       )
     },
@@ -159,7 +159,7 @@ const ProductList = () => {
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
           <Button onClick={start} disabled={!hasSelected} loading={loading}>
             Reload
           </Button>

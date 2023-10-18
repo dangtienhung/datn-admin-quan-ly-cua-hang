@@ -3,7 +3,7 @@ import { AiOutlineFontSize, AiOutlineControl } from 'react-icons/ai'
 import { IoTicket } from 'react-icons/io5'
 import { BiSolidCategoryAlt } from 'react-icons/bi'
 import { HiCollection } from 'react-icons/hi'
-import { FaUserEdit, FaUserFriends, FaClipboardList } from 'react-icons/fa'
+import { FaUserEdit, FaUserFriends, FaClipboardList, FaRegNewspaper, FaImages } from 'react-icons/fa'
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
 
@@ -33,13 +33,14 @@ export const items: MenuProps['items'] = [
   getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <FaClipboardList />),
 
   // quản lý sản phẩm
-  getItem('Sản phẩm', 'products', <ShoppingOutlined />, [
-    getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'product'),
-    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories'),
-    getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'Topping'),
-    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'Sizes'),
-    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'Vouchers'),
-    getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'Blogs')
+  getItem('Quản lý', 'manager', <AiOutlineControl />, [
+    getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'products', <ShoppingOutlined />),
+    getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories', <BiSolidCategoryAlt />),
+    getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'toppings', <HiCollection />),
+    getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'sizes', <AiOutlineFontSize />),
+    getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'vouchers', <IoTicket />),
+    getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'blogs', <FaRegNewspaper />),
+    getItem(<NavLink to={`/manager/sliders`}>Sliders</NavLink>, 'sliders', <FaImages />)
   ]),
 
   // quản lý người dùng
