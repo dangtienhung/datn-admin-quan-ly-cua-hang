@@ -92,7 +92,7 @@ const ProductList = () => {
       render: (sizes: ISizeRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
-            {sizes.slice(0, 2).map((size: ISizeRefProduct) => (
+            {sizes?.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
                 <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
@@ -126,7 +126,7 @@ const ProductList = () => {
       title: 'Danh mục sản phẩm',
       dataIndex: 'category',
       key: 'category',
-      render: (category: ICategoryRefProduct) => <p className='capitalize'>{category.name}</p>
+      render: (category: ICategoryRefProduct) => <p className='capitalize'>{category?.name || 'Không có thông tin'}</p>
     },
     {
       title: 'Action',
