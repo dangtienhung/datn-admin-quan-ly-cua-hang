@@ -1,25 +1,26 @@
-import { Button, DeleteIcon, EditIcon } from '~/components'
+import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
 import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
 
+import { AiOutlineUndo } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
-import { useAppSelector } from '~/store/hooks'
+import { useGetAllProductActiveQuery } from '~/store/services'
 import { useState } from 'react'
 
-const ProductList = () => {
-  const dispatch = useAppDispatch()
-  const { productsList } = useAppSelector((state: RootState) => state.products)
-
+export const ProductListActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
+  const { data } = useGetAllProductActiveQuery({
+    _page: 1,
+    _limit: 10
+  })
 
-  const products = productsList.map((product: IProduct, index: number) => ({
+  const products = data?.docs.map((product: any, index: number) => ({
     ...product,
     key: product._id,
     index: index + 1
@@ -92,14 +93,14 @@ const ProductList = () => {
       render: (sizes: ISizeRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
-            {sizes.slice(0, 2).map((size: ISizeRefProduct) => (
+            {sizes.slice(0, 2).map((size: ISize) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
-                <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
+                <p className='border-r-graydark pr-3 w-full uppercase border-r border-opacity-50'>{size.name}</p>
+                <p className='pl-3 w-full'>{formatCurrency(size.price)}</p>
               </div>
             ))}
           </div>
-          <p className=''>{sizes?.length > 2 && '....'}</p>
+          <p className=''>{sizes.length > 2 && '....'}</p>
         </>
       )
     },
@@ -113,12 +114,12 @@ const ProductList = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
-                <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
+                <p className='border-r-graydark pr-3 uppercase border-r w-full border-opacity-50'>{topping.name}</p>
+                <p className='pl-3 w-full'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
           </div>
-          <p className=''>{toppings?.length > 2 && '....'}</p>
+          <p className=''>{toppings.length > 2 && '....'}</p>
         </>
       )
     },
@@ -135,16 +136,13 @@ const ProductList = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <ButtonAntd
-            icon={<EditIcon />}
-            className='bg-primary hover:text-white flex items-center justify-center text-white'
-          />
-          <Popconfirm
-            title='Bạn có chắc chắn muốn xóa sản phẩm này không?'
-            onConfirm={() => {}}
-            okText='Yes'
-            cancelText='No'
-          >
+          <Tooltip title='Khôi phục sản phẩm'>
+            <ButtonAntd
+              icon={<AiOutlineUndo />}
+              className='bg-primary hover:text-white flex items-center justify-center text-white'
+            />
+          </Tooltip>
+          <Popconfirm title='Xóa sản phẩm?' onConfirm={() => {}} okText='Yes' cancelText='No'>
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
@@ -155,11 +153,10 @@ const ProductList = () => {
       )
     }
   ]
-
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
           <Button onClick={start} disabled={!hasSelected} loading={loading}>
             Reload
           </Button>
@@ -169,5 +166,3 @@ const ProductList = () => {
     </div>
   )
 }
-
-export default ProductList

@@ -3,6 +3,7 @@ import { NotFound } from '..'
 import { useGetAllProductsQuery } from '~/store/services'
 
 const ProductPage = () => {
+  /* lấy ra tất cả các sản phẩm */
   const {
     data: dataProducts,
     isLoading: loadingProduct,
