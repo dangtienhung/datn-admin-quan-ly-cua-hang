@@ -1,4 +1,14 @@
-import { VoucherApi, blogApi, productApi, toppingApi } from './services'
+import {
+  VoucherApi,
+  blogApi,
+  productApi,
+  toppingApi,
+  sizeApi,
+  sliderApi,
+  userApi,
+  orderApi,
+  categoryApi
+} from './services'
 import {
   blogReducer,
   categoryReducer,
@@ -11,14 +21,10 @@ import {
 } from './slices'
 
 import { AuthApi } from './services/Auth'
-import { categoryApi } from './services/Categories/category.service'
 import { configureStore } from '@reduxjs/toolkit'
-import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
 import { productReducers } from './slices/Products/product.slice'
-import { sizeApi } from './services/Sizes'
 import { useDispatch } from 'react-redux'
-import { userApi } from './services/Users'
 import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
@@ -30,7 +36,8 @@ const middlewares = [
   orderApi.middleware,
   VoucherApi.middleware,
   blogApi.middleware,
-  AuthApi.middleware
+  AuthApi.middleware,
+  sliderApi.middleware
 ]
 
 export const store = configureStore({
@@ -45,6 +52,7 @@ export const store = configureStore({
     [VoucherApi.reducerPath]: VoucherApi.reducer,
     [blogApi.reducerPath]: blogApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
+    [sliderApi.reducerPath]: sliderApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,

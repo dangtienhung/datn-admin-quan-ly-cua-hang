@@ -201,7 +201,7 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
           label='Tải ảnh lên'
           // rules={[{ required: true, message: 'Không được bỏ trống giá địa chỉ!' }]}
         >
-          <UploadFile fileList={fileList} setFileList={setFileList} useCrop />
+          <UploadFile fileList={fileList} setFileList={setFileList} useCrop multiple />
         </Form.Item>
         <Form.Item>
           <Button
