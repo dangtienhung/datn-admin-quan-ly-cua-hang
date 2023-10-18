@@ -123,16 +123,17 @@ const ListCancelOrders = () => {
       },
       render: (user: any) => <UserInfoRow user={user} />
     },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note'
-      // render: (name: string) => <span className='capitalize'>{name}</span>
-    },
+    // {
+    //   title: 'Ghi chú',
+    //   dataIndex: 'note',
+    //   key: 'note'
+    //   // render: (name: string) => <span className='capitalize'>{name}</span>
+    // },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: string) => (
         <span className={`text-white capitalize font-semibold bg-meta-1 rounded inline-block px-2 py-1`}>{status}</span>
       )
@@ -149,7 +150,7 @@ const ListCancelOrders = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
+      // fixed: 'right',
       width: 100,
       render: (_: any, order) => (
         <Space size='middle'>
@@ -202,7 +203,7 @@ const ListCancelOrders = () => {
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }
         }}
-        scroll={{ y: '50vh' }}
+        scroll={{ y: '50vh', x: 1000 }}
         bordered
       />
     </div>

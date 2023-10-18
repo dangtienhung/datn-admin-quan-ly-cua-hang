@@ -34,3 +34,12 @@ export interface IUser {
   grade?: number
   gender?: string
 }
+
+export interface IUserDataType {
+  key: string
+  index: number
+  avatar: string
+  username: string
+  account: string
+  gender: string
+}

@@ -69,8 +69,8 @@ const ListCategory = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
-      width: 300,
+      // fixed: 'right',
+
       render: (_, category) => (
         <Space size='middle'>
           <Button
@@ -111,6 +111,7 @@ const ListCategory = () => {
             title='Bạn thực sự muốn xóa những danh mục này?'
             description='Hành động này sẽ xóa những danh mục đang được chọn!'
             onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
           >
             <Button variant='danger' styleClass='mb-4'>
               Xóa tất cả
@@ -131,7 +132,7 @@ const ListCategory = () => {
               setCurrentPage(page)
             }
           }}
-          scroll={{ y: '50vh' }}
+          scroll={{ y: '50vh', x: 650 }}
           bordered
           rowSelection={rowSelection}
         />

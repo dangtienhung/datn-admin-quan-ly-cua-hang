@@ -68,7 +68,8 @@ const ListCategoryDeleted = () => {
   const columns: ColumnsType<ICategory> = [
     {
       title: '#',
-      dataIndex: 'index'
+      dataIndex: 'index',
+      width: 50
     },
     {
       title: 'Tên danh mục',
@@ -80,8 +81,8 @@ const ListCategoryDeleted = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
-      width: 300,
+      // fixed: 'right',
+      // width: 200,
       render: (_, category) => (
         <Space size='middle'>
           <Popconfirm
@@ -122,6 +123,7 @@ const ListCategoryDeleted = () => {
             title='Bạn thực sự muốn khôi phục những danh mục này?'
             description='Hành động này sẽ khôi phục những danh mục đang được chọn!'
             onConfirm={handleRestoreMany}
+            onCancel={() => setSelectedRowKeys([])}
           >
             <Button variant='primary' styleClass='mb-4'>
               Khôi phục tất cả
@@ -131,6 +133,7 @@ const ListCategoryDeleted = () => {
             title='Bạn thực sự muốn xóa VĨNH VIỄN những danh mục này?'
             description='Hành động này sẽ xóa những danh mục đang được chọn!'
             onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
           >
             <Button variant='danger' styleClass='mb-4'>
               Xóa tất cả
@@ -139,7 +142,7 @@ const ListCategoryDeleted = () => {
         </Space>
       )}
 
-      <div className='dark:bg-graydark'>
+      <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
           columns={columns}
           dataSource={categorriesData}
@@ -152,7 +155,7 @@ const ListCategoryDeleted = () => {
               setCurrentPage(page)
             }
           }}
-          scroll={{ y: '50vh' }}
+          scroll={{ y: '50vh', x: 650 }}
           bordered
           rowSelection={rowSelection}
         />

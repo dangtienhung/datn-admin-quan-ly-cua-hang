@@ -83,7 +83,7 @@ export const ListSizes = () => {
   const sizes = sizeList?.docs.map((size, index) => ({ ...size, key: size._id, index: index + 1 }))
 
   return (
-    <div className='dark:bg-graydark'>
+    <div className='dark:bg-graydark w-full overflow-x-auto'>
       <Table
         columns={columns}
         dataSource={sizes}
@@ -94,6 +94,8 @@ export const ListSizes = () => {
             setCurrentPage(page)
           }
         }}
+        bordered
+        scroll={{ y: '50vh', x: true }}
       />
     </div>
   )

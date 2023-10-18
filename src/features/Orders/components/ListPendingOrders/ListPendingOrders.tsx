@@ -150,6 +150,7 @@ const ListPendingOrders = () => {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
+      width: 250,
       rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
@@ -157,12 +158,12 @@ const ListPendingOrders = () => {
       sortDirections: ['descend', 'ascend'],
       render: (user: any) => <UserInfoRow user={user} />
     },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note'
-      // render: (name: string) => <span className='capitalize'>{name}</span>
-    },
+    // {
+    //   title: 'Ghi chú',
+    //   dataIndex: 'note',
+    //   key: 'note'
+    //   // render: (name: string) => <span className='capitalize'>{name}</span>
+    // },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
@@ -181,6 +182,7 @@ const ListPendingOrders = () => {
       title: 'Thời gian đặt hàng',
       dataIndex: 'timeOrder',
       key: 'timeOrder',
+
       sorter: (a, b) => a.timeOrder.localeCompare(b.timeOrder),
       sortDirections: ['descend', 'ascend'],
       render: (time: string) => <span className='capitalize'>{formatDate(time)}</span>
@@ -189,7 +191,7 @@ const ListPendingOrders = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
+      // fixed: 'right',
       // width: 300,
       render: (_: any, order) => (
         <Space size='middle'>
@@ -253,7 +255,7 @@ const ListPendingOrders = () => {
         </Space>
       )}
 
-      <div className='dark:bg-graydark'>
+      <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
           columns={columns}
           dataSource={ordersData}
@@ -266,7 +268,7 @@ const ListPendingOrders = () => {
               setoptions((prev) => ({ ...prev, page, limit: pageSize }))
             }
           }}
-          scroll={{ y: '50vh', x: 1350 }}
+          scroll={{ y: '50vh', x: 1000 }}
           bordered
           rowSelection={rowSelection}
         />

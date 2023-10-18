@@ -157,12 +157,12 @@ const ListConfirmOrders = () => {
       },
       render: (user: any) => <UserInfoRow user={user} />
     },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note'
-      // render: (name: string) => <span className='capitalize'>{name}</span>
-    },
+    // {
+    //   title: 'Ghi chú',
+    //   dataIndex: 'note',
+    //   key: 'note'
+    //   // render: (name: string) => <span className='capitalize'>{name}</span>
+    // },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
@@ -184,7 +184,7 @@ const ListConfirmOrders = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
+      // fixed: 'right',
       render: (_: any, order) => (
         <Space size='middle'>
           <Button
@@ -243,7 +243,7 @@ const ListConfirmOrders = () => {
           </Popconfirm>
         </Space>
       )}
-      <div className='dark:bg-graydark'>
+      <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
           columns={columns}
           dataSource={ordersData}
@@ -256,7 +256,7 @@ const ListConfirmOrders = () => {
               setoptions((prev) => ({ ...prev, page, limit: pageSize }))
             }
           }}
-          scroll={{ y: '50vh' }}
+          scroll={{ y: '50vh', x: 1000 }}
           bordered
           rowSelection={rowSelection}
         />
