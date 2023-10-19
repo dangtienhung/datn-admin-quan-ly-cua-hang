@@ -79,6 +79,7 @@ const FormProduct = ({ open }: FormProductProps) => {
       }
       dispatch(setOpenDrawer(false))
       dispatch(setProductId(null))
+      setIsUpload(false)
       /* reset form */
       form.resetFields()
       setImages([])
@@ -106,7 +107,7 @@ const FormProduct = ({ open }: FormProductProps) => {
           >
             {!isCreateLoading && <p>Thêm sản phẩm</p>}
             {isCreateLoading && (
-              <div className='h-6 w-6 rounded-full border-2 border-white border-t-primary border-t-2 animate-spin'></div>
+              <div className='border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full'></div>
             )}
           </label>
         </Space>

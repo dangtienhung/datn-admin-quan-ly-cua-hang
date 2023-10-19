@@ -1,6 +1,7 @@
 import { Button, DeleteIcon } from '~/components'
-import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
-import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
+import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { useDeleteProductMutation, useGeAllProductDeletedTrueQuery, useRestoreProductMutation } from '~/store/services'
 
 import { AiOutlineUndo } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
@@ -8,7 +9,6 @@ import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
-import { useGeAllProductDeletedTrueQuery } from '~/store/services'
 import { useState } from 'react'
 
 export const ProductListDelete = () => {
@@ -18,6 +18,8 @@ export const ProductListDelete = () => {
     _limit: 10,
     query: ''
   })
+  const [restoreProduct] = useRestoreProductMutation()
+  const [deleteProduct] = useDeleteProductMutation()
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
@@ -140,12 +142,24 @@ export const ProductListDelete = () => {
       render: (_: any, product: IProduct) => (
         <Space>
           <Tooltip title='Khôi phục sản phẩm'>
-            <ButtonAntd
-              icon={<AiOutlineUndo />}
-              className='bg-primary hover:text-white flex items-center justify-center text-white'
-            />
+            <Popconfirm
+              title='Bạn có muốn khôi phục sản phẩm này?'
+              onConfirm={() => handleRestoreProduct(product._id)}
+              okText='Đồng ý'
+              cancelText='Hủy'
+            >
+              <ButtonAntd
+                icon={<AiOutlineUndo />}
+                className='bg-primary hover:text-white flex items-center justify-center text-white'
+              />
+            </Popconfirm>
           </Tooltip>
-          <Popconfirm title='Xóa sản phẩm?' onConfirm={() => {}} okText='Yes' cancelText='No'>
+          <Popconfirm
+            title='Xóa sản phẩm?'
+            onConfirm={() => handleDeleteProduct(product._id)}
+            okText='Đồng ý'
+            cancelText='Hủy'
+          >
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
@@ -156,6 +170,29 @@ export const ProductListDelete = () => {
       )
     }
   ]
+
+  const handleRestoreProduct = async (id: string) => {
+    try {
+      const response = await restoreProduct({ id })
+      if ((response as any).message === 'success') {
+        message.success('Khôi phục sản phẩm thành công!')
+      }
+    } catch (error) {
+      message.error('Khôi phục sản phẩm thất bại')
+    }
+  }
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await deleteProduct({ id })
+      console.log('🚀 ~ file: ProductListDelete.tsx:183 ~ handleDeleteProduct ~ reponse:', response)
+      if ((response as any).message === 'success') {
+        message.success('Xóa sản phẩm thành công!')
+      }
+    } catch (error) {
+      message.error('Khôi phục sản phẩm thất bại')
+    }
+  }
 
   return (
     <div>
