@@ -82,6 +82,16 @@ export const productApi = createApi({
         body: product
       }),
       invalidatesTags: [{ type: 'Product', id: 'LIST' }]
+    }),
+
+    /* xóa mềm sản phẩm */
+    deleteFakeProduct: builder.mutation<{ message: string; data: IProduct }, { id: string }>({
+      query: ({ id }) => ({
+        url: `/deleteFakeProduct/${id}`,
+        method: 'PUT',
+        body: {}
+      }),
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }]
     })
   })
 })
@@ -92,5 +102,6 @@ export const {
   useGeAllProductDeletedTrueQuery,
   useGetAllProductActiveQuery,
   useGetAllProductActiveFalseQuery,
-  useCreateProductMutation
+  useCreateProductMutation,
+  useDeleteFakeProductMutation
 } = productApi
