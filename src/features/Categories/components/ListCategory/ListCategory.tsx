@@ -15,8 +15,8 @@ import { useAppDispatch } from '~/store/store'
 import { useState } from 'react'
 
 const ListCategory = () => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const { data: categories, isError, isLoading } = useGetAllCategoryQuery(currentPage)
+  const [options, setOptions] = useState({ _page: 1, _limit: 10 })
+  const { data: categories, isError, isLoading } = useGetAllCategoryQuery(options)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteFakeCategory] = useDeleteFakeMutation()
   const dispatch = useAppDispatch()
@@ -129,7 +129,7 @@ const ListCategory = () => {
             // pageSizeOptions: ['5', '10', '15', '20'],
             total: categories && categories?.totalDocs,
             onChange(page) {
-              setCurrentPage(page)
+              setOptions((prev) => ({ ...prev, _page: page }))
             }
           }}
           scroll={{ y: '50vh', x: 650 }}

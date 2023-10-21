@@ -17,26 +17,28 @@ export const orderApi = createApi({
     }),
 
     /**Order cho xac nhan */
-    getAllOrderPending: builder.query<any, { limit: number; page: number }>({
-      query: (options) => `/order-pending?_limit=${options.limit}&_page=${options.page}`,
+    getAllOrderPending: builder.query<any, { limit: number; page: number; startDate?: string }>({
+      query: (options) => `/order-pending?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
       providesTags: ['Orders']
     }),
 
     /**Order hoan thanh */
-    getAllOrderDone: builder.query<any, { limit: number; page: number }>({
-      query: (options) => `/order-done?_limit=${options.limit}&_page=${options.page}`,
+    getAllOrderDone: builder.query<any, { limit: number; page: number; startDate?: string }>({
+      query: (options) => `/order-done?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
       providesTags: ['Orders']
     }),
 
     /**Orders da huy */
-    getAllOrderCancel: builder.query<any, { limit: number; page: number }>({
-      query: (options) => `/order-canceled?_limit=${options.limit}&_page=${options.page}`,
+    getAllOrderCancel: builder.query<any, { limit: number; page: number; startDate?: string }>({
+      query: (options) =>
+        `/order-canceled?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
       providesTags: ['Orders']
     }),
 
     /**Lay orders da xac nhan */
-    getAllOrderConfirm: builder.query<any, { limit: number; page: number }>({
-      query: (options) => `/order-confirmed?_limit=${options.limit}&_page=${options.page}`,
+    getAllOrderConfirm: builder.query<any, { limit: number; page: number; startDate?: string }>({
+      query: (options) =>
+        `/order-confirmed?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
       providesTags: ['Orders']
     }),
 
