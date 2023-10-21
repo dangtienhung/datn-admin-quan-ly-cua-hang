@@ -1,5 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { Drawer, Form, Input, InputNumber } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
 import { useAddVoucherMutation, useUpdateVoucherMutation } from '~/store/services'
@@ -23,13 +24,14 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   // console.log(voucherData)
   voucherData._id &&
     form.setFieldsValue({
-      code: voucherData.code,
+      // code: voucherData.code,
       sale: voucherData.sale,
-      discount: voucherData.discount
+      discount: voucherData.discount,
+      title: voucherData.title
     })
-  const onFinish = async (value: IVoucher) => {
+  const onFinish = async (values: IVoucher) => {
     if (voucherData._id) {
-      updateVoucher({ _id: voucherData._id, ...value })
+      updateVoucher({ _id: voucherData._id, ...values })
         .unwrap()
         .then(() => {
           messageAlert('Cập nhật thành công', 'success')
@@ -37,20 +39,21 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         })
         .catch(() => messageAlert('Cập nhật thất bại', 'error'))
       return
-      console.log('update', { ...value, _id: voucherData._id })
+      console.log('update', { ...values, _id: voucherData._id })
     }
 
-    addVoucher(value)
+    addVoucher(values)
       .unwrap()
       .then(() => {
         messageAlert('Thêm voucher thành công', 'success')
         onClose()
       })
       .catch(() => messageAlert('Thêm voucher thất bại!', 'error'))
+    console.log(values)
   }
   const onClose = () => {
     dispatch(setOpenDrawer(false))
-    dispatch(setVoucher({ _id: '', code: '', discount: 0, sale: 0 }))
+    dispatch(setVoucher({ _id: '', code: '', title: '', discount: 0, sale: 0 }))
     form.resetFields()
   }
 
@@ -71,14 +74,14 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         className='dark:text-white'
         onFinish={onFinish}
       >
-        <Form.Item
+        {/* <Form.Item
           className='dark:text-white'
           label='Tên voucher'
           name='code'
-          rules={[{ required: true, message: 'Không được bỏ trống tên voucher!' }]}
+          // rules={[{ required: true, message: 'Không được bỏ trống tên voucher!' }]}
         >
           <Input size='large' placeholder='Tên voucher' />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           className='dark:text-white'
           label='Số lượng'
@@ -122,15 +125,15 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <Input size='large' placeholder='Giảm giá cho đơn từ ' />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           className='dark:text-white'
           label='Mô tả voucher'
-          name='desc'
+          name='title'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <TextArea rows={4} placeholder='Mô tả voucher' />
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item>
           <Button
             disabled={isAdding ? true : false}

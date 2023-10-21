@@ -1,63 +1,34 @@
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { Drawer, Form, Input, Modal, Upload } from 'antd'
-// import TextArea from 'antd/es/input/TextArea'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Drawer, Form, Image, Input } from 'antd'
 import { RcFile } from 'antd/es/upload'
-import { UploadFile, UploadProps } from 'antd/lib'
-import { SetStateAction, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
-import { useAddBlogMutation, useUpdateBlogMutation } from '~/store/services'
+import { useAddBlogMutation, useUpLoadImageBlogMutation, useUpdateBlogMutation } from '~/store/services'
 import { setBlog, setOpenDrawer } from '~/store/slices'
 import { RootState, useAppDispatch } from '~/store/store'
 import { IBlogs } from '~/types'
 import { messageAlert } from '~/utils/messageAlert'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import UploadFile from '~/components/UploadFile'
+import toast from 'react-hot-toast'
 import { container, formats } from '../../utils/ReactQuill'
-
 interface BlogFormProps {
   open: boolean
 }
-
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = (error) => reject(error)
-  })
-
 const FormBlog = ({ open }: BlogFormProps) => {
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
   const { blogData } = useAppSelector((state: RootState) => state.blogs)
   const [addBlog, { isLoading: isAdding }] = useAddBlogMutation()
-  const [updateBlog] = useUpdateBlogMutation()
+  const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation()
 
-  const [fileList, setFileList] = useState<UploadFile[]>([])
-  const secureUrls = fileList?.map((file) => file.response?.secure_url)
-
-  const [value, setvalue] = useState('')
   const reactQuillRef = useRef<ReactQuill>(null)
-  // const handleQuillChange = (content: SetStateAction<string>) => {
-  //   setvalue(content) // Lưu nội dung vào state
-  // }
-  // console.log(value);
-  const [previewOpen, setPreviewOpen] = useState(false)
-  const [previewImage, setPreviewImage] = useState('')
-  const [previewTitle, setPreviewTitle] = useState('')
-  const handleCancel = () => setPreviewOpen(false)
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile)
-    }
+  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [uploadFile, { isLoading: isUploading }] = useUpLoadImageBlogMutation()
 
-    setPreviewImage(file.url || (file.preview as string))
-    setPreviewOpen(true)
-    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
-  }
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList)
-  // console.log(blogData)
+  const [value, setvalue] = useState(blogData.description)
 
   blogData._id &&
     form.setFieldsValue({
@@ -66,44 +37,77 @@ const FormBlog = ({ open }: BlogFormProps) => {
       images: blogData.images[0]?.url
     })
 
-  const onFinish = async (value: IBlogs) => {
-    // if (blogData._id) {
-    //   updateBlog({ ...value, _id: blogData._id, images: blogData.images })
-    //     .unwrap()
-    //     .then(() => {
-    //       messageAlert('Cập nhật thành công', 'success')
-    //       onClose()
-    //     })
-    //     .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-    //   return
-    //   console.log('update:', { ...value, _id: blogData._id })
-    // }
-    // if (secureUrls) {
-    //   addBlog({ ...value, images: { url: `${secureUrls}` } as any })
-    //     .unwrap()
-    //     .then(() => {
-    //       messageAlert('Thêm bài viết thành công', 'success')
-    //       onClose()
-    //     })
-    //     .catch(() => messageAlert('Thêm bài viết thất bại!', 'error'))
-    // }
-    // console.log('value add:', {...value , images: {url: secureUrls}})
-    const editor = reactQuillRef.current
-    const content = editor?.getEditor().getContents()
-    console.log({ ...value, description: content?.ops, images: { url: `${secureUrls}` } as any })
+  const onFinish = async (values: IBlogs) => {
+    if (blogData._id && fileList.length === 0) {
+      updateBlog({ ...values, _id: blogData._id, images: blogData.images })
+        .unwrap()
+        .then(() => {
+          messageAlert('Cập nhật thành công', 'success')
+          onClose()
+        })
+        .catch(() => {
+          messageAlert('Cập nhật thất bại', 'error')
+        })
+      console.log({
+        name: values.name,
+        description: value
+      })
+      return
+    }
+    const formData = new FormData()
+    const file = fileList[0]?.originFileObj as RcFile
+    formData.append('images', file)
+    uploadFile(formData)
+      .unwrap()
+      .then(({ urls }: any) => {
+        if (blogData._id) {
+          updateBlog({
+            name: values.name,
+            description: values.description,
+            images: urls[0],
+            _id: blogData._id
+          })
+            .unwrap()
+            .then(() => {
+              messageAlert('Cập nhật bài viết thành công', 'success')
+              onClose()
+            })
+            .catch(() => {
+              messageAlert('Cập nhật bài viết thất bại', 'error')
+            })
+          console.log({
+            name: values.name,
+            description: value,
+            images: urls[0]
+          })
+        } else {
+          addBlog({
+            name: values.name,
+            description: values.description,
+            images: urls[0]
+          })
+            .unwrap()
+            .then(() => {
+              toast.success('Thêm bài viết thành công')
+              onClose()
+            })
+            .catch((error) => {
+              toast.error(`Thêm bài viết thất bại! ${error.data.message}`)
+              onClose()
+            })
+        }
+      })
   }
 
   const onClose = () => {
+    setFileList([])
     dispatch(setOpenDrawer(false))
     dispatch(setBlog({ _id: '', name: '', description: '', images: [] }))
     form.resetFields()
   }
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  )
+  const handleProcedureContentChange = (content: string) => {
+    setvalue(content)
+  }
   return (
     <Drawer
       title={blogData?._id ? 'Chỉnh sửa bài viết' : 'Thêm bài viết mới'}
@@ -121,30 +125,18 @@ const FormBlog = ({ open }: BlogFormProps) => {
         className='dark:text-white'
         onFinish={onFinish}
       >
+        {fileList.length <= 0 && blogData.images && (
+          <div>
+            <Image src={blogData?.images[0]?.url} width={300} />
+          </div>
+        )}
         <Form.Item
           className='dark:text-white'
           label='Ảnh bài viết'
           name='images'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          // rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
-          {blogData._id ? (
-            <img src={blogData.images[0]?.url} alt={blogData.images[0]?.filename} className='w-full' />
-          ) : (
-            <>
-              <Upload
-                action='https://api.cloudinary.com/v1_1/dx4a0htyu/image/upload'
-                listType='picture-card'
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                data={{
-                  upload_preset: 'uploadImg'
-                }}
-              >
-                {fileList.length >= 1 ? null : uploadButton}
-              </Upload>
-            </>
-          )}
+          <UploadFile fileList={fileList} setFileList={setFileList} />
         </Form.Item>
         <Form.Item
           className='dark:text-white'
@@ -161,7 +153,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <ReactQuill
-            className='h-[250px]'
+            className='h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'
             ref={reactQuillRef}
             theme='snow'
             placeholder='Start writing...'
@@ -175,13 +167,14 @@ const FormBlog = ({ open }: BlogFormProps) => {
             }}
             formats={formats}
             value={value}
-            // onChange={onChange}
+            onChange={handleProcedureContentChange}
           />
+          {/* <ReactQuill theme='snow' value={value} onChange={handleProcedureContentChange} /> */}
         </Form.Item>
         <Form.Item>
           <Button
-            disabled={isAdding ? true : false}
-            icon={isAdding && <LoadingOutlined />}
+            disabled={isAdding || isUploading || isUpdating}
+            icon={(isAdding || isUploading || isUpdating) && <LoadingOutlined />}
             styleClass='!w-full mt-5 py-2'
             type='submit'
           >
@@ -189,9 +182,6 @@ const FormBlog = ({ open }: BlogFormProps) => {
           </Button>
         </Form.Item>
       </Form>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-        <img alt='example' style={{ width: '100%' }} src={previewImage} />
-      </Modal>
     </Drawer>
   )
 }

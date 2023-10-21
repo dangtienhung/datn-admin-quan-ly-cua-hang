@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message } from 'antd'
+import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAnt } from 'antd'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
 import { useRef, useState } from 'react'
@@ -24,7 +24,7 @@ const ListVoucher = () => {
 
   console.log(voucherData)
   const handleDelete = async (id: string) => {
-    console.log('🚀 ~ file: ListVoucher.tsx:19 ~ handleDelete ~ id:', id)
+    // console.log('🚀 ~ file: ListVoucher.tsx:19 ~ handleDelete ~ id:', id)
     try {
       await deleteVoucher({ id }).then(() => {
         message.success('Xoá thành công!')
@@ -76,38 +76,28 @@ const ListVoucher = () => {
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Tìm kiếm mã`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
-          <Button
-            variant='success'
+          <ButtonAnt
+            type='primary'
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
           >
             Search
-          </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)}>Reset</Button>
-          <Button
-            variant='success'
-            onClick={() => {
-              confirm({ closeDropdown: false })
-              setSearchText((selectedKeys as string[])[0])
-              setSearchedColumn(`${dataIndex}`)
-            }}
-          >
-            Filter
-          </Button>
-          <Button
+          </ButtonAnt>
+          <ButtonAnt onClick={() => clearFilters && handleReset(clearFilters)}>Reset</ButtonAnt>
+          <ButtonAnt
             onClick={() => {
               close()
             }}
           >
             close
-          </Button>
+          </ButtonAnt>
         </Space>
       </div>
     ),
@@ -170,6 +160,13 @@ const ListVoucher = () => {
       render: (sale: number) => `${formatCurrency(sale)}`
     },
     {
+      title: 'Mã giảm giá',
+      dataIndex: 'title',
+      key: 'title',
+      render: (name: string) => <span>{name}</span>,
+      ...getColumnSearchProps('title')
+    },
+    {
       title: 'Action',
       key: 'action',
       width: 300,
@@ -205,6 +202,8 @@ const ListVoucher = () => {
     key: voucher._id,
     index: index + 1
   }))
+  // console.log(vouchers)
+
   return (
     <div>
       <Space>
