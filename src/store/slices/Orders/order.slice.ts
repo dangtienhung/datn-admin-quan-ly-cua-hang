@@ -18,6 +18,7 @@ interface IOrderDetail {
     reasonCancelOrder?: string
   }
   id: string
+  orderDate: string
 }
 
 const initialState: IOrderDetail = {
@@ -37,7 +38,8 @@ const initialState: IOrderDetail = {
     },
     reasonCancelOrder: ''
   },
-  id: ''
+  id: '',
+  orderDate: ''
 }
 
 export const orderSlice = createSlice({
@@ -49,9 +51,12 @@ export const orderSlice = createSlice({
     },
     setIdOrderCancel: (state, action: PayloadAction<string>) => {
       state.id = action.payload
+    },
+    setOrderDate: (state, action: PayloadAction<string>) => {
+      state.orderDate = action.payload
     }
   }
 })
 
-export const { setOrderData, setIdOrderCancel } = orderSlice.actions
+export const { setOrderData, setIdOrderCancel, setOrderDate } = orderSlice.actions
 export const orderReducer = orderSlice.reducer
