@@ -42,6 +42,8 @@ const FormProduct = ({ open }: FormProductProps) => {
   const { data: dataSizeDefault } = useGetAllSizeDefaultQuery()
   const [createProduct, { isLoading: isCreateLoading }] = useCreateProductMutation()
 
+  console.log(dataCategories)
+
   useEffect(() => {
     if (dataCategories && dataToppings && dataSizeDefault) {
       setCategories(dataCategories?.docs)
