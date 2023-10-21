@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IBlogs, IBlogsDocs } from '~/types'
+import { IBlogs, IBlogsDocs, IResImage } from '~/types'
 
 export const blogApi = createApi({
   reducerPath: 'blogApi',
@@ -48,8 +48,21 @@ export const blogApi = createApi({
         }
       },
       invalidatesTags: (_, __, { _id }) => [{ type: 'Blogs', _id }]
+    }),
+    upLoadImageBlog: builder.mutation<IResImage, FormData>({
+      query: (file) => ({
+        url: '/uploadImages',
+        method: 'POST',
+        body: file
+      })
     })
   })
 })
 
-export const { useGetAllBlogsQuery, useAddBlogMutation, useDeleteBlogMutation, useUpdateBlogMutation } = blogApi
+export const {
+  useGetAllBlogsQuery,
+  useAddBlogMutation,
+  useDeleteBlogMutation,
+  useUpdateBlogMutation,
+  useUpLoadImageBlogMutation
+} = blogApi
