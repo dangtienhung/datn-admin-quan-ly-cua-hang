@@ -1,9 +1,11 @@
 import { Button, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd'
-import { ICategory, IImage, ISize, ITopping } from '~/types'
+import { ICategory, IImage, IProduct, ISize, ITopping } from '~/types'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setProductId } from '~/store/slices'
 import {
   useCreateProductMutation,
+  useEditProductMutation,
   useGetAllCategoryQuery,
   useGetAllSizeDefaultQuery,
   useGetAllToppingsQuery
@@ -13,7 +15,6 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { Loader } from '~/common'
 import { handleUploadImage } from '../..'
-import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 
 const { Option } = Select
@@ -35,14 +36,15 @@ const FormProduct = ({ open }: FormProductProps) => {
   const [isUpload, setIsUpload] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
   const [images, setImages] = useState<IImage[]>([])
+  const [productEdit, setProductEdit] = useState<IProduct | null>(null)
 
   const { productId } = useAppSelector((state) => state.products)
   const { data: dataCategories } = useGetAllCategoryQuery({ ...infoPage })
   const { data: dataToppings } = useGetAllToppingsQuery({ ...infoPage })
   const { data: dataSizeDefault } = useGetAllSizeDefaultQuery()
   const [createProduct, { isLoading: isCreateLoading }] = useCreateProductMutation()
-
-  console.log(dataCategories)
+  const { productsList } = useAppSelector((state: RootState) => state.products)
+  const [editProduct] = useEditProductMutation()
 
   useEffect(() => {
     if (dataCategories && dataToppings && dataSizeDefault) {
@@ -73,7 +75,31 @@ const FormProduct = ({ open }: FormProductProps) => {
         return
       }
     }
-    /* kiểm tra xem sizeDefault có nằm trong size không */
+
+    if (productId && productEdit) {
+      const data = {
+        ...values,
+        images: images.length > 0 ? images : productEdit.images,
+        size: values.size.map((size: any) => ({ name: size.name, price: Number(size.price) }))
+      }
+      try {
+        const response = await editProduct({ id: productEdit._id, product: data }).unwrap()
+        if (response.message === 'success') {
+          message.success('Cập nhật sản phẩm thành công!')
+        }
+        dispatch(setOpenDrawer(false))
+        dispatch(setProductId(null))
+        setIsUpload(false)
+        /* reset form */
+        form.resetFields()
+        setImages([])
+      } catch (error) {
+        console.log('🚀 ~ file: FormProduct.tsx:100 ~ handleSubmitForm ~ error:', error)
+        message.error('Có lỗi xảy ra, vui lòng thử lại sau!')
+      }
+      return
+    }
+
     try {
       const response = await createProduct({ ...values, images }).unwrap()
       if (response.message === 'success') {
@@ -89,6 +115,30 @@ const FormProduct = ({ open }: FormProductProps) => {
       message.error('Có lỗi xảy ra, vui lòng thử lại sau!')
     }
   }
+
+  /* edit product */
+  useEffect(() => {
+    if (productEdit) {
+      form.setFieldsValue({
+        name: productEdit.name,
+        category: productEdit.category._id,
+        toppings: productEdit.toppings.map((topping) => topping._id),
+        is_active: productEdit.is_active,
+        size: productEdit.sizes,
+        sale: productEdit.sale,
+        description: productEdit.description
+      })
+    }
+  }, [form, productEdit])
+
+  useEffect(() => {
+    if (productId) {
+      const product = productsList.find((product) => product._id === productId)
+      if (product) setProductEdit(product)
+    } else {
+      setProductEdit(null)
+    }
+  }, [productId, productsList])
 
   return (
     <Drawer
@@ -109,7 +159,7 @@ const FormProduct = ({ open }: FormProductProps) => {
           >
             {!isCreateLoading && <p>Thêm sản phẩm</p>}
             {isCreateLoading && (
-              <div className='border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full'></div>
+              <div className='w-6 h-6 border-2 border-t-2 border-white rounded-full border-t-primary animate-spin'></div>
             )}
           </label>
         </Space>
@@ -210,7 +260,7 @@ const FormProduct = ({ open }: FormProductProps) => {
             <Form.Item
               name='sizeDefault'
               label='Size mặc định'
-              rules={[{ required: true, message: 'Size là bắt buộc' }]}
+              rules={[{ required: productEdit ? false : true, message: 'Size là bắt buộc' }]}
             >
               <Select placeholder='Chọn size' size='large' mode='multiple' allowClear>
                 {sizeDefault.map((size) => (
@@ -239,7 +289,7 @@ const FormProduct = ({ open }: FormProductProps) => {
                 name='images'
                 className='w-full'
                 label='Hình ảnh sản phẩm'
-                rules={[{ required: true, message: 'Không được để trống hình ảnh sản phẩm' }]}
+                rules={[{ required: productEdit ? false : true, message: 'Không được để trống hình ảnh sản phẩm' }]}
               >
                 <input type='file' onChange={(e) => handleOnChange(e)} id='thumbnail' multiple className='!hidden' />
                 <label
@@ -262,7 +312,7 @@ const FormProduct = ({ open }: FormProductProps) => {
                       />
                     </svg>
                   </p>
-                  <p className='ant-upload-text text-center'>Tải hình ảnh</p>
+                  <p className='text-center ant-upload-text'>Tải hình ảnh</p>
                 </label>
               </Form.Item>
             )}
@@ -281,13 +331,28 @@ const FormProduct = ({ open }: FormProductProps) => {
                         <img src={image.url} alt='' className='object-cover w-full h-full border rounded-md shadow' />
                       </div>
                       <div
-                        className='top-4 left-4 absolute flex items-center justify-center w-4 h-4 cursor-pointer'
+                        className='absolute flex items-center justify-center w-4 h-4 cursor-pointer top-4 left-4'
                         onClick={() => setIsUpload(false)}
                       >
                         <AiOutlineCloseCircle />
                       </div>
                     </div>
                   ))}
+              </div>
+            )}
+            {productEdit && (
+              <div className='rounded-xl flex-col items-start justify-start flex h-[150px] w-full gap-3 relative'>
+                <p className='text-left'>Hoặc giữ lại ảnh cũ</p>
+                {productEdit.images.map((image) => (
+                  <div className='h-[80px] w-[80px] object-cover rounded-md'>
+                    <img
+                      src={image.url}
+                      key={image.publicId}
+                      alt={image.filename}
+                      className='object-cover w-full h-full border rounded-md shadow'
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </Col>

@@ -1,17 +1,21 @@
+import { AiFillEdit, AiOutlineUndo } from 'react-icons/ai'
 import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { useDeleteFakeProductMutation, useGetAllProductActiveQuery } from '~/store/services'
+import { setOpenDrawer, setProductId } from '~/store/slices'
+import { useDeleteFakeProductMutation, useGetAllProductActiveQuery, useGetOneProductQuery } from '~/store/services'
 
-import { AiOutlineUndo } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
+import { useAppDispatch } from '~/store/hooks'
 import { useState } from 'react'
 
 export const ProductListActive = () => {
+  const dispatch = useAppDispatch()
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
@@ -71,7 +75,7 @@ export const ProductListActive = () => {
       key: 'name',
       width: 350,
       render: (name: string, product: IProduct) => (
-        <div className='gap-x-3 flex items-center justify-start'>
+        <div className='flex items-center justify-start gap-x-3'>
           <img
             src={product.images[0].url}
             alt={product.images[0].filename}
@@ -107,7 +111,7 @@ export const ProductListActive = () => {
           <div className='flex flex-col gap-1'>
             {sizes?.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
+                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{size.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
@@ -126,7 +130,7 @@ export const ProductListActive = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
+                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{topping.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
@@ -148,10 +152,14 @@ export const ProductListActive = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <Tooltip title='Khôi phục sản phẩm'>
+          <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
-              icon={<AiOutlineUndo />}
-              className='bg-primary hover:text-white flex items-center justify-center text-white'
+              icon={<AiFillEdit />}
+              onClick={() => {
+                dispatch(setOpenDrawer(true))
+                dispatch(setProductId(product._id))
+              }}
+              className='flex items-center justify-center text-white bg-primary hover:text-white'
             />
           </Tooltip>
           <Popconfirm
@@ -163,7 +171,7 @@ export const ProductListActive = () => {
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
-              className='hover:text-white flex items-center justify-center text-white'
+              className='flex items-center justify-center text-white hover:text-white'
             />
           </Popconfirm>
         </Space>
