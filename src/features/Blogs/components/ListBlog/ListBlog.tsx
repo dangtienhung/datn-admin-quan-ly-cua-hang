@@ -10,6 +10,8 @@ import { useAppDispatch } from '~/store/store'
 import { IBlogs } from '~/types'
 import { truncateDescription } from '../../utils'
 import { messageAlert } from '~/utils/messageAlert'
+import ReactHtmlParser from 'html-react-parser'
+import 'react-quill/dist/quill.snow.css'
 
 const ListBlog = () => {
   const dispatch = useAppDispatch()
@@ -58,15 +60,13 @@ const ListBlog = () => {
     {
       title: 'Tên blog',
       dataIndex: 'name',
-      key: 'name',
-      // with: '20%',
-      render: (name: string) => <span className='uppercase'>{name}</span>
+      key: 'name'
+      // render: (name: string) => <span className='uppercase'>{name}</span>
     },
     {
       title: 'Ảnh blog',
       dataIndex: 'images',
       key: 'images',
-      // with: '20%',
 
       render: (image: any) => <img className='w-full max-w-[350px]' src={image[0]?.url} alt='' />
     },
@@ -74,8 +74,7 @@ const ListBlog = () => {
       title: 'Mô tả blog',
       dataIndex: 'description',
       key: 'description',
-      // with: '20%',
-      render: (text: string) => <p>{truncateDescription(text, 100)}</p>
+      render: (text: string) => <div>{truncateDescription(ReactHtmlParser(text) as any, 120)}</div>
     },
     {
       title: 'Action',

@@ -1,6 +1,7 @@
 import { Button, DeleteIcon } from '~/components'
-import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { useDeleteFakeProductMutation, useGetAllProductActiveQuery } from '~/store/services'
 
 import { AiOutlineUndo } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
@@ -8,13 +9,13 @@ import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
-import { useGetAllProductActiveQuery } from '~/store/services'
 import { useState } from 'react'
 
 export const ProductListActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
+  const [deleteFakeProduct, { isLoading: isLoadingDeleteFake }] = useDeleteFakeProductMutation()
   const { data } = useGetAllProductActiveQuery({
     _page: 1,
     _limit: 10
@@ -45,6 +46,17 @@ export const ProductListActive = () => {
     onChange: onSelectChange
   }
   const hasSelected = selectedRowKeys.length > 0
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await deleteFakeProduct({ id }).unwrap()
+      if (response.message === 'success') {
+        message.success('Sản phẩm đã được chuyển vào thùng rác!')
+      }
+    } catch (error) {
+      message.error('Xóa sản phẩm thất bại')
+    }
+  }
 
   const columns = [
     {
@@ -142,7 +154,12 @@ export const ProductListActive = () => {
               className='bg-primary hover:text-white flex items-center justify-center text-white'
             />
           </Tooltip>
-          <Popconfirm title='Xóa sản phẩm?' onConfirm={() => {}} okText='Yes' cancelText='No'>
+          <Popconfirm
+            title='Xóa sản phẩm?'
+            onConfirm={() => handleDeleteProduct(product._id)}
+            okText='Yes'
+            cancelText='No'
+          >
             <ButtonAntd
               icon={<DeleteIcon />}
               danger

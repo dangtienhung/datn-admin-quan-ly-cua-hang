@@ -3,7 +3,7 @@ import { Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
@@ -16,15 +16,26 @@ import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
+import { useAppSelector } from '~/store/hooks'
 
 type DataIndex = keyof IOrderDataType
 
 const ListDoneOrders = () => {
   const dispatch = useAppDispatch()
+  const { orderDate } = useAppSelector((state) => state.orders)
+
   const [options, setoptions] = useState({
     page: 1,
     limit: 10
   })
+
+  useEffect(() => {
+    setoptions((prev) => ({
+      ...prev,
+      page: 1,
+      startDate: orderDate
+    }))
+  }, [orderDate])
 
   /*Search */
   const [searchText, setSearchText] = useState('')

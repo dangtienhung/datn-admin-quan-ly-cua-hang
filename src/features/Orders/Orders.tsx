@@ -7,16 +7,19 @@ import { useAppSelector } from '~/store/hooks'
 import DetailOrder from './components/DetailOrder/DetailOrder'
 import ModalCancelReason from './components/ModalCancelReason/ModalCancelReason'
 import type { DatePickerProps } from 'antd'
+import { useAppDispatch } from '~/store/store'
+import { setOrderDate } from '~/store/slices/Orders'
 
 const Orders = () => {
   const { openDrawer } = useAppSelector((state) => state.drawer)
+  const dispatch = useAppDispatch()
   const onDateChange: DatePickerProps['onChange'] = (_, dateString) => {
-    console.log(dateString)
+    dispatch(setOrderDate(dateString))
   }
   return (
     <div>
       <Breadcrumb pageName='Orders'>
-        <DatePicker size='large' format={'DD/MM/YYYY'} onChange={onDateChange} />
+        <DatePicker size='large' onChange={onDateChange} />
       </Breadcrumb>
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
       <DetailOrder open={openDrawer} />

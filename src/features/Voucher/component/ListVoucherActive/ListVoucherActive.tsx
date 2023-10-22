@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message } from 'antd'
+import { Input, InputRef, Popconfirm, Space, Table, message, Button as AntButton } from 'antd'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
 import { useRef, useState } from 'react'
@@ -77,38 +77,28 @@ const ListVoucherActive = () => {
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Tìm kiếm mã`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
-          <Button
-            variant='success'
+          <AntButton
+            type='primary'
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
           >
             Search
-          </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)}>Reset</Button>
-          <Button
-            variant='success'
-            onClick={() => {
-              confirm({ closeDropdown: false })
-              setSearchText((selectedKeys as string[])[0])
-              setSearchedColumn(`${dataIndex}`)
-            }}
-          >
-            Filter
-          </Button>
-          <Button
+          </AntButton>
+          <AntButton onClick={() => clearFilters && handleReset(clearFilters)}>Reset</AntButton>
+          <AntButton
             onClick={() => {
               close()
             }}
           >
             close
-          </Button>
+          </AntButton>
         </Space>
       </div>
     ),
@@ -169,6 +159,13 @@ const ListVoucherActive = () => {
         return saleX - saleY
       },
       render: (sale: number) => `${formatCurrency(sale)}`
+    },
+    {
+      title: 'Mã giảm giá',
+      dataIndex: 'title',
+      key: 'title',
+      render: (name: string) => <span>{name}</span>,
+      ...getColumnSearchProps('title')
     },
     {
       title: 'Action',
