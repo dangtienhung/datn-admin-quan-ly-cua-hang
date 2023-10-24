@@ -28,13 +28,15 @@ const ListPendingOrders = () => {
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
-    startDate: ''
+    startDate: '',
+    endDate: ''
   })
   useEffect(() => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
-      startDate: orderDate
+      startDate: orderDate.startDate,
+      endDate: orderDate.endDate
     }))
   }, [orderDate])
 

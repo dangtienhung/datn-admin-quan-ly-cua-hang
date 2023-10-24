@@ -1,6 +1,11 @@
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteImageSliderMutation, useDeleteSliderMutation, useGetAllSlidersQuery } from '~/store/services'
+import {
+  useDeleteImageSliderMutation,
+  useDeleteSliderMutation,
+  useGetAllSlidersQuery,
+  useUpdateStatusMutation
+} from '~/store/services'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { Image, Popconfirm, Space, Table, Switch } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
@@ -13,9 +18,9 @@ import { ISLider } from '~/types'
 
 export const ListSliders = () => {
   const { data: sliders, isLoading, isError } = useGetAllSlidersQuery()
-  const [idSlider, setIdSlider] = useState('')
   const [deleteSlider] = useDeleteSliderMutation()
   const [deleteImageSlider] = useDeleteImageSliderMutation()
+  const [updateStatus] = useUpdateStatusMutation()
   const onHandleDelete = async (id: string) => {
     await pause(2000)
     deleteSlider(id)
@@ -25,6 +30,15 @@ export const ListSliders = () => {
         messageAlert('Xóa thành công', 'success')
       })
       .catch(() => messageAlert('Xóa thất bại!', 'error'))
+  }
+
+  const onSwitchChange = (id: number | string) => {
+    updateStatus(id)
+      .unwrap()
+      .then(() => {
+        messageAlert('Cập nhật thành công', 'success')
+      })
+      .catch(() => messageAlert('Cập nhật thất bại', 'error'))
   }
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -67,8 +81,9 @@ export const ListSliders = () => {
         <Switch
           checkedChildren={<CheckOutlined />}
           unCheckedChildren={<CloseOutlined />}
-          onChange={() => setIdSlider(slider._id)}
-          // checked
+          onChange={() => onSwitchChange(slider._id)}
+          defaultChecked={slider.is_active}
+          disabled={countActive && countActive.length <= 1 && slider.is_active}
         />
       )
     },
@@ -98,6 +113,9 @@ export const ListSliders = () => {
     key: item._id,
     index: index + 1
   }))
+  const countActive = sliderData?.filter((item) => {
+    return item.is_active === true
+  })
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
