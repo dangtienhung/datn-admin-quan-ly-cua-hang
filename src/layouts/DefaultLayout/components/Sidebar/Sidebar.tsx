@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { BarsIcon } from '~/components'
 import { Menu } from 'antd'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { items } from './components'
 
 interface SidebarProps {
@@ -13,8 +13,10 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+  const { pathname } = useLocation()
   const trigger = useRef<any>(null)
   const sidebar = useRef<any>(null)
+  const currentPath = pathname.split('/').pop()
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -52,7 +54,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#001529] duration-300 ease-linear dark:bg-[#001529] lg:static lg:translate-x-0 ${
+      className={`absolute left-0 top-0 z-999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#001529] duration-300 ease-linear dark:bg-[#001529] lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -80,7 +82,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <div className='select-none'>
             <h3 className='text-bodydark2 mb-4 ml-4 text-sm font-semibold select-none'>MENU</h3>
 
-            <Menu theme='dark' defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
+            <Menu
+              theme='dark'
+              defaultSelectedKeys={[`${currentPath}`]}
+              defaultOpenKeys={['manager']}
+              mode='inline'
+              items={items}
+            />
           </div>
         </nav>
       </div>

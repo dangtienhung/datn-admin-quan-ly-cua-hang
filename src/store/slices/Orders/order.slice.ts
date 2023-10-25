@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface IOrderDetail {
   orderData: {
-    _id: string
     key: string
     priceShip: number
     totalPrice: number
@@ -16,12 +15,17 @@ interface IOrderDetail {
       avatar: string
       address: string
     }
+    reasonCancelOrder?: string
+  }
+  id: string
+  orderDate: {
+    startDate: string
+    endDate: string
   }
 }
 
 const initialState: IOrderDetail = {
   orderData: {
-    _id: '',
     key: '',
     priceShip: 0,
     totalPrice: 0,
@@ -34,7 +38,13 @@ const initialState: IOrderDetail = {
       phone: '',
       username: '',
       address: ''
-    }
+    },
+    reasonCancelOrder: ''
+  },
+  id: '',
+  orderDate: {
+    startDate: '',
+    endDate: ''
   }
 }
 
@@ -44,9 +54,15 @@ export const orderSlice = createSlice({
   reducers: {
     setOrderData: (state, action: PayloadAction<any>) => {
       state.orderData = action.payload
+    },
+    setIdOrderCancel: (state, action: PayloadAction<string>) => {
+      state.id = action.payload
+    },
+    setOrderDate: (state, action: PayloadAction<{ startDate: string; endDate: string }>) => {
+      state.orderDate = action.payload
     }
   }
 })
 
-export const { setOrderData } = orderSlice.actions
+export const { setOrderData, setIdOrderCancel, setOrderDate } = orderSlice.actions
 export const orderReducer = orderSlice.reducer

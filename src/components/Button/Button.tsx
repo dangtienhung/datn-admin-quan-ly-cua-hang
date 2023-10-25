@@ -60,6 +60,7 @@ const Button = ({
         { 'cursor-wait bg-opacity-90': loading },
         { 'bg-danger hover:bg-opacity-90': variant === 'danger' },
         { 'bg-meta-3 hover:bg-opacity-90': variant === 'success' },
+        { 'bg-meta-6 hover:bg-opacity-90': variant === 'warning' },
         styleClass,
         size
       )}

@@ -88,7 +88,13 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
             }
           ]}
         >
-          <InputNumber size='large' placeholder='Tên size' className='w-full' />
+          <InputNumber
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+            parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
+            size='large'
+            placeholder='Tên size'
+            className='w-full'
+          />
         </Form.Item>
 
         <Form.Item>
@@ -98,7 +104,7 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
             styleClass='!w-full mt-5 py-2'
             type='submit'
           >
-            {sizeData._id ? 'Cập nhật size' : 'Thêm danh size mới'}
+            {sizeData._id ? 'Cập nhật size' : 'Thêm size mới'}
           </Button>
         </Form.Item>
       </Form>

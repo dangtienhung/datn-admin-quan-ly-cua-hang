@@ -7,8 +7,8 @@ export const toppingApi = createApi({
   tagTypes: ['Topping'],
   endpoints: (builder) => ({
     /* Lấy ra tất cả topping */
-    getAllToppings: builder.query<IDocsToppings, void>({
-      query: () => `/toppings`,
+    getAllToppings: builder.query<IDocsToppings, { _page: number; _limit: number }>({
+      query: ({ _page, _limit }) => `/toppings?_page=${_page}&_limit=${_limit}`,
       providesTags: (result) => {
         if (result) {
           const final = [

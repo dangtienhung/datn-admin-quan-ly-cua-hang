@@ -1,26 +1,108 @@
 import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table } from 'antd'
+import { Input, Space, Table, Button as ButtonAnt } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useState } from 'react'
-import { useCancelOrderMutation, useConfirmOrderMutation, useGetAllOrderQuery } from '~/store/services/Orders'
+import { useRef, useState } from 'react'
+import { useConfirmOrderMutation, useDoneOrderMutation, useGetAllOrderQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
-import { EyeFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
+import { EyeFilled, CloseCircleFilled, CheckOutlined, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
-import { setOrderData } from '~/store/slices/Orders/order.slice'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
 import { messageAlert } from '~/utils/messageAlert'
+import { setOpenModal } from '~/store/slices/Modal'
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5'
+import type { InputRef } from 'antd'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { IOrderDataType } from '~/types'
+import { ColumnType } from 'antd/lib/table'
+import Highlighter from 'react-highlight-words'
 
+type DataIndex = keyof IOrderDataType
 const ListOrders = () => {
   const dispatch = useAppDispatch()
   const [options, setoptions] = useState({
     page: 1,
     limit: 10
   })
+
+  /*Search */
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const searchInput = useRef<InputRef>(null)
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IOrderDataType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm mã đơn hàng`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <ButtonAnt
+            type='primary'
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size='small'
+            style={{ width: 90 }}
+          >
+            Tìm kiếm
+          </ButtonAnt>
+          <ButtonAnt onClick={() => clearFilters && handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+            Làm mới
+          </ButtonAnt>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100)
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      )
+  })
+  /*End Search */
+
+  const { data: orders, isLoading, isError } = useGetAllOrderQuery(options)
   const [confirmOrder] = useConfirmOrderMutation()
-  const [cancelOrder] = useCancelOrderMutation()
+  const [doneOrder] = useDoneOrderMutation()
   const onConfirmOrder = (id: string) => {
     confirmOrder(id)
       .unwrap()
@@ -29,16 +111,14 @@ const ListOrders = () => {
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
-
-  const onCancelOrder = (id: string) => {
-    cancelOrder(id)
+  const onDoneOrder = (id: string) => {
+    doneOrder(id)
       .unwrap()
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
-  const { data: orders, isLoading, isError } = useGetAllOrderQuery(options)
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
@@ -51,7 +131,14 @@ const ListOrders = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Thông tin  người đặt',
+      title: 'Mã đơn hàng',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      width: 250,
+      ...getColumnSearchProps('orderCode')
+    },
+    {
+      title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
       rowScope: 'row',
@@ -64,12 +151,14 @@ const ListOrders = () => {
       title: 'Ghi chú',
       dataIndex: 'note',
       key: 'note'
+
       // render: (name: string) => <span className='capitalize'>{name}</span>
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: string) => (
         <span
           className={`text-white capitalize font-semibold ${
@@ -77,14 +166,35 @@ const ListOrders = () => {
               ? 'bg-meta-1'
               : status === 'pending'
               ? 'bg-meta-6'
-              : status === 'done' || status === 'confirmed'
+              : status === 'done'
               ? 'bg-meta-3'
               : 'bg-meta-5'
           } rounded inline-block px-2 py-1`}
         >
           {status}
         </span>
-      )
+      ),
+      filters: [
+        {
+          text: 'Hoàn thành',
+          value: 'done'
+        },
+        {
+          text: 'Đang chờ',
+          value: 'pending'
+        },
+        {
+          text: 'Đã hủy',
+          value: 'canceled'
+        },
+        {
+          text: 'Đã xác nhận',
+          value: 'confirmed'
+        }
+      ],
+      onFilter(value, record) {
+        return record.status.startsWith(value)
+      }
     },
     {
       title: 'Thời gian đặt hàng',
@@ -103,8 +213,7 @@ const ListOrders = () => {
         <Space size='middle'>
           {order.status === 'pending' && (
             <Button
-              variant='success'
-              icon={<CheckCircleFilled />}
+              icon={<CheckOutlined />}
               onClick={() => {
                 onConfirmOrder(order.key)
               }}
@@ -113,20 +222,27 @@ const ListOrders = () => {
 
           <Button
             icon={<EyeFilled />}
+            variant='warning'
             onClick={() => {
               // dispatch(setCategory({ _id: category._id, name: category.name }))
               dispatch(setOpenDrawer(true))
               dispatch(setOrderData({ ...order }))
             }}
           />
+
+          {order.status === 'confirmed' && (
+            <Button variant='success' icon={<IoCheckmarkDoneCircleSharp />} onClick={() => onDoneOrder(order.key)} />
+          )}
+
           {order.status === 'pending' && (
-            <Popconfirm
-              title='Bạn có muốn hủy đơn hàng này?'
-              okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-              onConfirm={() => onCancelOrder(order.key)}
-            >
-              <Button variant='danger' icon={<CloseCircleFilled />} />
-            </Popconfirm>
+            <Button
+              variant='danger'
+              icon={<CloseCircleFilled />}
+              onClick={() => {
+                dispatch(setOpenModal(true))
+                dispatch(setIdOrderCancel(order.key))
+              }}
+            />
           )}
         </Space>
       )
@@ -134,7 +250,7 @@ const ListOrders = () => {
   ]
   const ordersData = orders?.docs.map((item: any, index: number) => ({
     user: {
-      username: item.inforOrderShipping.name,
+      username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address
@@ -148,7 +264,9 @@ const ListOrders = () => {
     status: item.status,
     timeOrder: item.createdAt,
     key: item._id,
-    index: index + 1
+    index: index + 1,
+    reasonCancelOrder: item?.reasonCancelOrder ? item.reasonCancelOrder : '',
+    orderCode: item._id.toUpperCase()
   }))
 
   return (
@@ -165,7 +283,7 @@ const ListOrders = () => {
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }
         }}
-        scroll={{ y: '50vh' }}
+        scroll={{ y: '50vh', x: 1350 }}
         bordered
       />
     </div>

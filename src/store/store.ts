@@ -1,21 +1,43 @@
-import { categoryReducer, drawerReducers, toppingReducers, sizeReducers, voucherReducer } from './slices'
+import {
+  VoucherApi,
+  blogApi,
+  productApi,
+  toppingApi,
+  sizeApi,
+  sliderApi,
+  userApi,
+  orderApi,
+  categoryApi
+} from './services'
+import {
+  blogReducer,
+  categoryReducer,
+  drawerReducers,
+  modalReducer,
+  sizeReducers,
+  themeReducer,
+  toppingReducers,
+  voucherReducer
+} from './slices'
 
+import { AuthApi } from './services/Auth'
 import { configureStore } from '@reduxjs/toolkit'
-import { useDispatch } from 'react-redux'
-import { userApi } from './services/Users'
-import { categoryApi } from './services/Categories/category.service'
-import { sizeApi } from './services/Sizes'
-import { orderApi } from './services/Orders'
 import { orderReducer } from './slices/Orders/order.slice'
-import { VoucherApi, toppingApi } from './services'
+import { productReducers } from './slices/Products/product.slice'
+import { useDispatch } from 'react-redux'
+import { userReducer } from './slices/User/user.slice'
 
 const middlewares = [
   toppingApi.middleware,
   userApi.middleware,
   categoryApi.middleware,
   sizeApi.middleware,
+  productApi.middleware,
   orderApi.middleware,
-  VoucherApi.middleware
+  VoucherApi.middleware,
+  blogApi.middleware,
+  AuthApi.middleware,
+  sliderApi.middleware
 ]
 
 export const store = configureStore({
@@ -25,16 +47,25 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [sizeApi.reducerPath]: sizeApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [VoucherApi.reducerPath]: VoucherApi.reducer,
+    [blogApi.reducerPath]: blogApi.reducer,
+    [AuthApi.reducerPath]: AuthApi.reducer,
+    [sliderApi.reducerPath]: sliderApi.reducer,
 
     /* redux toolkit */
     drawer: drawerReducers,
+    modal: modalReducer,
+    theme: themeReducer,
     toppings: toppingReducers,
     categories: categoryReducer,
     sizes: sizeReducers,
+    products: productReducers,
     orders: orderReducer,
-    vouchers: voucherReducer
+    vouchers: voucherReducer,
+    blogs: blogReducer,
+    user: userReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
