@@ -44,6 +44,14 @@ export const sliderApi = createApi({
         method: 'DELETE',
         body: id
       })
+    }),
+    /**Update status */
+    updateStatus: builder.mutation({
+      query: (id: string | number) => ({
+        url: `/banner/${id}`,
+        method: 'PUT'
+      }),
+      invalidatesTags: ['Sliders']
     })
   })
 })
@@ -53,5 +61,6 @@ export const {
   useAddSliderMutation,
   useUploadSliderMutation,
   useDeleteSliderMutation,
-  useDeleteImageSliderMutation
+  useDeleteImageSliderMutation,
+  useUpdateStatusMutation
 } = sliderApi

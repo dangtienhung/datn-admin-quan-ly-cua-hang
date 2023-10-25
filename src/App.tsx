@@ -1,13 +1,13 @@
 import { RouterProvider } from 'react-router-dom'
 
 import routers from './routes/routes'
-import './App.css'
 import { useState } from 'react'
 import { Loader } from './common'
 import { pause } from './utils/pause'
 import { ConfigProvider, theme } from 'antd'
 import vi_VN from 'antd/lib/locale/vi_VN'
 import { useAppSelector } from './store/hooks'
+import './App.css'
 const App = () => {
   const { theme: currentTheme } = useAppSelector((state) => state.theme)
   const [isLoading, setIsLoading] = useState(true)

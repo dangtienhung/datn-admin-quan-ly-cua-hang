@@ -33,7 +33,8 @@ const ListDoneOrders = () => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
-      startDate: orderDate
+      startDate: orderDate.startDate,
+      endDate: orderDate.endDate
     }))
   }, [orderDate])
 

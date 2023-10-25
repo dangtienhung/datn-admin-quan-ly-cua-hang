@@ -17,28 +17,30 @@ export const orderApi = createApi({
     }),
 
     /**Order cho xac nhan */
-    getAllOrderPending: builder.query<any, { limit: number; page: number; startDate?: string }>({
-      query: (options) => `/order-pending?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
+    getAllOrderPending: builder.query<any, { limit: number; page: number; startDate?: string; endDate?: string }>({
+      query: (options) =>
+        `/order-pending?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}&endDate=${options.endDate}`,
       providesTags: ['Orders']
     }),
 
     /**Order hoan thanh */
-    getAllOrderDone: builder.query<any, { limit: number; page: number; startDate?: string }>({
-      query: (options) => `/order-done?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
+    getAllOrderDone: builder.query<any, { limit: number; page: number; startDate?: string; endDate?: string }>({
+      query: (options) =>
+        `/order-done?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}&endDate=${options.endDate}`,
       providesTags: ['Orders']
     }),
 
     /**Orders da huy */
-    getAllOrderCancel: builder.query<any, { limit: number; page: number; startDate?: string }>({
+    getAllOrderCancel: builder.query<any, { limit: number; page: number; startDate?: string; endDate?: string }>({
       query: (options) =>
-        `/order-canceled?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
+        `/order-canceled?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}&endDate=${options.endDate}`,
       providesTags: ['Orders']
     }),
 
     /**Lay orders da xac nhan */
-    getAllOrderConfirm: builder.query<any, { limit: number; page: number; startDate?: string }>({
+    getAllOrderConfirm: builder.query<any, { limit: number; page: number; startDate?: string; endDate?: string }>({
       query: (options) =>
-        `/order-confirmed?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}`,
+        `/order-confirmed?_limit=${options.limit}&_page=${options.page}&startDate=${options.startDate}&endDate=${options.endDate}`,
       providesTags: ['Orders']
     }),
 
