@@ -1,78 +1,104 @@
-import { Drawer } from 'antd'
-import { memo } from 'react'
+import './style.module.css'
 
-interface PreviewProductProps {
-  open: boolean
-  onClose: () => void
-}
+import { Drawer, Table } from 'antd'
+import { RootState, useAppDispatch } from '~/store/store'
+import { setOpenDrawer, setProductDetail } from '~/store/slices'
 
-const PreviewProduct = ({ onClose, open }: PreviewProductProps) => {
+import { BiSolidDiscount } from 'react-icons/bi'
+import { formatCurrency } from '~/utils'
+import parse from 'html-react-parser'
+import { useAppSelector } from '~/store/hooks'
+import { v4 as uuidv4 } from 'uuid'
+
+const PreviewProduct = () => {
+  const dispatch = useAppDispatch()
+  const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
+  const { product } = useAppSelector((state: RootState) => state.products)
+
+  if (!product) return null
+
+  const columns = [
+    {
+      dataIndex: 'name',
+      key: 'name',
+      render: (name: string) => <span className='max-w-[200px] capitalize'>{name}</span>
+    },
+    {
+      dataIndex: 'price',
+      key: 'price',
+      width: 200,
+      render: (price: number) => <span className='max-w-[200px]'>{formatCurrency(price)}</span>
+    }
+  ]
+
   return (
-    <Drawer title='Basic Drawer' placement='right' onClose={onClose} open={open}>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </Drawer>
-  )
-}
-
-export default PreviewProduct
-
-{
-  /* <div className='flex gap-4'>
+    <Drawer
+      title='Xem chi tiết sản phẩm'
+      placement='right'
+      open={product ? openDrawer : false}
+      width={800}
+      onClose={() => {
+        dispatch(setOpenDrawer(false)), dispatch(setProductDetail(null))
+      }}
+    >
+      <div className='flex flex-col gap-5'>
+        <div className='flex gap-4'>
           <div className='w-[40%]'>
-            <Slider {...settings}>
-              {product.images.map((url) => (
-                <div key={url.url}>
-                  <img src={url.url} alt={product.name} className='w-full' />
-                </div>
-              ))}
-            </Slider>
+            <div>
+              <img
+                src={product?.images[0].url}
+                alt={product?.name}
+                className='w-[300px] h-[300px] rounded-md object-cover'
+              />
+            </div>
           </div>
           <div className='flex-1'>
             <div className='flex flex-col'>
               <h1 className='flex flex-wrap items-center gap-2 text-2xl font-bold capitalize'>
                 <span className='text-2xl font-bold'>{product.name}</span>{' '}
-                {product.sale && (
+                {product?.sale && (
                   <span className='flex items-center text-2xl font-bold'>
                     <span className='mt-[2px] mr-3'>
                       <BiSolidDiscount />
                     </span>
-                    <span className=''>{saleCaculator(product.sale)}</span>
+                    <span className=''>{product.sale}</span>
                   </span>
                 )}
               </h1>
               <span className=''>
                 {product.category?.name} -
-                {`Sale: ${product.sale.isPercent ? product.sale.value + '%' : formatCurrency(product.sale.value)}`}
+                {/* {`Sale: ${product.sale.isPercent ? product.sale.value + '%' : formatCurrency(product.sale.value)}`} */}
               </span>
               <div className='mt-5'>
                 <h2 className='text-lg font-semibold'>Description</h2>
                 <span className=''>{parse(product.description)}</span>
               </div>
-              <div className='mt-14 relative'>
-                <div className='absolute -top-4 left-0 w-full bg-gray-200 h-[1px] z-10'></div>
-                <div className='-top-8 left-4 absolute z-10 px-4 bg-white'>
-                  <h2 className='text-lg font-semibold'>Size</h2>
-                </div>
-                <Table
-                  dataSource={sizes.map((item) => ({ ...item, key: uuidv4() }))}
-                  columns={columns}
-                  pagination={false}
-                />
-              </div>
-              <div className='mt-14 relative'>
-                <div className='absolute -top-4 left-0 w-full bg-gray-200 h-[1px] z-10'></div>
-                <div className='-top-8 left-4 absolute z-10 px-4 bg-white'>
-                  <h2 className='text-lg font-semibold'>Topping</h2>
-                </div>
-                <Table
-                  dataSource={product.toppings.map((item) => ({ ...item, key: uuidv4() }))}
-                  columns={columns}
-                  pagination={false}
-                />
-              </div>
             </div>
           </div>
-        </div> */
+        </div>
+        <div className='relative flex flex-col gap-3'>
+          <div className=''>
+            <h2 className='text-lg font-semibold'>Size</h2>
+          </div>
+          <Table
+            dataSource={product.sizes.map((item) => ({ ...item, key: uuidv4() }))}
+            columns={columns}
+            pagination={false}
+          />
+        </div>
+        <div className='relative flex flex-col gap-3'>
+          <div className=''>
+            <h2 className='text-lg font-semibold'>Topping</h2>
+          </div>
+          <Table
+            dataSource={product.toppings.map((item) => ({ ...item, key: uuidv4() }))}
+            columns={columns}
+            pagination={false}
+          />
+        </div>
+      </div>
+    </Drawer>
+  )
 }
+
+export default PreviewProduct

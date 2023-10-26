@@ -1,10 +1,10 @@
-import { AiFillEdit, AiOutlineUndo } from 'react-icons/ai'
 import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
-import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
 import { setOpenDrawer, setProductId } from '~/store/slices'
-import { useDeleteFakeProductMutation, useGetAllProductActiveQuery, useGetOneProductQuery } from '~/store/services'
+import { useDeleteFakeProductMutation, useGetAllProductActiveQuery } from '~/store/services'
 
+import { AiFillEdit } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
@@ -19,7 +19,7 @@ export const ProductListActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
-  const [deleteFakeProduct, { isLoading: isLoadingDeleteFake }] = useDeleteFakeProductMutation()
+  const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const { data } = useGetAllProductActiveQuery({
     _page: 1,
     _limit: 10
@@ -75,14 +75,20 @@ export const ProductListActive = () => {
       key: 'name',
       width: 350,
       render: (name: string, product: IProduct) => (
-        <div className='flex items-center justify-start gap-x-3'>
+        <div className='gap-x-3 flex items-center justify-start'>
           <img
             src={product.images[0].url}
             alt={product.images[0].filename}
             className='object-cover w-20 h-20 rounded-lg cursor-pointer'
           />
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <Tag color={clsxm({ success: !product.is_deleted }, { '#333': product.is_deleted })}>
+            <Tag
+              color={clsxm(
+                { success: !product.is_deleted && product.is_active },
+                { '#333': product.is_deleted },
+                { red: !product.is_deleted && !product.is_active }
+              )}
+            >
               {product.is_active && !product.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
             </Tag>
             <p
@@ -91,12 +97,14 @@ export const ProductListActive = () => {
             >
               {name}
             </p>
-            <p className='flex items-center justify-center gap-1'>
-              <span>
-                <TbBasketDiscount />
-              </span>
-              <span className=''>{formatCurrency(product.sale.value)}</span>
-            </p>
+            {product.sale > 0 && (
+              <p className='flex items-center justify-center gap-1'>
+                <span>
+                  <TbBasketDiscount />
+                </span>
+                <span className=''>{formatCurrency(product.sale)}</span>
+              </p>
+            )}
           </div>
         </div>
       )
@@ -111,12 +119,12 @@ export const ProductListActive = () => {
           <div className='flex flex-col gap-1'>
             {sizes?.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{size.name}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
           </div>
-          <p className=''>{sizes.length > 2 && '....'}</p>
+          <p className=''>{sizes?.length > 2 && '....'}</p>
         </>
       )
     },
@@ -130,7 +138,7 @@ export const ProductListActive = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{topping.name}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
@@ -159,7 +167,7 @@ export const ProductListActive = () => {
                 dispatch(setOpenDrawer(true))
                 dispatch(setProductId(product._id))
               }}
-              className='flex items-center justify-center text-white bg-primary hover:text-white'
+              className='bg-primary hover:text-white flex items-center justify-center text-white'
             />
           </Tooltip>
           <Popconfirm
@@ -171,7 +179,7 @@ export const ProductListActive = () => {
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
-              className='flex items-center justify-center text-white hover:text-white'
+              className='hover:text-white flex items-center justify-center text-white'
             />
           </Popconfirm>
         </Space>
@@ -180,14 +188,41 @@ export const ProductListActive = () => {
   ]
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
-          <Button onClick={start} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
+      <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+          <ButtonAntd
+            size='large'
+            danger
+            type='primary'
+            className='text-sm font-semibold capitalize'
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Xóa tất cả
+          </ButtonAntd>
         </Tooltip>
+        <ButtonAntd size='large' className='bg-green text-green-d10 text-sm font-semibold capitalize'>
+          Xuất excel
+        </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+        >
+          Xuất PDF
+        </ButtonAntd>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={products} scroll={{ x: 1300 }} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={products}
+        scroll={{ x: 1300 }}
+        pagination={{
+          pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
+          defaultPageSize: 5,
+          showSizeChanger: true
+        }}
+      />
     </div>
   )
 }

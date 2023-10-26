@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd'
+import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd'
 import { ICategory, IImage, IProduct, ISize, ITopping } from '~/types'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { RootState, useAppDispatch } from '~/store/store'
@@ -19,14 +19,12 @@ import { useAppSelector } from '~/store/hooks'
 
 const { Option } = Select
 
-interface FormProductProps {
-  open: boolean
-}
-
-const FormProduct = ({ open }: FormProductProps) => {
+const FormProduct = () => {
   const [form] = Form.useForm()
   const dispatch = useAppDispatch()
-  const [infoPage, setInfoPage] = useState({
+  const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
+  const { product } = useAppSelector((state: RootState) => state.products)
+  const [infoPage, _] = useState({
     _page: 1,
     _limit: 10
   })
@@ -68,11 +66,17 @@ const FormProduct = ({ open }: FormProductProps) => {
     if (values.sale === undefined) {
       values.sale = 0
     }
+    if (values.sizeDefault === undefined && values.size.length === 0) {
+      message.error('Phải có ít nhất 1 size')
+      return
+    }
     /* kiểm tra xem sale có cao hơn giá size không */
-    for (const sizeItem of values.size) {
-      if (sizeItem.price < values.sale) {
-        message.error('Giá sale không được cao hơn giá size')
-        return
+    if (values.size !== undefined) {
+      for (const sizeItem of values.size) {
+        if (sizeItem.price < values.sale) {
+          message.error('Giá sale không được cao hơn giá size')
+          return
+        }
       }
     }
 
@@ -149,7 +153,7 @@ const FormProduct = ({ open }: FormProductProps) => {
         dispatch(setOpenDrawer(false))
         dispatch(setProductId(null))
       }}
-      open={open}
+      open={product ? false : openDrawer}
       extra={
         <Space>
           <label
@@ -157,9 +161,9 @@ const FormProduct = ({ open }: FormProductProps) => {
             onClick={() => {}}
             className='bg-primary px-6 py-2 flex justify-center items-center w-[180px] h-[44px] text-white rounded-lg cursor-pointer'
           >
-            {!isCreateLoading && <p>Thêm sản phẩm</p>}
+            {!isCreateLoading && <p>{productId === null ? 'Thêm' : 'Cập nhật'} sản phẩm</p>}
             {isCreateLoading && (
-              <div className='w-6 h-6 border-2 border-t-2 border-white rounded-full border-t-primary animate-spin'></div>
+              <div className='border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full'></div>
             )}
           </label>
         </Space>
@@ -312,7 +316,7 @@ const FormProduct = ({ open }: FormProductProps) => {
                       />
                     </svg>
                   </p>
-                  <p className='text-center ant-upload-text'>Tải hình ảnh</p>
+                  <p className='ant-upload-text text-center'>Tải hình ảnh</p>
                 </label>
               </Form.Item>
             )}
@@ -331,7 +335,7 @@ const FormProduct = ({ open }: FormProductProps) => {
                         <img src={image.url} alt='' className='object-cover w-full h-full border rounded-md shadow' />
                       </div>
                       <div
-                        className='absolute flex items-center justify-center w-4 h-4 cursor-pointer top-4 left-4'
+                        className='top-4 left-4 absolute flex items-center justify-center w-4 h-4 cursor-pointer'
                         onClick={() => setIsUpload(false)}
                       >
                         <AiOutlineCloseCircle />
@@ -344,7 +348,7 @@ const FormProduct = ({ open }: FormProductProps) => {
               <div className='rounded-xl flex-col items-start justify-start flex h-[150px] w-full gap-3 relative'>
                 <p className='text-left'>Hoặc giữ lại ảnh cũ</p>
                 {productEdit.images.map((image) => (
-                  <div className='h-[80px] w-[80px] object-cover rounded-md'>
+                  <div className='h-[80px] w-[80px] object-cover rounded-md' key={image.publicId}>
                     <img
                       src={image.url}
                       key={image.publicId}
