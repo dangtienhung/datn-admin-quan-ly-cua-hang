@@ -1,17 +1,20 @@
 import { Button, DeleteIcon } from '~/components'
-import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
-import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
+import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { setOpenDrawer, setProductId } from '~/store/slices'
+import { useDeleteFakeProductMutation, useGetAllProductActiveFalseQuery } from '~/store/services'
 
-import { AiOutlineUndo } from 'react-icons/ai'
+import { AiFillEdit } from 'react-icons/ai'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
-import { useGetAllProductActiveFalseQuery } from '~/store/services'
+import { useAppDispatch } from '~/store/store'
 import { useState } from 'react'
 
 export const ProductListInActive = () => {
+  const dispatch = useAppDispatch()
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
@@ -20,6 +23,7 @@ export const ProductListInActive = () => {
     _limit: 10,
     query: ''
   })
+  const [deleteFakeProduct] = useDeleteFakeProductMutation()
 
   const products = data?.docs.map((product: any, index: number) => ({
     ...product,
@@ -67,7 +71,7 @@ export const ProductListInActive = () => {
             className='object-cover w-20 h-20 rounded-lg cursor-pointer'
           />
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <Tag color={clsxm({ success: !product.is_deleted }, { '#333': product.is_deleted })}>
+            <Tag color={clsxm({ red: !product.is_deleted && !product.is_active })}>
               {product.is_active && !product.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
             </Tag>
             <p
@@ -76,12 +80,14 @@ export const ProductListInActive = () => {
             >
               {name}
             </p>
-            <p className='flex items-center justify-center gap-1'>
-              <span>
-                <TbBasketDiscount />
-              </span>
-              <span className=''>{formatCurrency(product.sale.value)}</span>
-            </p>
+            {product.sale > 0 && (
+              <p className='flex items-center justify-center gap-1'>
+                <span>
+                  <TbBasketDiscount />
+                </span>
+                <span className=''>{formatCurrency(product.sale)}</span>
+              </p>
+            )}
           </div>
         </div>
       )
@@ -94,10 +100,10 @@ export const ProductListInActive = () => {
       render: (sizes: ISizeRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
-            {sizes.slice(0, 2).map((size: ISize) => (
+            {sizes.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark pr-3 w-full uppercase border-r border-opacity-50'>{size.name}</p>
-                <p className='pl-3 w-full'>{formatCurrency(size.price)}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
+                <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
           </div>
@@ -115,8 +121,8 @@ export const ProductListInActive = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark pr-3 uppercase border-r w-full border-opacity-50'>{topping.name}</p>
-                <p className='pl-3 w-full'>{formatCurrency(topping.price)}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
+                <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
           </div>
@@ -137,13 +143,22 @@ export const ProductListInActive = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <Tooltip title='Khôi phục sản phẩm'>
+          <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
-              icon={<AiOutlineUndo />}
+              icon={<AiFillEdit />}
+              onClick={() => {
+                dispatch(setOpenDrawer(true))
+                dispatch(setProductId(product._id))
+              }}
               className='bg-primary hover:text-white flex items-center justify-center text-white'
             />
           </Tooltip>
-          <Popconfirm title='Xóa sản phẩm?' onConfirm={() => {}} okText='Yes' cancelText='No'>
+          <Popconfirm
+            title='Xóa sản phẩm?'
+            onConfirm={() => handleDeleteProduct(product._id)}
+            okText='Có'
+            cancelText='Không'
+          >
             <ButtonAntd
               icon={<DeleteIcon />}
               danger
@@ -154,16 +169,56 @@ export const ProductListInActive = () => {
       )
     }
   ]
+
+  /* handle delete product */
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await deleteFakeProduct({ id }).unwrap()
+      if (response.message === 'success') {
+        message.success('Sản phẩm đã được chuyển vào thùng rác!')
+      }
+    } catch (error) {
+      message.error('Xóa sản phẩm thất bại')
+    }
+  }
+
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
-          <Button onClick={start} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
+      <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+          <ButtonAntd
+            size='large'
+            danger
+            type='primary'
+            className='text-sm font-semibold capitalize'
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Xóa tất cả
+          </ButtonAntd>
         </Tooltip>
+        <ButtonAntd size='large' className='bg-green text-green-d10 text-sm font-semibold capitalize'>
+          Xuất excel
+        </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+        >
+          Xuất PDF
+        </ButtonAntd>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={products} scroll={{ x: 1300 }} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={products}
+        scroll={{ x: 1300 }}
+        pagination={{
+          pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
+          defaultPageSize: 5,
+          showSizeChanger: true
+        }}
+      />
     </div>
   )
 }

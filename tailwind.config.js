@@ -9,6 +9,14 @@ export default {
       satoshi: ['Satoshi', 'sans-serif']
     },
     colors: {
+      green: {
+        DEFAULT: '#A2ECB5',
+        d10: '#003C00'
+      },
+      red: {
+        DEFAULT: '#EFCACA',
+        d10: '#BF0000'
+      },
       current: 'currentColor',
       transparent: 'transparent',
       white: '#FFFFFF',

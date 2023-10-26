@@ -111,6 +111,19 @@ export const productApi = createApi({
         method: 'DELETE'
       }),
       invalidatesTags: [{ type: 'Product', id: 'LIST' }]
+    }),
+
+    /* edit product */
+    editProduct: builder.mutation<{ message: string; data: IProduct }, { id: string; product: IProduct }>({
+      query: ({ id, product }) => {
+        console.log('🚀 ~ file: product.service.ts:119 ~ product:', product)
+        return {
+          url: `/product/${id}`,
+          method: 'PUT',
+          body: product
+        }
+      },
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }]
     })
   })
 })
@@ -124,5 +137,6 @@ export const {
   useCreateProductMutation,
   useDeleteFakeProductMutation,
   useRestoreProductMutation,
-  useDeleteProductMutation
+  useDeleteProductMutation,
+  useEditProductMutation
 } = productApi

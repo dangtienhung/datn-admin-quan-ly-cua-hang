@@ -80,12 +80,14 @@ export const ProductListDelete = () => {
             >
               {name}
             </p>
-            <p className='flex items-center justify-center gap-1'>
-              <span>
-                <TbBasketDiscount />
-              </span>
-              <span className=''>{formatCurrency(product.sale.value)}</span>
-            </p>
+            {product.sale > 0 && (
+              <p className='flex items-center justify-center gap-1'>
+                <span>
+                  <TbBasketDiscount />
+                </span>
+                <span className=''>{formatCurrency(product.sale)}</span>
+              </p>
+            )}
           </div>
         </div>
       )
@@ -196,14 +198,41 @@ export const ProductListDelete = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
-          <Button onClick={start} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
+      <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+          <ButtonAntd
+            size='large'
+            danger
+            type='primary'
+            className='text-sm font-semibold capitalize'
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Xóa tất cả
+          </ButtonAntd>
         </Tooltip>
+        <ButtonAntd size='large' className='bg-green text-green-d10 text-sm font-semibold capitalize'>
+          Xuất excel
+        </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+        >
+          Xuất PDF
+        </ButtonAntd>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={products} scroll={{ x: 1300 }} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={products}
+        scroll={{ x: 1300 }}
+        pagination={{
+          pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
+          defaultPageSize: 5,
+          showSizeChanger: true
+        }}
+      />
     </div>
   )
 }
