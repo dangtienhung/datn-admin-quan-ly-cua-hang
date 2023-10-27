@@ -29,7 +29,7 @@ export const sizeApi = createApi({
     }),
 
     /**Xóa size */
-    deleteSize: builder.mutation({
+    deleteSize: builder.mutation<ISize, number | string>({
       query: (id: string) => ({
         url: `/size/${id}`,
         method: 'DELETE'

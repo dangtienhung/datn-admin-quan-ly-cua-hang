@@ -12,7 +12,6 @@ import { messageAlert } from '~/utils/messageAlert'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import UploadFile from '~/components/UploadFile'
-import toast from 'react-hot-toast'
 import { container, formats } from '../../utils/ReactQuill'
 interface BlogFormProps {
   open: boolean
@@ -28,7 +27,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [uploadFile, { isLoading: isUploading }] = useUpLoadImageBlogMutation()
 
-  const [value, setvalue] = useState(blogData.description)
+  // const [value, _] = useState('')
 
   blogData._id &&
     form.setFieldsValue({
@@ -50,7 +49,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
         })
       console.log({
         name: values.name,
-        description: value
+        description: values.description
       })
       return
     }
@@ -77,7 +76,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
             })
           console.log({
             name: values.name,
-            description: value,
+            description: values.description,
             images: urls[0]
           })
         } else {
@@ -88,11 +87,11 @@ const FormBlog = ({ open }: BlogFormProps) => {
           })
             .unwrap()
             .then(() => {
-              toast.success('Thêm bài viết thành công')
+              messageAlert('Thêm bài viết thành công', 'success')
               onClose()
             })
             .catch((error) => {
-              toast.error(`Thêm bài viết thất bại! ${error.data.message}`)
+              messageAlert(`Thêm bài viết thất bại! ${error.data.message}`, 'error')
               onClose()
             })
         }
@@ -105,9 +104,12 @@ const FormBlog = ({ open }: BlogFormProps) => {
     dispatch(setBlog({ _id: '', name: '', description: '', images: [] }))
     form.resetFields()
   }
-  const handleProcedureContentChange = (content: string) => {
-    setvalue(content)
-  }
+  // const handleProcedureContentChange = (content: string) => {
+  //   useEffect(() => {
+  //     setValue(content)
+  //   }, [value])
+  // }
+
   return (
     <Drawer
       title={blogData?._id ? 'Chỉnh sửa bài viết' : 'Thêm bài viết mới'}
@@ -166,8 +168,8 @@ const FormBlog = ({ open }: BlogFormProps) => {
               }
             }}
             formats={formats}
-            value={value}
-            onChange={handleProcedureContentChange}
+            // value={value}
+            // onChange={handleProcedureContentChange}
           />
           {/* <ReactQuill theme='snow' value={value} onChange={handleProcedureContentChange} /> */}
         </Form.Item>
