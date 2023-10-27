@@ -1,14 +1,14 @@
-import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
+import { exportDataToExcel, formatCurrency } from '~/utils'
 import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
 
 import { AiFillEdit } from 'react-icons/ai'
+import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
-import { formatCurrency } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteFakeProductMutation } from '~/store/services'
 import { useState } from 'react'
@@ -207,7 +207,17 @@ const ProductList = () => {
             Xóa tất cả
           </ButtonAntd>
         </Tooltip>
-        <ButtonAntd size='large' className='bg-green text-green-d10 text-sm font-semibold capitalize'>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (productsList?.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            exportDataToExcel(productsList, 'products')
+          }}
+        >
           Xuất excel
         </ButtonAntd>
         <ButtonAntd
