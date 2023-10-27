@@ -22,7 +22,7 @@ export const sizeSlice = createSlice({
   name: 'sizes',
   initialState,
   reducers: {
-    setSize: (state, action: PayloadAction<ISize>) => {
+    setSize: (state, action: PayloadAction<any>) => {
       state.sizeData = action.payload
     }
   }

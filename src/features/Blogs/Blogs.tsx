@@ -17,7 +17,7 @@ const BlogFeature = ({ data }: BlogFeatureProps) => {
 
   return (
     <div>
-      <Breadcrumb pageName='Toppings'>
+      <Breadcrumb pageName='Blogs'>
         <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
           Thêm
         </Button>

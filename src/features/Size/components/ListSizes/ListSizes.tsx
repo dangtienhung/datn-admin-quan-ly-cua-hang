@@ -1,9 +1,9 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Popconfirm, Space, Table, message } from 'antd'
+import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { Button } from '~/components'
 import { ISize } from '~/types'
-import { formatCurrency } from '~/utils'
+import { exportDataToExcel, formatCurrency } from '~/utils'
 import { setOpenDrawer, setSize } from '~/store/slices'
 import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
 import { cancelDelete } from '~/features/Toppings'
@@ -28,16 +28,21 @@ export const ListSizes = () => {
       })
       .catch(() => messageAlert('Xóa thất bại', 'error'))
   }
-
+  const handleDeleteMany = async () => {
+    selectedRowKeys.forEach((selectedItem) => {
+      setLoading(true)
+      deleteSize(selectedItem)
+        .unwrap()
+        .then(() => {
+          message.success('Xóa thành công')
+          setSelectedRowKeys([])
+        })
+        .catch(() => messageAlert('Xóa thất bại', 'error'))
+      setLoading(false)
+    })
+  }
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const start = () => {
-    setLoading(true)
-    setTimeout(() => {
-      message.error('Chưa xóa được tất cả :))')
-      setLoading(false)
-    }, 1000)
-  }
 
   const hasSelected = selectedRowKeys.length > 0
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -107,13 +112,26 @@ export const ListSizes = () => {
         <Popconfirm
           title='Bạn thực sự muốn xóa những danh mục này?'
           description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          // onConfirm={handleDeleteMany}
+          onConfirm={handleDeleteMany}
           className='ml-[10px]'
         >
-          <Button variant='danger' onClick={start} disabled={!hasSelected} loading={loading}>
+          <Button variant='danger' disabled={!hasSelected} loading={loading}>
             Xóa tất cả
           </Button>
         </Popconfirm>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (sizeList?.docs.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            exportDataToExcel(sizeList?.docs, 'size')
+          }}
+        >
+          Xuất excel
+        </ButtonAntd>
       </Space>
       <Table
         className='dark:bg-graydark'

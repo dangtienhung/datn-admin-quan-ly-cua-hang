@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx'
 const fileExtension = '.xlsx'
 
 export const exportDataToExcel = (csvData: any, fileName: any) => {
+  console.log('🚀 ~ file: exportDataToExcel.ts:17 ~ exportDataToExcel ~ data:', csvData)
   const ws = XLSX.utils.json_to_sheet(csvData)
   const wb = { Sheets: { data: ws }, SheetNames: ['data'] }
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
