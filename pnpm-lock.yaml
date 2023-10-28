@@ -50,6 +50,9 @@ dependencies:
   jspdf:
     specifier: ^2.5.1
     version: 2.5.1
+  jspdf-autotable:
+    specifier: ^3.7.0
+    version: 3.7.0(jspdf@2.5.1)
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -7448,6 +7451,14 @@ packages:
     optionalDependencies:
       graceful-fs: 4.2.11
     dev: true
+
+  /jspdf-autotable@3.7.0(jspdf@2.5.1):
+    resolution: {integrity: sha512-K6R5U4W4E2RoINRMUvcAKmTwGMyN5DE634G35dcXyGuqzhjY4AgOBDss5+M91HEznvZ28k7rk0gAo8WfeDIXLw==}
+    peerDependencies:
+      jspdf: ^2.5.1
+    dependencies:
+      jspdf: 2.5.1
+    dev: false
 
   /jspdf@2.5.1:
     resolution: {integrity: sha512-hXObxz7ZqoyhxET78+XR34Xu2qFGrJJ2I2bE5w4SM8eFaFEkW2xcGRVUss360fYelwRSid/jT078kbNvmoW0QA==}

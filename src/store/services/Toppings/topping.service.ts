@@ -22,7 +22,7 @@ export const toppingApi = createApi({
     }),
 
     /* delete topping */
-    deleteTopping: builder.mutation<ITopping, { id: string }>({
+    deleteTopping: builder.mutation<ITopping, { id: string | number }>({
       query: ({ id }) => ({
         url: `/topping/${id}`,
         method: 'DElETE'

@@ -115,9 +115,16 @@ export const ListSizes = () => {
           onConfirm={handleDeleteMany}
           className='ml-[10px]'
         >
-          <Button variant='danger' disabled={!hasSelected} loading={loading}>
+          <ButtonAntd
+            size='large'
+            type='primary'
+            danger
+            className='text-sm font-semibold capitalize'
+            disabled={!hasSelected}
+            loading={loading}
+          >
             Xóa tất cả
-          </Button>
+          </ButtonAntd>
         </Popconfirm>
         <ButtonAntd
           size='large'
@@ -132,9 +139,22 @@ export const ListSizes = () => {
         >
           Xuất excel
         </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (sizeList?.docs.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            // exportDataToPDF(sizeList?.docs, 'size')
+          }}
+        >
+          Xuất PDF
+        </ButtonAntd>
       </Space>
       <Table
-        className='dark:bg-graydark'
+        className='dark:bg-graydark mt-3'
         columns={columns}
         dataSource={sizes}
         pagination={{
