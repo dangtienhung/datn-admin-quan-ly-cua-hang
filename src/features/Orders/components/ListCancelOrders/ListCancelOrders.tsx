@@ -17,10 +17,12 @@ import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
+import { ClientSocket } from '~/socket'
 
 type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
   const dispatch = useAppDispatch()
+  const [cancelOrder, setCancelOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
 
   const [options, setoptions] = useState({
@@ -36,6 +38,7 @@ const ListCancelOrders = () => {
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
+    ClientSocket.getCancelOrder(setCancelOrder)
   }, [orderDate])
 
   /*Search */
@@ -180,7 +183,7 @@ const ListCancelOrders = () => {
       )
     }
   ]
-  const ordersData = orders?.docs.map((item: any, index: number) => ({
+  const ordersData = cancelOrder?.docs.map((item: any, index: number) => ({
     user: {
       username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
