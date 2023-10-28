@@ -3,7 +3,7 @@ import { Input, Space, Table, Button as ButtonAnt } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useConfirmOrderMutation, useDoneOrderMutation, useGetAllOrderQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, CloseCircleFilled, CheckOutlined, SearchOutlined } from '@ant-design/icons'
@@ -19,14 +19,20 @@ import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
+import { ClientSocket } from '~/socket'
 
 type DataIndex = keyof IOrderDataType
 const ListOrders = () => {
   const dispatch = useAppDispatch()
+  const [allOrder, setAllOrder] = useState<any>()
   const [options, setoptions] = useState({
     page: 1,
     limit: 10
   })
+
+  useEffect(() => {
+    ClientSocket.getAllOrder(setAllOrder)
+  }, [])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -248,7 +254,7 @@ const ListOrders = () => {
       )
     }
   ]
-  const ordersData = orders?.docs.map((item: any, index: number) => ({
+  const ordersData = allOrder?.docs.map((item: any, index: number) => ({
     user: {
       username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,

@@ -19,11 +19,13 @@ import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
+import { ClientSocket } from '~/socket'
 
 type DataIndex = keyof IOrderDataType
 
 const ListConfirmOrders = () => {
   const dispatch = useAppDispatch()
+  const [confirmedOrder, setConfirmedOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
 
   const [options, setoptions] = useState({
@@ -32,12 +34,15 @@ const ListConfirmOrders = () => {
   })
 
   useEffect(() => {
+    console.log('kaka')
+
     setoptions((prev) => ({
       ...prev,
       page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
+    ClientSocket.getConfirmedOrder(setConfirmedOrder)
   }, [orderDate])
 
   /*Search */
@@ -212,13 +217,14 @@ const ListConfirmOrders = () => {
             variant='success'
             onClick={() => {
               onDoneOrder(order.key)
+              ClientSocket.doneOrder(order.key)
             }}
           />
         </Space>
       )
     }
   ]
-  const ordersData = orders?.docs.map((item: any, index: number) => ({
+  const ordersData = confirmedOrder?.docs.map((item: any, index: number) => ({
     user: {
       username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,

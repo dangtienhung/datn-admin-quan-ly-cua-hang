@@ -1,7 +1,7 @@
 import { Button, DeleteIcon, EditIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
-import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
+import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { RootState } from '~/store/store'
 
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
@@ -12,7 +12,6 @@ import { useAppSelector } from '~/store/hooks'
 import { useState } from 'react'
 
 const ProductList = () => {
-  const dispatch = useAppDispatch()
   const { productsList } = useAppSelector((state: RootState) => state.products)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])

@@ -1,7 +1,6 @@
 import ListCancelOrders from '../components/ListCancelOrders'
 import ListConfirmOrders from '../components/ListConfirmOrders/ListConfirmOrders'
 import ListDoneOrders from '../components/ListDoneOrders/ListDoneOrders'
-import ListOrders from '../components/ListOrders/ListOrders'
 import ListPendingOrders from '../components/ListPendingOrders/ListPendingOrders'
 
 export const items = [

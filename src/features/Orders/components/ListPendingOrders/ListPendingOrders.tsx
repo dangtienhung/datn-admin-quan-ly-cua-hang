@@ -19,10 +19,12 @@ import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
+import { ClientSocket } from '~/socket'
 
 type DataIndex = keyof IOrderDataType
 const ListPendingOrders = () => {
   const dispatch = useAppDispatch()
+  const [pendingOrder, setPendingOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
 
   const [options, setoptions] = useState({
@@ -31,6 +33,7 @@ const ListPendingOrders = () => {
     startDate: '',
     endDate: ''
   })
+
   useEffect(() => {
     setoptions((prev) => ({
       ...prev,
@@ -38,7 +41,10 @@ const ListPendingOrders = () => {
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
-  }, [orderDate])
+    console.log('render')
+
+    ClientSocket.getPendingOrder(setPendingOrder)
+  }, [orderDate, dispatch])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -217,13 +223,20 @@ const ListPendingOrders = () => {
               dispatch(setOrderData({ ...order }))
             }}
           />
-          <Button icon={<CheckOutlined />} onClick={() => onConfirmOrder(order.key)} />
+          <Button
+            icon={<CheckOutlined />}
+            onClick={() => {
+              onConfirmOrder(order.key)
+              ClientSocket.confirmOrder(order.key)
+            }}
+          />
 
           <Button
             variant='danger'
             icon={<CloseCircleFilled />}
             onClick={() => {
               dispatch(setOpenModal(true))
+              ClientSocket.cancelOrder(order.key)
               dispatch(setIdOrderCancel(order.key))
             }}
           />
@@ -234,7 +247,7 @@ const ListPendingOrders = () => {
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
 
-  const ordersData = orders?.docs.map((item: any, index: number) => ({
+  const ordersData = pendingOrder?.docs.map((item: any, index: number) => ({
     user: {
       username: item.inforOrderShipping?.name,
       phone: item.inforOrderShipping?.phone,
@@ -267,6 +280,7 @@ const ListPendingOrders = () => {
           </Popconfirm>
         </Space>
       )}
+      {/* <>{JSON.stringify(pendingOrder)}</> */}
 
       <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
