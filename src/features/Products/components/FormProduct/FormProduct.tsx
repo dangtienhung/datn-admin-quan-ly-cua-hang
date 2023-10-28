@@ -1,9 +1,11 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd'
-import { ICategory, IImage, ISize, ITopping } from '~/types'
+import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Space, message } from 'antd'
+import { ICategory, IImage, IProduct, ISize, ITopping } from '~/types'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setProductId } from '~/store/slices'
 import {
   useCreateProductMutation,
+  useEditProductMutation,
   useGetAllCategoryQuery,
   useGetAllSizeDefaultQuery,
   useGetAllToppingsQuery
@@ -13,19 +15,16 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { Loader } from '~/common'
 import { handleUploadImage } from '../..'
-import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 
 const { Option } = Select
 
-interface FormProductProps {
-  open: boolean
-}
-
-const FormProduct = ({ open }: FormProductProps) => {
+const FormProduct = () => {
   const [form] = Form.useForm()
   const dispatch = useAppDispatch()
-  const [infoPage, setInfoPage] = useState({
+  const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
+  const { product } = useAppSelector((state: RootState) => state.products)
+  const [infoPage, _] = useState({
     _page: 1,
     _limit: 10
   })
@@ -35,14 +34,15 @@ const FormProduct = ({ open }: FormProductProps) => {
   const [isUpload, setIsUpload] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
   const [images, setImages] = useState<IImage[]>([])
+  const [productEdit, setProductEdit] = useState<IProduct | null>(null)
 
   const { productId } = useAppSelector((state) => state.products)
   const { data: dataCategories } = useGetAllCategoryQuery({ ...infoPage })
   const { data: dataToppings } = useGetAllToppingsQuery({ ...infoPage })
   const { data: dataSizeDefault } = useGetAllSizeDefaultQuery()
   const [createProduct, { isLoading: isCreateLoading }] = useCreateProductMutation()
-
-  // console.log(dataCategories)
+  const { productsList } = useAppSelector((state: RootState) => state.products)
+  const [editProduct] = useEditProductMutation()
 
   useEffect(() => {
     console.log(dataSizeDefault)
@@ -68,14 +68,44 @@ const FormProduct = ({ open }: FormProductProps) => {
     if (values.sale === undefined) {
       values.sale = 0
     }
+    if (values.sizeDefault === undefined && values.size.length === 0) {
+      message.error('Phải có ít nhất 1 size')
+      return
+    }
     /* kiểm tra xem sale có cao hơn giá size không */
-    for (const sizeItem of values.size) {
-      if (sizeItem.price < values.sale) {
-        message.error('Giá sale không được cao hơn giá size')
-        return
+    if (values.size !== undefined) {
+      for (const sizeItem of values.size) {
+        if (sizeItem.price < values.sale) {
+          message.error('Giá sale không được cao hơn giá size')
+          return
+        }
       }
     }
-    /* kiểm tra xem sizeDefault có nằm trong size không */
+
+    if (productId && productEdit) {
+      const data = {
+        ...values,
+        images: images.length > 0 ? images : productEdit.images,
+        size: values.size.map((size: any) => ({ name: size.name, price: Number(size.price) }))
+      }
+      try {
+        const response = await editProduct({ id: productEdit._id, product: data }).unwrap()
+        if (response.message === 'success') {
+          message.success('Cập nhật sản phẩm thành công!')
+        }
+        dispatch(setOpenDrawer(false))
+        dispatch(setProductId(null))
+        setIsUpload(false)
+        /* reset form */
+        form.resetFields()
+        setImages([])
+      } catch (error) {
+        console.log('🚀 ~ file: FormProduct.tsx:100 ~ handleSubmitForm ~ error:', error)
+        message.error('Có lỗi xảy ra, vui lòng thử lại sau!')
+      }
+      return
+    }
+
     try {
       const response = await createProduct({ ...values, images }).unwrap()
       if (response.message === 'success') {
@@ -92,6 +122,30 @@ const FormProduct = ({ open }: FormProductProps) => {
     }
   }
 
+  /* edit product */
+  useEffect(() => {
+    if (productEdit) {
+      form.setFieldsValue({
+        name: productEdit.name,
+        category: productEdit.category._id,
+        toppings: productEdit.toppings.map((topping) => topping._id),
+        is_active: productEdit.is_active,
+        size: productEdit.sizes,
+        sale: productEdit.sale,
+        description: productEdit.description
+      })
+    }
+  }, [form, productEdit])
+
+  useEffect(() => {
+    if (productId) {
+      const product = productsList.find((product) => product._id === productId)
+      if (product) setProductEdit(product)
+    } else {
+      setProductEdit(null)
+    }
+  }, [productId, productsList])
+
   return (
     <Drawer
       title={`${productId === null ? 'Thêm' : 'Cập nhật'} sản phẩm`}
@@ -101,7 +155,7 @@ const FormProduct = ({ open }: FormProductProps) => {
         dispatch(setOpenDrawer(false))
         dispatch(setProductId(null))
       }}
-      open={open}
+      open={product ? false : openDrawer}
       extra={
         <Space>
           <label
@@ -109,7 +163,7 @@ const FormProduct = ({ open }: FormProductProps) => {
             onClick={() => {}}
             className='bg-primary px-6 py-2 flex justify-center items-center w-[180px] h-[44px] text-white rounded-lg cursor-pointer'
           >
-            {!isCreateLoading && <p>Thêm sản phẩm</p>}
+            {!isCreateLoading && <p>{productId === null ? 'Thêm' : 'Cập nhật'} sản phẩm</p>}
             {isCreateLoading && (
               <div className='border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full'></div>
             )}
@@ -212,7 +266,7 @@ const FormProduct = ({ open }: FormProductProps) => {
             <Form.Item
               name='sizeDefault'
               label='Size mặc định'
-              rules={[{ required: true, message: 'Size là bắt buộc' }]}
+              rules={[{ required: productEdit ? false : true, message: 'Size là bắt buộc' }]}
             >
               <Select placeholder='Chọn size' size='large' mode='multiple' allowClear>
                 {sizeDefault.map((size) => (
@@ -241,7 +295,7 @@ const FormProduct = ({ open }: FormProductProps) => {
                 name='images'
                 className='w-full'
                 label='Hình ảnh sản phẩm'
-                rules={[{ required: true, message: 'Không được để trống hình ảnh sản phẩm' }]}
+                rules={[{ required: productEdit ? false : true, message: 'Không được để trống hình ảnh sản phẩm' }]}
               >
                 <input type='file' onChange={(e) => handleOnChange(e)} id='thumbnail' multiple className='!hidden' />
                 <label
@@ -290,6 +344,21 @@ const FormProduct = ({ open }: FormProductProps) => {
                       </div>
                     </div>
                   ))}
+              </div>
+            )}
+            {productEdit && (
+              <div className='rounded-xl flex-col items-start justify-start flex h-[150px] w-full gap-3 relative'>
+                <p className='text-left'>Hoặc giữ lại ảnh cũ</p>
+                {productEdit.images.map((image) => (
+                  <div className='h-[80px] w-[80px] object-cover rounded-md' key={image.publicId}>
+                    <img
+                      src={image.url}
+                      key={image.publicId}
+                      alt={image.filename}
+                      className='object-cover w-full h-full border rounded-md shadow'
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </Col>

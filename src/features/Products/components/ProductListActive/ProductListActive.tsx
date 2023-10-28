@@ -1,21 +1,25 @@
-import { Button, DeleteIcon } from '~/components'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
-import { IProduct, ISize, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
+import { exportDataToExcel, formatCurrency } from '~/utils'
+import { setOpenDrawer, setProductId } from '~/store/slices'
 import { useDeleteFakeProductMutation, useGetAllProductActiveQuery } from '~/store/services'
 
-import { AiOutlineUndo } from 'react-icons/ai'
+import { AiFillEdit } from 'react-icons/ai'
+import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
-import { formatCurrency } from '~/utils'
 import { handleTogglePreviewProduct } from '../../utils'
+import { useAppDispatch } from '~/store/hooks'
 import { useState } from 'react'
 
 export const ProductListActive = () => {
+  const dispatch = useAppDispatch()
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
-  const [deleteFakeProduct, { isLoading: isLoadingDeleteFake }] = useDeleteFakeProductMutation()
+  const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const { data } = useGetAllProductActiveQuery({
     _page: 1,
     _limit: 10
@@ -78,7 +82,13 @@ export const ProductListActive = () => {
             className='object-cover w-20 h-20 rounded-lg cursor-pointer'
           />
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <Tag color={clsxm({ success: !product.is_deleted }, { '#333': product.is_deleted })}>
+            <Tag
+              color={clsxm(
+                { success: !product.is_deleted && product.is_active },
+                { '#333': product.is_deleted },
+                { red: !product.is_deleted && !product.is_active }
+              )}
+            >
               {product.is_active && !product.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
             </Tag>
             <p
@@ -87,12 +97,14 @@ export const ProductListActive = () => {
             >
               {name}
             </p>
-            <p className='flex items-center justify-center gap-1'>
-              <span>
-                <TbBasketDiscount />
-              </span>
-              <span className=''>{formatCurrency(product.sale.value)}</span>
-            </p>
+            {product.sale > 0 && (
+              <p className='flex items-center justify-center gap-1'>
+                <span>
+                  <TbBasketDiscount />
+                </span>
+                <span className=''>{formatCurrency(product.sale)}</span>
+              </p>
+            )}
           </div>
         </div>
       )
@@ -112,7 +124,7 @@ export const ProductListActive = () => {
               </div>
             ))}
           </div>
-          <p className=''>{sizes.length > 2 && '....'}</p>
+          <p className=''>{sizes?.length > 2 && '....'}</p>
         </>
       )
     },
@@ -148,9 +160,13 @@ export const ProductListActive = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <Tooltip title='Khôi phục sản phẩm'>
+          <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
-              icon={<AiOutlineUndo />}
+              icon={<AiFillEdit />}
+              onClick={() => {
+                dispatch(setOpenDrawer(true))
+                dispatch(setProductId(product._id))
+              }}
               className='bg-primary hover:text-white flex items-center justify-center text-white'
             />
           </Tooltip>
@@ -172,14 +188,51 @@ export const ProductListActive = () => {
   ]
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys.length} sản phẩm` : ''}>
-          <Button onClick={start} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
+      <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
+        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+          <ButtonAntd
+            size='large'
+            danger
+            type='primary'
+            className='text-sm font-semibold capitalize'
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Xóa tất cả
+          </ButtonAntd>
         </Tooltip>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (data?.docs?.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            exportDataToExcel(data?.docs, 'products-active')
+          }}
+        >
+          Xuất excel
+        </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+        >
+          Xuất PDF
+        </ButtonAntd>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={products} scroll={{ x: 1300 }} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={products}
+        scroll={{ x: 1300 }}
+        pagination={{
+          pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
+          defaultPageSize: 5,
+          showSizeChanger: true
+        }}
+      />
     </div>
   )
 }

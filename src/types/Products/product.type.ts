@@ -11,7 +11,7 @@ export interface ISale {
 export interface IProduct {
   _id: string
   name: string
-  sale: ISale
+  sale: number
   images: IImage[]
   description: string
   category: ICategoryRefProduct

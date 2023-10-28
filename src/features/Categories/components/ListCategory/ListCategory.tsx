@@ -1,5 +1,5 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Popconfirm, Space, Table } from 'antd'
+import { Popconfirm, Space, Table, Button as ButtonAntd, message } from 'antd'
 import { setCategory, setOpenDrawer } from '~/store/slices'
 import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
 
@@ -13,6 +13,7 @@ import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 import { useAppDispatch } from '~/store/store'
 import { useState } from 'react'
+import { exportDataToExcel } from '~/utils'
 
 const ListCategory = () => {
   const [options, setOptions] = useState({ _page: 1, _limit: 10 })
@@ -105,21 +106,39 @@ const ListCategory = () => {
   }))
   return (
     <>
-      {hasSelected && (
-        <Space>
-          <Popconfirm
-            title='Bạn thực sự muốn xóa những danh mục này?'
-            description='Hành động này sẽ xóa những danh mục đang được chọn!'
-            onConfirm={handleDeleteMany}
-            onCancel={() => setSelectedRowKeys([])}
+      <Space>
+        <Popconfirm
+          title='Bạn thực sự muốn xóa những danh mục này?'
+          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          onConfirm={handleDeleteMany}
+          onCancel={() => setSelectedRowKeys([])}
+        >
+          <ButtonAntd
+            size='large'
+            type='primary'
+            danger
+            className='text-sm font-semibold capitalize'
+            disabled={!hasSelected}
+            // loading={loading}
           >
-            <Button variant='danger' styleClass='mb-4'>
-              Xóa tất cả
-            </Button>
-          </Popconfirm>
-        </Space>
-      )}
-      <div className='dark:bg-graydark'>
+            Xóa tất cả
+          </ButtonAntd>
+        </Popconfirm>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (categories?.docs?.length === 0) {
+              message.warning('Không có danh mục nào để xuất')
+              return
+            }
+            exportDataToExcel(categories?.docs, 'Category')
+          }}
+        >
+          Xuất excel
+        </ButtonAntd>
+      </Space>
+      <div className='dark:bg-graydark mt-3'>
         <Table
           columns={columns}
           dataSource={categorriesData}

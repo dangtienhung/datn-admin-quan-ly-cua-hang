@@ -1,5 +1,5 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Popconfirm, Space, Table, message } from 'antd'
+import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingDetail, setToppingId } from '~/store/slices'
 
@@ -7,7 +7,7 @@ import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ITopping } from '~/types'
 import { cancelDelete } from '../..'
-import { formatCurrency } from '~/utils'
+import { exportDataToExcel, formatCurrency } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteToppingMutation } from '~/store/services'
 import { useState } from 'react'
@@ -17,6 +17,8 @@ const ToppingList = () => {
 
   const { toppingsList } = useAppSelector((state: RootState) => state.toppings)
   const [deleteTopping] = useDeleteToppingMutation()
+
+  console.log('toppingsList:', toppingsList)
 
   /* topping delete */
   const handleDelete = async (id: string) => {
@@ -40,7 +42,14 @@ const ToppingList = () => {
   const start = () => {
     setLoading(true)
     setTimeout(() => {
-      message.error('Chưa xóa được tất cả :))')
+      selectedRowKeys.forEach((selectedItem) => {
+        deleteTopping({ id: selectedItem })
+          .unwrap()
+          .then(() => {
+            message.success('Xóa thành công')
+            setSelectedRowKeys([])
+          })
+      })
       setLoading(false)
     }, 1000)
   }
@@ -102,18 +111,38 @@ const ToppingList = () => {
     <div>
       <Space>
         <Popconfirm
-          title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          // onConfirm={handleDeleteMany}
+          title='Bạn thực sự muốn xóa những topping này?'
+          description='Hành động này sẽ xóa những topping đang được chọn!'
+          onConfirm={start}
           className='ml-[10px]'
         >
-          <Button variant='danger' onClick={start} disabled={!hasSelected} loading={loading}>
+          <ButtonAntd
+            size='large'
+            type='primary'
+            danger
+            className='text-sm font-semibold capitalize'
+            disabled={!hasSelected}
+            loading={loading}
+          >
             Xóa tất cả
-          </Button>
+          </ButtonAntd>
         </Popconfirm>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (toppingsList?.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            exportDataToExcel(toppingsList, 'Toppings')
+          }}
+        >
+          Xuất excel
+        </ButtonAntd>
       </Space>
       <Table
-        className='dark:bg-graydark'
+        className='dark:bg-graydark mt-3'
         columns={columns}
         dataSource={toppings}
         pagination={{

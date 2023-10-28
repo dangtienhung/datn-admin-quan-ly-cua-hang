@@ -85,6 +85,14 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
               type: 'number',
               min: 5000,
               message: 'Giá size không được nhỏ hơn 5000'
+            },
+            {
+              validator: (_, value) => {
+                if (/^[0-9]+$/.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject('Hãy nhập kí tự số')
+              }
             }
           ]}
         >
@@ -92,7 +100,7 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
             parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
             size='large'
-            placeholder='Tên size'
+            placeholder='Giá size'
             className='w-full'
           />
         </Form.Item>

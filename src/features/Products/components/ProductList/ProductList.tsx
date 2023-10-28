@@ -1,22 +1,25 @@
-import { Button, DeleteIcon, EditIcon } from '~/components'
-import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { IProduct, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { RootState } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
+import { exportDataToExcel, formatCurrency } from '~/utils'
+import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
 
+import { AiFillEdit } from 'react-icons/ai'
+import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
-import { formatCurrency } from '~/utils'
-import { handleTogglePreviewProduct } from '../../utils'
 import { useAppSelector } from '~/store/hooks'
+import { useDeleteFakeProductMutation } from '~/store/services'
 import { useState } from 'react'
 
 const ProductList = () => {
+  const dispatch = useAppDispatch();
   const { productsList } = useAppSelector((state: RootState) => state.products)
+  const [deleteFakeProduct] = useDeleteFakeProductMutation()
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
-  const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
 
   const products = productsList.map((product: IProduct, index: number) => ({
     ...product,
@@ -62,23 +65,38 @@ const ProductList = () => {
             src={product.images[0].url}
             alt={product.images[0].filename}
             className='object-cover w-20 h-20 rounded-lg cursor-pointer'
+            onClick={() => {
+              dispatch(setOpenDrawer(true))
+              dispatch(setProductDetail(product))
+            }}
           />
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <Tag color={clsxm({ success: !product.is_deleted }, { '#333': product.is_deleted })}>
+            <Tag
+              color={clsxm(
+                { success: !product.is_deleted && product.is_active },
+                { '#333': product.is_deleted },
+                { red: !product.is_deleted && !product.is_active }
+              )}
+            >
               {product.is_active && !product.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
             </Tag>
             <p
               className='hover:underline capitalize truncate cursor-pointer w-[215px]'
-              onClick={() => handleTogglePreviewProduct(openPreProduct, setOpenPreProduct)}
+              onClick={() => {
+                dispatch(setOpenDrawer(true))
+                dispatch(setProductDetail(product))
+              }}
             >
               {name}
             </p>
-            <p className='flex items-center justify-center gap-1'>
-              <span>
-                <TbBasketDiscount />
-              </span>
-              <span className=''>{formatCurrency(product.sale?.value)}</span>
-            </p>
+            {product.sale > 0 && (
+              <p className='flex items-center justify-center gap-1'>
+                <span>
+                  <TbBasketDiscount />
+                </span>
+                <span className=''>{formatCurrency(product.sale)}</span>
+              </p>
+            )}
           </div>
         </div>
       )
@@ -134,15 +152,21 @@ const ProductList = () => {
       key: 'action',
       render: (_: any, product: IProduct) => (
         <Space>
-          <ButtonAntd
-            icon={<EditIcon />}
-            className='bg-primary hover:text-white flex items-center justify-center text-white'
-          />
+          <Tooltip title='Cập nhật sản phẩm'>
+            <ButtonAntd
+              icon={<AiFillEdit />}
+              onClick={() => {
+                dispatch(setOpenDrawer(true))
+                dispatch(setProductId(product._id))
+              }}
+              className='bg-primary hover:text-white flex items-center justify-center text-white'
+            />
+          </Tooltip>
           <Popconfirm
-            title='Bạn có chắc chắn muốn xóa sản phẩm này không?'
-            onConfirm={() => {}}
-            okText='Yes'
-            cancelText='No'
+            title='Xóa sản phẩm?'
+            onConfirm={() => handleDeleteProduct(product._id)}
+            okText='Có'
+            cancelText='Không'
           >
             <ButtonAntd
               icon={<DeleteIcon />}
@@ -155,16 +179,65 @@ const ProductList = () => {
     }
   ]
 
+  /* handle delete product */
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await deleteFakeProduct({ id }).unwrap()
+      if (response.message === 'success') {
+        message.success('Sản phẩm đã được chuyển vào thùng rác!')
+      }
+    } catch (error) {
+      message.error('Xóa sản phẩm thất bại')
+    }
+  }
+
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
         <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
-          <Button onClick={start} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
+          <ButtonAntd
+            size='large'
+            danger
+            type='primary'
+            className='text-sm font-semibold capitalize'
+            onClick={start}
+            disabled={!hasSelected}
+            loading={loading}
+          >
+            Xóa tất cả
+          </ButtonAntd>
         </Tooltip>
+        <ButtonAntd
+          size='large'
+          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          onClick={() => {
+            if (productsList?.length === 0) {
+              message.warning('Không có sản phẩm nào để xuất')
+              return
+            }
+            exportDataToExcel(productsList, 'products')
+          }}
+        >
+          Xuất excel
+        </ButtonAntd>
+        <ButtonAntd
+          size='large'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+        >
+          Xuất PDF
+        </ButtonAntd>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={products} scroll={{ x: 1300 }} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={products}
+        scroll={{ x: 1300 }}
+        pagination={{
+          pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
+          defaultPageSize: 5,
+          showSizeChanger: true
+        }}
+      />
     </div>
   )
 }

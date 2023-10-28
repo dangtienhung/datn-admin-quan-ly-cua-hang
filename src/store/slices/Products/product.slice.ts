@@ -34,7 +34,7 @@ const productSlice = createSlice({
     },
 
     /* lưu product */
-    setProductDetail: (state, action: PayloadAction<IProduct>) => {
+    setProductDetail: (state, action: PayloadAction<IProduct | null>) => {
       state.product = action.payload
     },
 
