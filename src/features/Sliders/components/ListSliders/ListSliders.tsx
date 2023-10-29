@@ -91,7 +91,7 @@ export const ListSliders = () => {
       title: 'Action',
       key: 'action',
       width: 300,
-      render: (_: any, slider: any) => (
+      render: (_: any, slider: ISLider) => (
         <Space size='middle'>
           <Popconfirm
             title='Bạn có muốn xóa slide này?'
@@ -100,7 +100,11 @@ export const ListSliders = () => {
             onCancel={cancelDelete}
             onConfirm={() => onHandleDelete(slider._id)}
           >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
+            <Button
+              disabled={(slider.is_active && countActive && countActive.length <= 1) || slider.is_active}
+              variant='danger'
+              icon={<BsFillTrashFill />}
+            >
               Xóa
             </Button>
           </Popconfirm>
