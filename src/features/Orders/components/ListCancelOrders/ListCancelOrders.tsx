@@ -3,7 +3,7 @@ import { Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { useGetAllOrderCancelQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
@@ -28,18 +28,24 @@ const ListCancelOrders = () => {
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
-    startDate: ''
+    startDate: '',
+    endDate: ''
   })
 
-  useEffect(() => {
+  const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
-    ClientSocket.getCancelOrder(setCancelOrder)
   }, [orderDate])
+
+  const { isError, isLoading } = useGetAllOrderCancelQuery(options)
+
+  useEffect(() => {
+    ClientSocket.getCancelOrder(setCancelOrder, options)
+  }, [orderDate, memoOptions, options])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -112,8 +118,6 @@ const ListCancelOrders = () => {
       )
   })
   /*End Search */
-
-  const { data: orders, isError, isLoading } = useGetAllOrderCancelQuery(options)
 
   const columns: ColumnsType<any> = [
     {
@@ -211,10 +215,10 @@ const ListCancelOrders = () => {
         columns={columns}
         dataSource={ordersData}
         pagination={{
-          pageSize: orders && orders.limit,
+          pageSize: cancelOrder && cancelOrder.limit,
           showSizeChanger: true,
           pageSizeOptions: ['10', '15', '20', '25'],
-          total: orders && orders?.totalDocs,
+          total: cancelOrder && cancelOrder?.totalDocs,
           onChange(page, pageSize) {
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }

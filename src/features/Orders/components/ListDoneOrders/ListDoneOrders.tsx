@@ -3,7 +3,7 @@ import { Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
@@ -25,21 +25,27 @@ const ListDoneOrders = () => {
   const dispatch = useAppDispatch()
   const [doneOrder, setDoneOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
-
   const [options, setoptions] = useState({
     page: 1,
-    limit: 10
+    limit: 10,
+    startDate: '',
+    endDate: ''
   })
 
-  useEffect(() => {
+  const { isError, isLoading } = useGetAllOrderDoneQuery(options)
+
+  const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
-    ClientSocket.getDoneOrder(setDoneOrder)
   }, [orderDate])
+
+  useEffect(() => {
+    ClientSocket.getDoneOrder(setDoneOrder, options)
+  }, [orderDate, memoOptions, options])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -112,8 +118,6 @@ const ListDoneOrders = () => {
       )
   })
   /*End Search */
-
-  const { data: orders, isError, isLoading } = useGetAllOrderDoneQuery(options)
   const columns: ColumnsType<any> = [
     {
       title: '#',
@@ -208,10 +212,10 @@ const ListDoneOrders = () => {
         columns={columns}
         dataSource={ordersData}
         pagination={{
-          pageSize: orders && orders.limit,
+          pageSize: doneOrder && doneOrder.limit,
           showSizeChanger: true,
           pageSizeOptions: ['10', '15', '20', '25'],
-          total: orders && orders?.totalDocs,
+          total: doneOrder && doneOrder?.totalDocs,
           onChange(page, pageSize) {
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }
