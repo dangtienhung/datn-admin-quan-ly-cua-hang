@@ -5,6 +5,8 @@ import { setOpenDrawer, setProductId } from '~/store/slices'
 import { useDeleteFakeProductMutation, useGetAllProductActiveQuery } from '~/store/services'
 
 import { AiFillEdit } from 'react-icons/ai'
+import { HiDocumentDownload } from 'react-icons/hi'
+import { FaFilePdf } from 'react-icons/fa6'
 import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
@@ -203,8 +205,9 @@ export const ProductListActive = () => {
           </ButtonAntd>
         </Tooltip>
         <ButtonAntd
+          icon={<HiDocumentDownload />}
           size='large'
-          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
           onClick={() => {
             if (data?.docs?.length === 0) {
               message.warning('Không có sản phẩm nào để xuất')
@@ -216,8 +219,9 @@ export const ProductListActive = () => {
           Xuất excel
         </ButtonAntd>
         <ButtonAntd
+          icon={<FaFilePdf />}
           size='large'
-          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize flex items-center'
         >
           Xuất PDF
         </ButtonAntd>

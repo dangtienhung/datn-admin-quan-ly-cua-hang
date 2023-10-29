@@ -7,6 +7,7 @@ import { IUser } from '~/types'
 import { cancelDelete } from '~/features/Toppings'
 import { useRef, useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { HiDocumentDownload } from 'react-icons/hi'
 import { useAppDispatch } from '~/store/store'
 import { setUser } from '~/store/slices/User/user.slice'
 import { setOpenDrawer } from '~/store/slices'
@@ -19,6 +20,7 @@ import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { IUserDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
+import { exportDataToExcel } from '~/utils'
 
 // type Props = {}
 type DataIndex = keyof IUserDataType
@@ -211,20 +213,33 @@ export const ListCustomers = () => {
   if (isError) return <NotFound />
   return (
     <>
-      {hasSelected && (
-        <Space>
-          <Popconfirm
-            title='Bạn thực sự muốn xóa những danh mục này?'
-            description='Hành động này sẽ xóa những danh mục đang được chọn!'
-            onConfirm={handleDeleteMany}
-            onCancel={() => setSelectedRowKeys([])}
-          >
-            <Button variant='danger' styleClass='mb-4'>
-              Xóa tất cả
-            </Button>
-          </Popconfirm>
-        </Space>
-      )}
+      <Space className='mb-4'>
+        <Popconfirm
+          title='Bạn thực sự muốn xóa những danh mục này?'
+          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          onConfirm={handleDeleteMany}
+          onCancel={() => setSelectedRowKeys([])}
+        >
+          <Button variant='danger' disabled={!hasSelected}>
+            Xóa tất cả
+          </Button>
+        </Popconfirm>
+
+        <Button
+          // size='large'
+          icon={<HiDocumentDownload />}
+          styleClass='bg-[#209E62] text-white text-sm font-semibold capitalize'
+          onClick={() => {
+            if (customers && customers.length === 0) {
+              messageAlert('Không có dũ liệu để xuất', 'error')
+            }
+            exportDataToExcel(customers, 'Customer Data')
+          }}
+        >
+          Xuất excel
+        </Button>
+      </Space>
+
       <div className='dark:bg-graydark'>
         <Table
           columns={columns}

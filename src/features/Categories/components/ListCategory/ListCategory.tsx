@@ -1,4 +1,5 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { HiDocumentDownload } from 'react-icons/hi'
 import { Popconfirm, Space, Table, Button as ButtonAntd, message } from 'antd'
 import { setCategory, setOpenDrawer } from '~/store/slices'
 import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
@@ -125,8 +126,9 @@ const ListCategory = () => {
           </ButtonAntd>
         </Popconfirm>
         <ButtonAntd
+          icon={<HiDocumentDownload />}
           size='large'
-          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
           onClick={() => {
             if (categories?.docs?.length === 0) {
               message.warning('Không có danh mục nào để xuất')

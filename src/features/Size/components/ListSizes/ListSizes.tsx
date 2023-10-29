@@ -1,4 +1,6 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { HiDocumentDownload } from 'react-icons/hi'
+import { FaFilePdf } from 'react-icons/fa6'
 import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
 import { useAppDispatch } from '~/store/store'
 import { Button } from '~/components'
@@ -31,7 +33,7 @@ export const ListSizes = () => {
   const handleDeleteMany = async () => {
     selectedRowKeys.forEach((selectedItem) => {
       setLoading(true)
-      deleteSize(selectedItem)
+      deleteSize(selectedItem as string)
         .unwrap()
         .then(() => {
           message.success('Xóa thành công')
@@ -89,7 +91,7 @@ export const ListSizes = () => {
             Sửa
           </Button>
           <Popconfirm
-            title='Bạn có muốn xóa topping này?'
+            title='Bạn có muốn xóa size này?'
             description='Bạn chắc chắn muốn xóa đi size này?'
             okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
             onCancel={cancelDelete}
@@ -127,8 +129,9 @@ export const ListSizes = () => {
           </ButtonAntd>
         </Popconfirm>
         <ButtonAntd
+          icon={<HiDocumentDownload />}
           size='large'
-          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
           onClick={() => {
             if (sizeList?.docs.length === 0) {
               message.warning('Không có sản phẩm nào để xuất')
@@ -140,8 +143,9 @@ export const ListSizes = () => {
           Xuất excel
         </ButtonAntd>
         <ButtonAntd
+          icon={<FaFilePdf />}
           size='large'
-          className='bg-red text-green-d10 text-sm font-semibold capitalize'
+          className='bg-red text-green-d10 text-sm font-semibold capitalize flex items-center'
           onClick={() => {
             if (sizeList?.docs.length === 0) {
               message.warning('Không có sản phẩm nào để xuất')

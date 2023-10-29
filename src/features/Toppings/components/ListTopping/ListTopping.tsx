@@ -1,4 +1,5 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { HiDocumentDownload } from 'react-icons/hi'
 import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingDetail, setToppingId } from '~/store/slices'
@@ -43,7 +44,7 @@ const ToppingList = () => {
     setLoading(true)
     setTimeout(() => {
       selectedRowKeys.forEach((selectedItem) => {
-        deleteTopping({ id: selectedItem })
+        deleteTopping({ id: selectedItem as string })
           .unwrap()
           .then(() => {
             message.success('Xóa thành công')
@@ -128,8 +129,9 @@ const ToppingList = () => {
           </ButtonAntd>
         </Popconfirm>
         <ButtonAntd
+          icon={<HiDocumentDownload />}
           size='large'
-          className='bg-green text-green-d10 text-sm font-semibold capitalize'
+          className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
           onClick={() => {
             if (toppingsList?.length === 0) {
               message.warning('Không có sản phẩm nào để xuất')
