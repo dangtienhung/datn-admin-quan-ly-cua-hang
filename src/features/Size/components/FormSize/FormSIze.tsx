@@ -71,7 +71,17 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
           className='dark:text-white'
           label='Tên size'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên size!' }]}
+          rules={[
+            { required: true, message: 'Tên size không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên size không được chứa toàn khoảng trắng!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên size' />
         </Form.Item>
@@ -85,14 +95,6 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
               type: 'number',
               min: 5000,
               message: 'Giá size không được nhỏ hơn 5000'
-            },
-            {
-              validator: (_, value) => {
-                if (/^[0-9]+$/.test(value)) {
-                  return Promise.resolve()
-                }
-                return Promise.reject('Hãy nhập kí tự số')
-              }
             }
           ]}
         >
