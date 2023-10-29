@@ -14,7 +14,7 @@ import { useDeleteFakeProductMutation } from '~/store/services'
 import { useState } from 'react'
 
 const ProductList = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   const { productsList } = useAppSelector((state: RootState) => state.products)
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
 

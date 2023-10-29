@@ -7,6 +7,7 @@ import { useAppDispatch } from '~/store/store'
 import { messageAlert } from '~/utils/messageAlert'
 import { useCancelOrderMutation } from '~/store/services/Orders'
 import { setOrderData } from '~/store/slices/Orders'
+import { ClientSocket } from '~/socket'
 
 const ModalCancelReason = () => {
   const dispatch = useAppDispatch()
@@ -46,6 +47,7 @@ const ModalCancelReason = () => {
       .catch(() => {
         messageAlert('Hủy đơn hàng thất bại.Hãy thử lại! ', 'error', 5)
       })
+    ClientSocket.cancelOrder(id)
   }
   const onCancel = () => {
     setReason('')

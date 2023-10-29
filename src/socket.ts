@@ -14,8 +14,16 @@ export const ClientSocket = {
     }
   },
 
-  getPendingOrder: (setPendingOrder: React.Dispatch<React.SetStateAction<undefined>>) => {
-    socket.emit('client:requestPendingOrder', '')
+  getPendingOrder: (
+    setPendingOrder: React.Dispatch<React.SetStateAction<undefined>>,
+    options: {
+      page: number
+      limit: number
+      startDate: string
+      endDate: string
+    }
+  ) => {
+    socket.emit('client:requestPendingOrder', options)
     socket.on('server:loadPendingOrder', (data) => {
       setPendingOrder(data)
     })
@@ -24,8 +32,16 @@ export const ClientSocket = {
     }
   },
 
-  getCancelOrder: (setCancelOrder: React.Dispatch<React.SetStateAction<undefined>>) => {
-    socket.emit('client:requestCancelOrder', '')
+  getCancelOrder: (
+    setCancelOrder: React.Dispatch<React.SetStateAction<undefined>>,
+    options: {
+      page: number
+      limit: number
+      startDate: string
+      endDate: string
+    }
+  ) => {
+    socket.emit('client:requestCancelOrder', options)
     socket.on('server:loadCancelOrder', (data) => {
       setCancelOrder(data)
     })
@@ -56,9 +72,17 @@ export const ClientSocket = {
     }
   },
 
-  getConfirmedOrder: (setConfirmedOrder: React.Dispatch<React.SetStateAction<undefined>>) => {
-    socket.emit('client:requestConfirmedOrder', '')
-    socket.on('server:loadConfirmedder', (data) => {
+  getConfirmedOrder: (
+    setConfirmedOrder: React.Dispatch<any>,
+    options: {
+      page: number
+      limit: number
+      startDate: string
+      endDate: string
+    }
+  ) => {
+    socket.emit('client:requestConfirmedOrder', options)
+    socket.on('server:loadConfirmedOrder', (data) => {
       setConfirmedOrder(data)
     })
     return () => {
@@ -66,9 +90,18 @@ export const ClientSocket = {
     }
   },
 
-  getDoneOrder: (setDoneOrder: React.Dispatch<React.SetStateAction<undefined>>) => {
-    socket.emit('client:requestDoneOrder', '')
-    socket.on('server:loadDoneder', (data) => {
+  getDoneOrder: (
+    setDoneOrder: React.Dispatch<any>,
+    options: {
+      page: number
+      limit: number
+      startDate: string
+      endDate: string
+    }
+  ) => {
+    socket.emit('client:requestDoneOrder', options)
+    socket.on('server:loadDoneOrder', (data) => {
+      console.log(data)
       setDoneOrder(data)
     })
     return () => {

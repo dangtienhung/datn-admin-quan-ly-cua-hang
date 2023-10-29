@@ -3,7 +3,7 @@ import { Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { useDoneOrderMutation, useGetAllOrderConfirmQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
@@ -30,20 +30,23 @@ const ListConfirmOrders = () => {
 
   const [options, setoptions] = useState({
     page: 1,
-    limit: 10
+    limit: 10,
+    startDate: '',
+    endDate: ''
   })
 
-  useEffect(() => {
-    console.log('kaka')
-
+  const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
-    ClientSocket.getConfirmedOrder(setConfirmedOrder)
   }, [orderDate])
+
+  useEffect(() => {
+    ClientSocket.getConfirmedOrder(setConfirmedOrder, options)
+  }, [orderDate, memoOptions, options])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -118,7 +121,7 @@ const ListConfirmOrders = () => {
   /*End Search */
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const { data: orders, isError, isLoading } = useGetAllOrderConfirmQuery(options)
+  const { isError, isLoading } = useGetAllOrderConfirmQuery(options)
   const [doneOrder] = useDoneOrderMutation()
 
   const onDoneOrder = (id: string) => {
@@ -261,15 +264,16 @@ const ListConfirmOrders = () => {
           </Popconfirm>
         </Space>
       )}
+      {/* <>{JSON.stringify(confirmedOrder)}</> */}
       <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
           columns={columns}
           dataSource={ordersData}
           pagination={{
-            pageSize: orders && orders.limit,
+            pageSize: confirmedOrder && confirmedOrder.limit,
             showSizeChanger: true,
             pageSizeOptions: ['10', '15', '20', '25'],
-            total: orders && orders?.totalDocs,
+            total: confirmedOrder && confirmedOrder?.totalDocs,
             onChange(page, pageSize) {
               setoptions((prev) => ({ ...prev, page, limit: pageSize }))
             }

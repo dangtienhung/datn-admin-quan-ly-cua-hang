@@ -3,7 +3,7 @@ import { Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, CloseCircleFilled, CheckOutlined, SearchOutlined } from '@ant-design/icons'
@@ -34,17 +34,18 @@ const ListPendingOrders = () => {
     endDate: ''
   })
 
-  useEffect(() => {
+  const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
       page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
-    console.log('render')
+  }, [orderDate])
 
-    ClientSocket.getPendingOrder(setPendingOrder)
-  }, [orderDate, dispatch])
+  useEffect(() => {
+    ClientSocket.getPendingOrder(setPendingOrder, options)
+  }, [orderDate, memoOptions, options])
 
   /*Search */
   const [searchText, setSearchText] = useState('')
@@ -149,7 +150,7 @@ const ListPendingOrders = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
 
-  const { data: orders, isLoading, isError } = useGetAllOrderPendingQuery(options)
+  const { isLoading, isError } = useGetAllOrderPendingQuery(options)
   const columns: ColumnsType<any> = [
     {
       title: '#',
@@ -236,7 +237,6 @@ const ListPendingOrders = () => {
             icon={<CloseCircleFilled />}
             onClick={() => {
               dispatch(setOpenModal(true))
-              ClientSocket.cancelOrder(order.key)
               dispatch(setIdOrderCancel(order.key))
             }}
           />
@@ -287,10 +287,10 @@ const ListPendingOrders = () => {
           columns={columns}
           dataSource={ordersData}
           pagination={{
-            pageSize: orders && orders.limit,
+            pageSize: pendingOrder && pendingOrder.limit,
             showSizeChanger: true,
             pageSizeOptions: ['10', '15', '20', '25'],
-            total: orders && orders?.totalDocs,
+            total: pendingOrder && pendingOrder?.totalDocs,
             onChange(page, pageSize) {
               setoptions((prev) => ({ ...prev, page, limit: pageSize }))
             }
