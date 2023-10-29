@@ -68,7 +68,17 @@ const FormCategory = ({ open }: FormCategoryProps) => {
           className='dark:text-white'
           label='Tên danh mục'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên danh mục!' }]}
+          rules={[
+            { required: true, message: 'Tên danh mục không được bỏ trống !' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên danh mục không được chứa toàn khoảng trắng!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên danh mục' />
         </Form.Item>
