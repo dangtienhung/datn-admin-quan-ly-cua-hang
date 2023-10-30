@@ -69,14 +69,13 @@ const FormCategory = ({ open }: FormCategoryProps) => {
           label='Tên danh mục'
           name='name'
           rules={[
-            { required: true, message: 'Không được bỏ trống tên danh mục!' },
+            { required: true, message: 'Tên danh mục không được bỏ trống !' },
             {
-              validator: (_, value, callback) => {
-                if (value && value.trim() === '') {
-                  callback('Không được để trống')
-                } else {
-                  callback()
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên danh mục không được chứa toàn khoảng trắng!')
                 }
+                return Promise.resolve()
               }
             }
           ]}

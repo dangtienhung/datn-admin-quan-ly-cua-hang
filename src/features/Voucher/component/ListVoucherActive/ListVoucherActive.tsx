@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message, Button as AntButton } from 'antd'
+import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
 import { useRef, useState } from 'react'
@@ -84,21 +84,21 @@ const ListVoucherActive = () => {
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
-          <AntButton
+          <ButtonAntd
             type='primary'
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
           >
             Search
-          </AntButton>
-          <AntButton onClick={() => clearFilters && handleReset(clearFilters)}>Reset</AntButton>
-          <AntButton
+          </ButtonAntd>
+          <ButtonAntd onClick={() => clearFilters && handleReset(clearFilters)}>Reset</ButtonAntd>
+          <ButtonAntd
             onClick={() => {
               close()
             }}
           >
             close
-          </AntButton>
+          </ButtonAntd>
         </Space>
       </div>
     ),
@@ -212,13 +212,19 @@ const ListVoucherActive = () => {
           onConfirm={handleDeleteMany}
           className='ml-[10px]'
         >
-          <Button variant='danger' disabled={!hasSelected}>
+          <ButtonAntd
+            size='large'
+            type='primary'
+            danger
+            className='text-sm font-semibold capitalize'
+            disabled={!hasSelected}
+          >
             Xóa tất cả
-          </Button>
+          </ButtonAntd>
         </Popconfirm>
       </Space>
       <Table
-        className='dark:bg-graydark mt-4'
+        className='dark:bg-graydark mt-3'
         columns={columns}
         dataSource={vouchers}
         pagination={{

@@ -145,10 +145,14 @@ const FormBlog = ({ open }: BlogFormProps) => {
           label='Tên blog'
           name='name'
           rules={[
-            { required: true, message: 'Không được bỏ trống tên bài viết!' },
+            { required: true, message: 'Tên bài viết không được bỏ trống!' },
             {
-              validator: (_, value) =>
-                !value.includes(' ') ? Promise.resolve() : Promise.reject(new Error('Không chấp nhận khoảng trắng'))
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên bài viết không được chứa toàn khoảng trắng!')
+                }
+                return Promise.resolve()
+              }
             }
           ]}
         >

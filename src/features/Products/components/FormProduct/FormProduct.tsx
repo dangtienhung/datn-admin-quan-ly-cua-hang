@@ -180,12 +180,11 @@ const FormProduct = () => {
               rules={[
                 { required: true, message: 'Tên sản phẩm là bắt buộc!' },
                 {
-                  validator: (_, value, callback) => {
-                    if (value && value.trim() === '') {
-                      callback('Không được để trống')
-                    } else {
-                      callback()
+                  validator: (_, value) => {
+                    if (value.trim() === '') {
+                      return Promise.reject('Tên sản phẩm không được chứa toàn khoảng trắng!')
                     }
+                    return Promise.resolve()
                   }
                 }
               ]}
