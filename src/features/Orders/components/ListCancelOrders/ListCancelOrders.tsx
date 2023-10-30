@@ -48,6 +48,7 @@ const ListCancelOrders = () => {
 
   useEffect(() => {
     ClientSocket.getCancelOrder(setCancelOrder, options)
+    console.log(options)
   }, [orderDate, memoOptions, options])
 
   /*Search */
@@ -183,7 +184,6 @@ const ListCancelOrders = () => {
               // dispatch(setCategory({ _id: category._id, name: category.name }))
               dispatch(setOpenDrawer(true))
               dispatch(setOrderData({ ...order }))
-              console.log(order)
             }}
           />
         </Space>

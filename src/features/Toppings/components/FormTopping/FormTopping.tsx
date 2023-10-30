@@ -88,7 +88,17 @@ export const ToppingAdd = ({ open }: ToppingAddProps) => {
           className='dark:text-white'
           label='Tên topping'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên toppping!' }]}
+          rules={[
+            { required: true, message: 'Tên topping không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên topping không được chứa toàn khoảng trắng!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên topping' />
         </Form.Item>
@@ -97,7 +107,17 @@ export const ToppingAdd = ({ open }: ToppingAddProps) => {
           className='dark:text-white'
           label='Giá topping'
           name='price'
-          rules={[{ required: true, message: 'Không được bỏ trống giá toppping!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống giá toppping!' },
+            {
+              validator: (_, value) => {
+                if (value < 1000) {
+                  return Promise.reject('Giá topping không được nhỏ hơn 1000đ!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <InputNumber
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}

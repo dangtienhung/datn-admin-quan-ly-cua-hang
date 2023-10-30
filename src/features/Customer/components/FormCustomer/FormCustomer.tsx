@@ -137,7 +137,18 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
           className='dark:text-white'
           label='Tên khách hàng'
           name='username'
-          rules={[{ required: true, message: 'Không được bỏ trống tên khách hàng!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống tên khách hàng!' },
+            {
+              validator: (_, value, callback) => {
+                if (value && value.trim() === '') {
+                  callback('Không được để trống')
+                } else {
+                  callback()
+                }
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên người dùng' />
         </Form.Item>
@@ -201,7 +212,7 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
           label='Tải ảnh lên'
           // rules={[{ required: true, message: 'Không được bỏ trống giá địa chỉ!' }]}
         >
-          <UploadFile fileList={fileList} setFileList={setFileList} useCrop multiple />
+          <UploadFile fileList={fileList} setFileList={setFileList} useCrop />
         </Form.Item>
         <Form.Item>
           <Button
