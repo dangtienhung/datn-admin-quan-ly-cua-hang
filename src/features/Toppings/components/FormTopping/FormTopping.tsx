@@ -88,7 +88,18 @@ export const ToppingAdd = ({ open }: ToppingAddProps) => {
           className='dark:text-white'
           label='Tên topping'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên toppping!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống tên toppping!' },
+            {
+              validator: (_, value, callback) => {
+                if (value && value.trim() === '') {
+                  callback('Không được để trống')
+                } else {
+                  callback()
+                }
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên topping' />
         </Form.Item>

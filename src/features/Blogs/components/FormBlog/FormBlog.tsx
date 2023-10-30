@@ -144,7 +144,13 @@ const FormBlog = ({ open }: BlogFormProps) => {
           className='dark:text-white'
           label='Tên blog'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên bài viết!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống tên bài viết!' },
+            {
+              validator: (_, value) =>
+                !value.includes(' ') ? Promise.resolve() : Promise.reject(new Error('Không chấp nhận khoảng trắng'))
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên bài viết' />
         </Form.Item>

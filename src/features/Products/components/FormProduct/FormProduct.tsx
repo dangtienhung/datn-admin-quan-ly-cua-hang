@@ -177,7 +177,18 @@ const FormProduct = () => {
             <Form.Item
               name='name'
               label='Tên sản phẩm'
-              rules={[{ required: true, message: 'Tên sản phẩm là bắt buộc!' }]}
+              rules={[
+                { required: true, message: 'Tên sản phẩm là bắt buộc!' },
+                {
+                  validator: (_, value, callback) => {
+                    if (value && value.trim() === '') {
+                      callback('Không được để trống')
+                    } else {
+                      callback()
+                    }
+                  }
+                }
+              ]}
             >
               <Input placeholder='Tên sản phẩm' size='large' />
             </Form.Item>

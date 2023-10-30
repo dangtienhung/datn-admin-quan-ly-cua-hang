@@ -71,7 +71,18 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
           className='dark:text-white'
           label='Tên size'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống tên size!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống tên size!' },
+            {
+              validator: (_, value, callback) => {
+                if (value && value.trim() === '') {
+                  callback('Không được để trống')
+                } else {
+                  callback()
+                }
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên size' />
         </Form.Item>
