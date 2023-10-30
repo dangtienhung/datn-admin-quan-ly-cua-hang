@@ -15,6 +15,7 @@ import DefaultLayout from '~/layouts/DefaultLayout'
 import { createBrowserRouter } from 'react-router-dom'
 import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
+import { GuardAccount } from '.'
 
 const routers = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ const routers = createBrowserRouter([
     path: '/dashboard',
     children: [
       {
-        element: <DefaultLayout />,
+        element: <GuardAccount JSX={DefaultLayout} />,
         children: [{ index: true, element: <Dashboard /> }]
       }
     ]
@@ -34,7 +35,7 @@ const routers = createBrowserRouter([
     path: '/manager',
     children: [
       {
-        element: <DefaultLayout />,
+        element: <GuardAccount JSX={DefaultLayout} />,
         children: [
           { path: 'toppings', element: <ToppingPage /> },
           { path: 'products', element: <ProductPage /> },
@@ -54,7 +55,7 @@ const routers = createBrowserRouter([
     path: '/settings',
     children: [
       {
-        element: <DefaultLayout />,
+        element: <GuardAccount JSX={DefaultLayout} />,
         children: [{ index: true, element: 'settings' }]
       }
     ]

@@ -18,18 +18,21 @@ import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
+import { RootState } from '~/store/store'
 
 type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
   const dispatch = useAppDispatch()
   const [cancelOrder, setCancelOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    room: user._id
   })
 
   const memoOptions = useMemo(() => {
