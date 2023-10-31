@@ -1,14 +1,11 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { FaFilePdf } from 'react-icons/fa6'
-import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
+import { Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
 import { useAppDispatch } from '~/store/store'
-import { Button } from '~/components'
 import { ISize } from '~/types'
 import { exportDataToExcel, formatCurrency } from '~/utils'
 import { setOpenDrawer, setSize } from '~/store/slices'
 import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
-import { cancelDelete } from '~/features/Toppings'
 import { useState } from 'react'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
@@ -76,32 +73,40 @@ export const ListSizes = () => {
       render: (price: number) => `${formatCurrency(price)}`
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, size: ISize) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setSize(size))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa size này?'
-            description='Bạn chắc chắn muốn xóa đi size này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(size._id)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật size này'>
+              <ButtonAntd
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setSize(size))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa size này'>
+              <Popconfirm
+                title='Bạn có muốn xóa size này?'
+                description='Bạn chắc chắn muốn xóa đi size này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDelete(size._id)}
+              >
+                <ButtonAntd
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -142,25 +147,12 @@ export const ListSizes = () => {
         >
           Xuất excel
         </ButtonAntd>
-        <ButtonAntd
-          icon={<FaFilePdf />}
-          size='large'
-          className='bg-red text-green-d10 text-sm font-semibold capitalize flex items-center'
-          onClick={() => {
-            if (sizeList?.docs.length === 0) {
-              message.warning('Không có sản phẩm nào để xuất')
-              return
-            }
-            // exportDataToPDF(sizeList?.docs, 'size')
-          }}
-        >
-          Xuất PDF
-        </ButtonAntd>
       </Space>
       <Table
         className='dark:bg-graydark mt-3'
         columns={columns}
         dataSource={sizes}
+        scroll={{ y: '50vh', x: 1000 }}
         pagination={{
           pageSize: 10,
           total: sizeList?.totalDocs,
@@ -169,6 +161,7 @@ export const ListSizes = () => {
           }
         }}
         rowSelection={rowSelection}
+        bordered
       />
     </div>
   )

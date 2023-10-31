@@ -1,6 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Space, Table, Button as ButtonAnt, Input } from 'antd'
-import { Button } from '~/components'
+import { Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -8,7 +7,7 @@ import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
 import type { InputRef } from 'antd'
@@ -18,7 +17,6 @@ import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
-import { RootState } from '~/store/store'
 
 type DataIndex = keyof IOrderDataType
 
@@ -168,21 +166,27 @@ const ListDoneOrders = () => {
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 100,
       render: (_: any, order) => (
-        <Space size='middle'>
-          <Button
-            icon={<EyeFilled />}
-            onClick={() => {
-              // dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-              dispatch(setOrderData({ ...order }))
-            }}
-          />
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Xem chi tiết đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
+                icon={<EyeFilled />}
+                onClick={() => {
+                  // dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setOrderData({ ...order }))
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

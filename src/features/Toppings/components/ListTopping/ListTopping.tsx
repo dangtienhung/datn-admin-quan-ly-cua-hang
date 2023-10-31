@@ -1,10 +1,8 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
+import { Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer, setToppingDetail, setToppingId } from '~/store/slices'
-
-import { Button } from '~/components'
+import { setOpenDrawer, setToppingId } from '~/store/slices'
 import { ColumnsType } from 'antd/es/table'
 import { ITopping } from '~/types'
 import { cancelDelete } from '../..'
@@ -74,34 +72,42 @@ const ToppingList = () => {
     },
     { title: 'Giá topping', dataIndex: 'price', key: 'price', render: (price: number) => `${formatCurrency(price)}` },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       fixed: 'right',
-      width: 300,
+      width: 200,
       render: (_, topping: ITopping) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setOpenDrawer(true)), saveToppingId(topping._id)
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa topping này?'
-            description='Are you sure to delete this task?'
-            onConfirm={() => handleDelete(topping._id)}
-            onCancel={cancelDelete}
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật topping này'>
+              <ButtonAntd
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setOpenDrawer(true)), saveToppingId(topping._id)
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xoá topping này'>
+              <Popconfirm
+                title='Bạn có muốn xóa topping này?'
+                description='Are you sure to delete this task?'
+                onConfirm={() => handleDelete(topping._id)}
+                onCancel={cancelDelete}
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                okText='Có'
+                cancelText='Không'
+              >
+                <ButtonAntd
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -153,6 +159,7 @@ const ToppingList = () => {
           pageSizeOptions: ['5', '10', '15', '20']
         }}
         rowSelection={rowSelection}
+        bordered
       />
     </div>
   )

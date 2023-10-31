@@ -1,10 +1,9 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { Popconfirm, Space, Table, Button as ButtonAntd, message } from 'antd'
+import { Popconfirm, Space, Table, Button as ButtonAntd, message, Tooltip } from 'antd'
 import { setCategory, setOpenDrawer } from '~/store/slices'
 import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
 
-import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
 import Loading from '~/components/Loading/Loading'
@@ -69,38 +68,48 @@ const ListCategory = () => {
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
+      width: 200,
       // fixed: 'right',
 
       render: (_, category) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa danh mục này?'
-            description='Bạn chắc chắn muốn xóa danh mục này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(category._id)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Sửa danh mục'>
+              <ButtonAntd
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+
+            <Tooltip title='Xóa danh mục'>
+              <Popconfirm
+                title='Bạn có muốn xóa danh mục này?'
+                description='Bạn chắc chắn muốn xóa danh mục này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDelete(category._id)}
+              >
+                <ButtonAntd
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
 
-  const categorriesData = categories?.docs.map((item: ICategory, index) => ({
+  const categorriesData = categories?.docs.map((item: ICategory, index: number) => ({
     ...item,
     key: item._id,
     index: index + 1

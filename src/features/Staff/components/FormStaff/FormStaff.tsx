@@ -26,7 +26,6 @@ export const FormStaff = ({ open }: FormStaffProps) => {
   const [addUser, { isLoading: isAdding }] = useAddUserMutation()
   const [uploadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
-  console.log(userData, fileList)
 
   userData._id &&
     form.setFieldsValue({

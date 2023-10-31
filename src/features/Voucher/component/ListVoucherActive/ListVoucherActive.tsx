@@ -1,11 +1,10 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAntd } from 'antd'
+import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
 import { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { useDeleteVoucherMutation, useGetAllVouchersActiveQuery } from '~/store/services'
@@ -37,7 +36,7 @@ const ListVoucherActive = () => {
   const handleDeleteMany = async () => {
     await pause(700)
     selectedRowKeys.forEach((selectedItem) => {
-      deleteVoucher({ id: selectedItem })
+      deleteVoucher({ id: selectedItem as string })
         .unwrap()
         .then(() => {
           messageAlert('Xóa thành công', 'success')
@@ -168,33 +167,41 @@ const ListVoucherActive = () => {
       ...getColumnSearchProps('title')
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, voucher: IVoucher) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setVoucher(voucher))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa voucher này?'
-            description='Are you sure to delete this task?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
-            onConfirm={() => handleDelete(voucher._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật voucher này'>
+              <ButtonAntd
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setVoucher(voucher))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa voucher này'>
+              <Popconfirm
+                title='Bạn có muốn xóa voucher này?'
+                description='Bạn chắc chắn muốn xóa voucher này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                okText='Có'
+                cancelText='Không'
+                onConfirm={() => handleDelete(voucher._id!)}
+              >
+                <ButtonAntd
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

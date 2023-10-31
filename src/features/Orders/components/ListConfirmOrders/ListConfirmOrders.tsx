@@ -1,5 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
+import { Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
@@ -174,7 +174,8 @@ const ListConfirmOrders = () => {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
-      rowScope: 'row',
+      width: 200,
+      // rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
       },
@@ -199,34 +200,45 @@ const ListConfirmOrders = () => {
       title: 'Thời gian đặt hàng',
       dataIndex: 'timeOrder',
       key: 'timeOrder',
+      width: 200,
       sorter: (a, b) => a.timeOrder.localeCompare(b.timeOrder),
       sortDirections: ['descend', 'ascend'],
       render: (time: string) => <span className='capitalize'>{formatDate(time)}</span>
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
+      width: 110,
       render: (_: any, order) => (
-        <Space size='middle'>
-          <Button
-            icon={<EyeFilled />}
-            onClick={() => {
-              // dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-              dispatch(setOrderData({ ...order }))
-            }}
-          />
-          <Button
-            icon={<IoCheckmarkDoneCircleSharp />}
-            variant='success'
-            onClick={() => {
-              onDoneOrder(order.key)
-              ClientSocket.doneOrder(order.key)
-            }}
-          />
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space>
+            <Tooltip title='Xem chi tiết đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
+                icon={<EyeFilled />}
+                onClick={() => {
+                  // dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setOrderData({ ...order }))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Hoàn thành đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-3 hover:!text-white flex items-center justify-center text-white'
+                icon={<IoCheckmarkDoneCircleSharp />}
+                onClick={() => {
+                  onDoneOrder(order.key)
+                  ClientSocket.doneOrder(order.key)
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

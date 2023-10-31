@@ -184,7 +184,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         <Col span={24}>
           <h1 className='text-xl font-semibold text-black dark:text-white'>Thông tin khách hàng</h1>
         </Col>
-        <Col span={10}>
+        <Col span={6}>
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-5'>
               <img className='w-[100px] h-[100px]' src={orderData?.user?.avatar} alt='' />
@@ -195,7 +195,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
             </div>
           </div>
         </Col>
-        <Col span={8}>
+        <Col span={10}>
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-2 text-base'>
               <span>Địa chỉ: </span>
@@ -207,7 +207,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
             </div>
           </div>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-2 text-base'>
               {/* <span className=''></span> */}
