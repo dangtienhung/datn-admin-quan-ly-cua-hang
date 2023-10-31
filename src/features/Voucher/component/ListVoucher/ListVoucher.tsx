@@ -137,19 +137,22 @@ const ListVoucher = () => {
       title: 'Mã giảm giá',
       dataIndex: 'code',
       key: 'code',
-      render: (name: string) => <span className='uppercase'>{name}</span>,
+      width: '25%',
+      render: (name: string) => <p className='uppercase'>{name}</p>,
       ...getColumnSearchProps('code')
     },
     {
       title: 'Số lượng mã',
       dataIndex: 'discount',
       key: 'discount',
+      width: '15%',
       render: (discount: number) => `${discount}`
     },
     {
       title: 'Giảm giá',
       dataIndex: 'sale',
       key: 'sale',
+      width: '15%',
       ...getColumnSearchProps('sale'),
       sorter: (x: { sale: number }, y: { sale: number }) => {
         const saleX = x.sale || 0
@@ -159,9 +162,10 @@ const ListVoucher = () => {
       render: (sale: number) => `${formatCurrency(sale)}`
     },
     {
-      title: 'Mã giảm giá',
+      title: 'Mô tả mã',
       dataIndex: 'title',
       key: 'title',
+      width: '25%',
       render: (name: string) => <span>{name}</span>,
       ...getColumnSearchProps('title')
     },
@@ -241,10 +245,14 @@ const ListVoucher = () => {
           total: voucherData && voucherData?.data?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
-          }
+          },
+          showQuickJumper: true
+          //   pageSizeOptions: ['10', '25', '50', '100'],
+          //   defaultPageSize: 10,
+          //   showSizeChanger: true
         }}
         rowSelection={rowSelection}
-        scroll={{ y: '60vh' }}
+        // scroll={{ y: '60vh' }}
         bordered
       />
     </div>

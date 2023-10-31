@@ -20,8 +20,6 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   const [updateVoucher] = useUpdateVoucherMutation()
   const { voucherData } = useAppSelector((state: RootState) => state.vouchers)
 
-  // const { TextArea } = Input
-  // console.log(voucherData)
   voucherData._id &&
     form.setFieldsValue({
       code: voucherData.code,
@@ -85,6 +83,9 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
                 if (value.trim() === '') {
                   return Promise.reject('Tên voucher không được chứa toàn khoảng trắng!')
                 }
+                if (!/^[a-z0-9]+$/.test(value)) {
+                  return Promise.reject('Tên voucher phải chứa chữ thường và số!')
+                }
                 return Promise.resolve()
               }
             }
@@ -134,14 +135,6 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
             className='w-full'
           />
         </Form.Item>
-        {/* <Form.Item
-          className='dark:text-white'
-          label='Giảm giá từ '
-          name='sale'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
-        >
-          <Input size='large' placeholder='Giảm giá cho đơn từ ' />
-        </Form.Item> */}
         <Form.Item
           className='dark:text-white'
           label='Mô tả voucher'
