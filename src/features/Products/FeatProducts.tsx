@@ -18,7 +18,6 @@ interface FeatureProductsProps {
 const FeatureProducts = ({ data }: FeatureProductsProps) => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
-
   const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
 
   useEffect(() => {

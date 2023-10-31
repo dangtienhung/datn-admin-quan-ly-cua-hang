@@ -1,13 +1,12 @@
-import { Image, Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
+import { Image, Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
 import { Button } from '~/components'
-import { cancelDelete } from '~/features/Toppings'
 import { useRef, useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setUser } from '~/store/slices/User/user.slice'
 import { IUser } from '~/types'
@@ -20,11 +19,15 @@ import { IUserDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { exportDataToExcel } from '~/utils'
+import { useAppSelector } from '~/store/hooks'
 
 type DataIndex = keyof IUserDataType
 export const ListStaffs = () => {
   const dispatch = useAppDispatch()
   const [deleteUser] = useDeleteUserMutation()
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  console.log(user)
+
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
@@ -169,39 +172,50 @@ export const ListStaffs = () => {
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, staff: IUser) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setOpenDrawer(true))
-              dispatch(setUser({ ...staff }))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa nhân viên này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(staff._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật thông tin nhân viên này'>
+              <ButtonAnt
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                size='large'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setUser({ ...staff }))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa nhân viên này'>
+              <Popconfirm
+                title='Bạn có muốn xóa nhân viên này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDelete(staff._id!)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
-  const staffs = staffData?.data?.docs?.map((staff: any, index: number) => ({
-    ...staff,
-    key: staff._id,
-    index: index + 1
-  }))
+  const staffs = staffData?.data?.docs
+    ?.filter((item: any) => item._id !== user._id)
+    .map((staff: any, index: number) => ({
+      ...staff,
+      key: staff._id,
+      index: index + 1
+    }))
+
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   return (

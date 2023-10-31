@@ -6,7 +6,6 @@ import { useDeleteFakeProductMutation, useGetAllProductActiveFalseQuery } from '
 
 import { AiFillEdit } from 'react-icons/ai'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { FaFilePdf } from 'react-icons/fa6'
 import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
@@ -147,6 +146,7 @@ export const ProductListInActive = () => {
         <Space>
           <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
+              size='large'
               icon={<AiFillEdit />}
               onClick={() => {
                 dispatch(setOpenDrawer(true))
@@ -162,6 +162,7 @@ export const ProductListInActive = () => {
             cancelText='Không'
           >
             <ButtonAntd
+              size='large'
               icon={<DeleteIcon />}
               danger
               className='hover:text-white flex items-center justify-center text-white'
@@ -213,13 +214,6 @@ export const ProductListInActive = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
-        <ButtonAntd
-          icon={<FaFilePdf />}
-          size='large'
-          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize flex items-center'
-        >
-          Xuất PDF
         </ButtonAntd>
       </div>
       <Table

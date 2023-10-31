@@ -1,5 +1,7 @@
 // // import { Dashboard } from '~/pages'
 
+export * from './guardRoute'
+
 // import { lazy } from 'react'
 
 // const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'))

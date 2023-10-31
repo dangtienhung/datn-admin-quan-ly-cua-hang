@@ -1,6 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Space, Table, Button as ButtonAnt, Input } from 'antd'
-import { Button } from '~/components'
+import { Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -8,7 +7,7 @@ import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
 import type { InputRef } from 'antd'
@@ -25,11 +24,13 @@ const ListDoneOrders = () => {
   const dispatch = useAppDispatch()
   const [doneOrder, setDoneOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    room: user._id
   })
 
   const { isError, isLoading } = useGetAllOrderDoneQuery(options)
@@ -37,7 +38,6 @@ const ListDoneOrders = () => {
   const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
-      page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
@@ -166,21 +166,27 @@ const ListDoneOrders = () => {
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 100,
       render: (_: any, order) => (
-        <Space size='middle'>
-          <Button
-            icon={<EyeFilled />}
-            onClick={() => {
-              // dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-              dispatch(setOrderData({ ...order }))
-            }}
-          />
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Xem chi tiết đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
+                icon={<EyeFilled />}
+                onClick={() => {
+                  // dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setOrderData({ ...order }))
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -217,6 +223,7 @@ const ListDoneOrders = () => {
           pageSizeOptions: ['10', '15', '20', '25'],
           total: doneOrder && doneOrder?.totalDocs,
           onChange(page, pageSize) {
+            // callbackOptions(page, pageSize)
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }
         }}
