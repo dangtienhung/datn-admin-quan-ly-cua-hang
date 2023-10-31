@@ -1,6 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Space, Table, Button as ButtonAnt, Input } from 'antd'
-import { Button } from '~/components'
+import { Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
 import { useState, useRef, useEffect, useMemo } from 'react'
@@ -8,7 +7,7 @@ import { useGetAllOrderCancelQuery } from '~/store/services/Orders'
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
 import type { InputRef } from 'antd'
@@ -23,7 +22,7 @@ type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
   const dispatch = useAppDispatch()
   const [cancelOrder, setCancelOrder] = useState<any>()
-  const { orderDate } = useAppSelector((state) => state.orders)
+  const { orderDate } = useAppSelector((state: RootState) => state.orders)
 
   const [options, setoptions] = useState({
     page: 1,
@@ -138,7 +137,8 @@ const ListCancelOrders = () => {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
-      rowScope: 'row',
+      width: 200,
+      // rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
       },
@@ -154,7 +154,7 @@ const ListCancelOrders = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: 120,
+      width: 200,
       render: (status: string) => (
         <span className={`text-white capitalize font-semibold bg-meta-1 rounded inline-block px-2 py-1`}>{status}</span>
       )
@@ -163,27 +163,34 @@ const ListCancelOrders = () => {
       title: 'Thời gian đặt hàng',
       dataIndex: 'timeOrder',
       key: 'timeOrder',
+      width: 200,
       sorter: (a, b) => a.timeOrder.localeCompare(b.timeOrder),
       sortDirections: ['descend', 'ascend'],
       render: (time: string) => <span className='capitalize'>{formatDate(time)}</span>
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 100,
       render: (_: any, order) => (
-        <Space size='middle'>
-          <Button
-            icon={<EyeFilled />}
-            onClick={() => {
-              // dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-              dispatch(setOrderData({ ...order }))
-            }}
-          />
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Xem chi tiết đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
+                icon={<EyeFilled />}
+                onClick={() => {
+                  // dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setOrderData({ ...order }))
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

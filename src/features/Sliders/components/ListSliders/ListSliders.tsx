@@ -7,7 +7,7 @@ import {
   useUpdateStatusMutation
 } from '~/store/services'
 import { BsFillTrashFill } from 'react-icons/bs'
-import { Image, Popconfirm, Space, Table, Switch } from 'antd'
+import { Image, Popconfirm, Space, Table, Switch, Button as ButtonAnt, Tooltip } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Button } from '~/components'
 import { cancelDelete } from '~/features/Toppings'
@@ -66,7 +66,8 @@ export const ListSliders = () => {
   const columns = [
     {
       title: '#',
-      dataIndex: 'index'
+      dataIndex: 'index',
+      width: 50
     },
     {
       title: 'Ảnh',
@@ -77,38 +78,44 @@ export const ListSliders = () => {
     {
       title: 'Hiển thị',
       key: 'show',
+      width: 200,
       render: (_: any, slider: ISLider) => (
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          onChange={() => onSwitchChange(slider._id)}
-          defaultChecked={slider.is_active}
-          disabled={countActive && countActive.length <= 1 && slider.is_active}
-        />
+        <Tooltip title='Thay đổi trang thái'>
+          <Switch
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            onChange={() => onSwitchChange(slider._id)}
+            defaultChecked={slider.is_active}
+            disabled={countActive && countActive.length <= 1 && slider.is_active}
+          />
+        </Tooltip>
       )
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, slider: ISLider) => (
-        <Space size='middle'>
-          <Popconfirm
-            title='Bạn có muốn xóa slide này?'
-            description='Bạn chắc chắn muốn xóa đi slide này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => onHandleDelete(slider._id)}
-          >
-            <Button
-              disabled={(slider.is_active && countActive && countActive.length <= 1) || slider.is_active}
-              variant='danger'
-              icon={<BsFillTrashFill />}
-            >
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Xóa slide này'>
+              <Popconfirm
+                title='Bạn có muốn xóa slide này?'
+                description='Bạn chắc chắn muốn xóa đi slide này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                onCancel={cancelDelete}
+                onConfirm={() => onHandleDelete(slider._id)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  disabled={(slider.is_active && countActive && countActive.length <= 1) || slider.is_active}
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -151,6 +158,7 @@ export const ListSliders = () => {
           //   setCurrentPage(page)
           // }
         }}
+        scroll={{ y: '50vh' }}
         rowSelection={rowSelection}
       />
     </div>

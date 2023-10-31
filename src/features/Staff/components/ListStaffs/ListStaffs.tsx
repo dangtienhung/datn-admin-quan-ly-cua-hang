@@ -1,9 +1,8 @@
-import { Image, Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
+import { Image, Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
 import { Button } from '~/components'
-import { cancelDelete } from '~/features/Toppings'
 import { useRef, useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
@@ -169,31 +168,39 @@ export const ListStaffs = () => {
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, staff: IUser) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setOpenDrawer(true))
-              dispatch(setUser({ ...staff }))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa nhân viên này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(staff._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật thông tin nhân viên này'>
+              <ButtonAnt
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                size='large'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setUser({ ...staff }))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa nhân viên này'>
+              <Popconfirm
+                title='Bạn có muốn xóa nhân viên này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDelete(staff._id!)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

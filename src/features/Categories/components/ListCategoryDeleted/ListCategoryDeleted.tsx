@@ -1,8 +1,7 @@
 import Loading from '~/components/Loading/Loading'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { RedoOutlined } from '@ant-design/icons'
-import { Popconfirm, Space, Table } from 'antd'
-import { Button } from '~/components'
+import { Popconfirm, Space, Table, Button as ButtonAnt, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { ICategory } from '~/types'
 import { NotFound } from '~/pages'
@@ -79,31 +78,43 @@ const ListCategoryDeleted = () => {
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
-      // width: 200,
+      width: 200,
       render: (_, category) => (
-        <Space size='middle'>
-          <Popconfirm
-            title='Bạn muốn khôi phục lại danh mục này?'
-            description='Bạn thực sự muốn khôi phục lại danh mục này?'
-            onConfirm={() => handleRestore(category._id)}
-          >
-            <Button icon={<RedoOutlined className='text-lg' />}>Khôi phục</Button>
-          </Popconfirm>
-          <Popconfirm
-            title='Bạn có muốn xóa VĨNH VIỄN danh mục này?'
-            description='Hành động này sẽ không thể khôi phục lại!'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            // onCancel={cancelDelete}
-            onConfirm={() => handleDeleteReal(category._id)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Khôi phục danh mục này'>
+              <Popconfirm
+                title='Bạn muốn khôi phục lại danh mục này?'
+                description='Bạn thực sự muốn khôi phục lại danh mục này?'
+                onConfirm={() => handleRestore(category._id)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                  icon={<RedoOutlined className='text-lg' />}
+                />
+              </Popconfirm>
+            </Tooltip>
+            <Tooltip title='Xóa vĩnh viễn danh mục này'>
+              <Popconfirm
+                title='Bạn có muốn xóa VĨNH VIỄN danh mục này?'
+                description='Hành động này sẽ không thể khôi phục lại!'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDeleteReal(category._id)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -117,30 +128,36 @@ const ListCategoryDeleted = () => {
   if (isError) return <NotFound />
   return (
     <>
-      {hasSelected && (
-        <Space>
-          <Popconfirm
-            title='Bạn thực sự muốn khôi phục những danh mục này?'
-            description='Hành động này sẽ khôi phục những danh mục đang được chọn!'
-            onConfirm={handleRestoreMany}
-            onCancel={() => setSelectedRowKeys([])}
+      <Space className='mb-4'>
+        <Popconfirm
+          title='Bạn thực sự muốn khôi phục những danh mục này?'
+          description='Hành động này sẽ khôi phục những danh mục đang được chọn!'
+          onConfirm={handleRestoreMany}
+          onCancel={() => setSelectedRowKeys([])}
+        >
+          <ButtonAnt
+            disabled={!hasSelected}
+            size='large'
+            className='bg-primary hover:!text-white flex items-center justify-center text-white'
           >
-            <Button variant='primary' styleClass='mb-4'>
-              Khôi phục tất cả
-            </Button>
-          </Popconfirm>
-          <Popconfirm
-            title='Bạn thực sự muốn xóa VĨNH VIỄN những danh mục này?'
-            description='Hành động này sẽ xóa những danh mục đang được chọn!'
-            onConfirm={handleDeleteMany}
-            onCancel={() => setSelectedRowKeys([])}
+            Khôi phục tất cả
+          </ButtonAnt>
+        </Popconfirm>
+        <Popconfirm
+          title='Bạn thực sự muốn xóa VĨNH VIỄN những danh mục này?'
+          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          onConfirm={handleDeleteMany}
+          onCancel={() => setSelectedRowKeys([])}
+        >
+          <ButtonAnt
+            disabled={!hasSelected}
+            size='large'
+            className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
           >
-            <Button variant='danger' styleClass='mb-4'>
-              Xóa tất cả
-            </Button>
-          </Popconfirm>
-        </Space>
-      )}
+            Xóa tất cả
+          </ButtonAnt>
+        </Popconfirm>
+      </Space>
 
       <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table

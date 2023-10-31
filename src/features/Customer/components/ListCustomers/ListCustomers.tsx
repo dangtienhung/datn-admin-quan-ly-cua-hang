@@ -1,4 +1,4 @@
-import { Popconfirm, Space, Table, Image, Button as ButtonAnt, Input } from 'antd'
+import { Popconfirm, Space, Table, Image, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
@@ -174,31 +174,39 @@ export const ListCustomers = () => {
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, customer: IUser) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setUser({ ...customer }))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa khách hàng này?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            onCancel={cancelDelete}
-            onConfirm={() => handleDelete(customer._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật thông tin khách hàng này'>
+              <ButtonAnt
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setUser({ ...customer }))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa người dùng này'>
+              <Popconfirm
+                title='Bạn có muốn xóa khách hàng này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                onCancel={cancelDelete}
+                onConfirm={() => handleDelete(customer._id!)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

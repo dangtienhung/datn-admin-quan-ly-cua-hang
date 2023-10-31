@@ -6,7 +6,6 @@ import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
 
 import { AiFillEdit } from 'react-icons/ai'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { FaFilePdf } from 'react-icons/fa6'
 import { DeleteIcon } from '~/components'
 import { ICategoryRefProduct } from '~/types/Category'
 import { TbBasketDiscount } from 'react-icons/tb'
@@ -19,10 +18,8 @@ const ProductList = () => {
   const dispatch = useAppDispatch()
   const { productsList } = useAppSelector((state: RootState) => state.products)
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
-
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
-
   const products = productsList.map((product: IProduct, index: number) => ({
     ...product,
     key: product._id,
@@ -156,6 +153,7 @@ const ProductList = () => {
         <Space>
           <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
+              size='large'
               icon={<AiFillEdit />}
               onClick={() => {
                 dispatch(setOpenDrawer(true))
@@ -171,6 +169,7 @@ const ProductList = () => {
             cancelText='Không'
           >
             <ButtonAntd
+              size='large'
               icon={<DeleteIcon />}
               danger
               className='hover:text-white flex items-center justify-center text-white'
@@ -223,13 +222,6 @@ const ProductList = () => {
         >
           Xuất excel
         </ButtonAntd>
-        <ButtonAntd
-          icon={<FaFilePdf />}
-          size='large'
-          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red text-sm font-semibold capitalize flex items-center'
-        >
-          Xuất PDF
-        </ButtonAntd>
       </div>
       <Table
         rowSelection={rowSelection}
@@ -241,6 +233,7 @@ const ProductList = () => {
           defaultPageSize: 5,
           showSizeChanger: true
         }}
+        bordered
       />
     </div>
   )
