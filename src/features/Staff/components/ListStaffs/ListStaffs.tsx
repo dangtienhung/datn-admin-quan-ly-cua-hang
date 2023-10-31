@@ -6,7 +6,7 @@ import { Button } from '~/components'
 import { useRef, useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setUser } from '~/store/slices/User/user.slice'
 import { IUser } from '~/types'
@@ -19,11 +19,15 @@ import { IUserDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { exportDataToExcel } from '~/utils'
+import { useAppSelector } from '~/store/hooks'
 
 type DataIndex = keyof IUserDataType
 export const ListStaffs = () => {
   const dispatch = useAppDispatch()
   const [deleteUser] = useDeleteUserMutation()
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  console.log(user)
+
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
@@ -204,11 +208,14 @@ export const ListStaffs = () => {
       )
     }
   ]
-  const staffs = staffData?.data?.docs?.map((staff: any, index: number) => ({
-    ...staff,
-    key: staff._id,
-    index: index + 1
-  }))
+  const staffs = staffData?.data?.docs
+    ?.filter((item: any) => item._id !== user._id)
+    .map((staff: any, index: number) => ({
+      ...staff,
+      key: staff._id,
+      index: index + 1
+    }))
+
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
   return (

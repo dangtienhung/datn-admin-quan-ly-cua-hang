@@ -121,7 +121,7 @@ const DropdownUser = () => {
               fill=''
             />
           </svg>
-          Log Out
+          Đăng xuất
         </button>
       </div>
       {/* <!-- Dropdown End --> */}
