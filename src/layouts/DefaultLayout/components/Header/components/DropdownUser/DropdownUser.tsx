@@ -3,12 +3,28 @@ import { ArrowDown, ContactIcon, ProfileIcon, SettingIcon } from '~/components'
 import { useEffect, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
+import { RootState } from '~/store/store'
+import { useAppSelector } from '~/store/hooks'
+import toast from 'react-hot-toast'
+import { useLogOutMutation } from '~/store/services/Auth'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
+
+  const [logout] = useLogOutMutation()
+  const onLogout = () => {
+    logout()
+      .unwrap()
+      .then(() => {
+        // navigate('/', { replace: true, relative: 'path' })
+        toast.success('Đăng xuất thành công')
+      })
+      .catch(() => toast.error('Đăng xuất thất bại'))
+  }
 
   // close on click outside
   useEffect(() => {
@@ -35,16 +51,12 @@ const DropdownUser = () => {
     <div className='relative'>
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
-          <span className='dark:text-white block text-sm font-medium text-black'>Thomas Anree</span>
-          <span className='block text-xs'>UX Designer</span>
+          <span className='dark:text-white block text-sm font-medium text-black'>{user?.username}</span>
+          <span className='block text-xs'>{user?.role}</span>
         </span>
 
         <span className='w-12 h-12 rounded-full'>
-          <img
-            src={`https://1.bp.blogspot.com/-6wptfQdSYb4/XVABmPVTAkI/AAAAAAAAQ5Q/xS0VuLwlPg8G8T2vPVQgohiUFP1DeS9GgCLcBGAs/s1600/hinh-nen-anime-girl-de-thuong-full-hd-cuc-dep-cho-dien-thoai-6.jpg`}
-            className='object-cover w-full h-full rounded-full'
-            alt='User'
-          />
+          <img src={`${user?.avatar}`} className='object-cover w-full h-full rounded-full' alt='User' />
         </span>
 
         <ArrowDown />
@@ -88,7 +100,10 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'>
+        <button
+          className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
+          onClick={() => onLogout()}
+        >
           <svg
             className='fill-current'
             width='22'

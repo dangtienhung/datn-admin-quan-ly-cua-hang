@@ -22,13 +22,15 @@ type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
   const dispatch = useAppDispatch()
   const [cancelOrder, setCancelOrder] = useState<any>()
-  const { orderDate } = useAppSelector((state: RootState) => state.orders)
+  const { orderDate } = useAppSelector((state) => state.orders)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    room: user._id
   })
 
   const memoOptions = useMemo(() => {

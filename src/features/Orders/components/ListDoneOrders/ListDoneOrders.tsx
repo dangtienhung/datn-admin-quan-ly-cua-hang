@@ -23,12 +23,14 @@ type DataIndex = keyof IOrderDataType
 const ListDoneOrders = () => {
   const dispatch = useAppDispatch()
   const [doneOrder, setDoneOrder] = useState<any>()
-  const { orderDate } = useAppSelector((state: RootState) => state.orders)
+  const { orderDate } = useAppSelector((state) => state.orders)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    room: user._id
   })
 
   const { isError, isLoading } = useGetAllOrderDoneQuery(options)
@@ -36,7 +38,6 @@ const ListDoneOrders = () => {
   const memoOptions = useMemo(() => {
     setoptions((prev) => ({
       ...prev,
-      page: 1,
       startDate: orderDate.startDate,
       endDate: orderDate.endDate
     }))
@@ -222,6 +223,7 @@ const ListDoneOrders = () => {
           pageSizeOptions: ['10', '15', '20', '25'],
           total: doneOrder && doneOrder?.totalDocs,
           onChange(page, pageSize) {
+            // callbackOptions(page, pageSize)
             setoptions((prev) => ({ ...prev, page, limit: pageSize }))
           }
         }}
