@@ -23,10 +23,8 @@ const ProductList = () => {
   const dispatch = useAppDispatch()
   const { productsList } = useAppSelector((state: RootState) => state.products)
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
-
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
-
   const products = productsList.map((product: IProduct, index: number) => ({
     ...product,
     key: product._id,
@@ -102,7 +100,7 @@ const ProductList = () => {
     },
     render: (text, product: IProduct) =>
       searchedColumn === dataIndex.name ? (
-        <div className='flex items-center justify-start gap-x-3'>
+        <div className='gap-x-3 flex items-center justify-start'>
           <img
             src={product.images[0].url}
             alt={product.images[0].filename}
@@ -149,7 +147,7 @@ const ProductList = () => {
         </div>
       ) : (
         // text
-        <div className='flex items-center justify-start gap-x-3'>
+        <div className='gap-x-3 flex items-center justify-start'>
           <img
             src={product.images[0].url}
             alt={product.images[0].filename}
@@ -215,7 +213,7 @@ const ProductList = () => {
           <div className='flex flex-col gap-1'>
             {sizes?.slice(0, 2).map((size: ISizeRefProduct) => (
               <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{size.name}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
               </div>
             ))}
@@ -234,7 +232,7 @@ const ProductList = () => {
             {/* chỉ map 2 topping ra ngoài màn hình thôi */}
             {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
               <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='w-full pr-3 uppercase border-r border-opacity-50 border-r-graydark'>{topping.name}</p>
+                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
                 <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
               </div>
             ))}
@@ -262,12 +260,13 @@ const ProductList = () => {
         <Space>
           <Tooltip title='Cập nhật sản phẩm'>
             <ButtonAntd
+              size='large'
               icon={<AiFillEdit />}
               onClick={() => {
                 dispatch(setOpenDrawer(true))
                 dispatch(setProductId(product._id))
               }}
-              className='flex items-center justify-center text-white bg-primary hover:text-white'
+              className='bg-primary hover:text-white flex items-center justify-center text-white'
             />
           </Tooltip>
           <Popconfirm
@@ -277,9 +276,10 @@ const ProductList = () => {
             cancelText='Không'
           >
             <ButtonAntd
+              size='large'
               icon={<DeleteIcon />}
               danger
-              className='flex items-center justify-center text-white hover:text-white'
+              className='hover:text-white flex items-center justify-center text-white'
             />
           </Popconfirm>
         </Space>
@@ -332,7 +332,7 @@ const ProductList = () => {
         <ButtonAntd
           icon={<FaFilePdf />}
           size='large'
-          className='flex items-center text-sm font-semibold capitalize bg-red text-red-d10 hover:text-red-d10 hover:bg-red'
+          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red flex items-center text-sm font-semibold capitalize'
         >
           Xuất PDF
         </ButtonAntd>
@@ -347,6 +347,7 @@ const ProductList = () => {
           defaultPageSize: 5,
           showSizeChanger: true
         }}
+        bordered
       />
     </div>
   )

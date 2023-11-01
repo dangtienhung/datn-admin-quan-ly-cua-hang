@@ -12,11 +12,8 @@ export interface IUserDocs {
 }
 
 export interface IUser {
-  _id?: string
+  _id: string
   googleId?: string
-  twitterId?: string
-  githubId?: string
-  facebookId?: string
   username?: string
   account?: string
   avatar?: string
@@ -33,6 +30,10 @@ export interface IUser {
   birthday?: Date
   grade?: number
   gender?: string
+}
+
+export interface ResIUser {
+  user: IUser
 }
 
 export interface IUserDataType {

@@ -1,10 +1,9 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Button as ButtonAnt, Input, InputRef, Popconfirm, Space, Table, message } from 'antd'
+import { Button as ButtonAntd, Input, InputRef, Popconfirm, Space, Table, Tooltip, message } from 'antd'
 import { setOpenDrawer, setVoucher } from '~/store/slices'
 import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
 import { useRef, useState } from 'react'
 
-import { Button } from '~/components'
 import { ColumnType } from 'antd/lib/table'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
@@ -84,21 +83,21 @@ const ListVoucher = () => {
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
-          <ButtonAnt
+          <ButtonAntd
             type='primary'
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
           >
             Search
-          </ButtonAnt>
-          <ButtonAnt onClick={() => clearFilters && handleReset(clearFilters)}>Reset</ButtonAnt>
-          <ButtonAnt
+          </ButtonAntd>
+          <ButtonAntd onClick={() => clearFilters && handleReset(clearFilters)}>Reset</ButtonAntd>
+          <ButtonAntd
             onClick={() => {
               close()
             }}
           >
             close
-          </ButtonAnt>
+          </ButtonAntd>
         </Space>
       </div>
     ),
@@ -139,19 +138,22 @@ const ListVoucher = () => {
       title: 'Mã giảm giá',
       dataIndex: 'code',
       key: 'code',
-      render: (name: string) => <span className='uppercase'>{name}</span>,
+      width: '25%',
+      render: (name: string) => <p className='uppercase'>{name}</p>,
       ...getColumnSearchProps('code')
     },
     {
       title: 'Số lượng mã',
       dataIndex: 'discount',
       key: 'discount',
+      width: '15%',
       render: (discount: number) => `${discount}`
     },
     {
       title: 'Giảm giá',
       dataIndex: 'sale',
       key: 'sale',
+      width: '15%',
       ...getColumnSearchProps('sale'),
       sorter: (x: { sale: number }, y: { sale: number }) => {
         const saleX = x.sale || 0
@@ -161,40 +163,49 @@ const ListVoucher = () => {
       render: (sale: number) => `${formatCurrency(sale)}`
     },
     {
-      title: 'Mã giảm giá',
+      title: 'Mô tả mã',
       dataIndex: 'title',
       key: 'title',
+      width: '25%',
       render: (name: string) => <span>{name}</span>,
       ...getColumnSearchProps('title')
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 200,
       render: (_: any, voucher: IVoucher) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setVoucher(voucher))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa voucher này?'
-            description='Are you sure to delete this task?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
-            onConfirm={() => handleDelete(voucher._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Cập nhật voucher này'>
+              <ButtonAntd
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setVoucher(voucher))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xóa voucher này'>
+              <Popconfirm
+                title='Bạn có muốn xóa voucher này?'
+                description='Bạn chắc chắn muốn xóa voucher này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                okText='Có'
+                cancelText='Không'
+                onConfirm={() => handleDelete(voucher._id!)}
+              >
+                <ButtonAntd
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -214,13 +225,20 @@ const ListVoucher = () => {
           onConfirm={handleDeleteMany}
           className='ml-[10px]'
         >
-          <Button variant='danger' disabled={!hasSelected}>
+          <ButtonAntd
+            size='large'
+            type='primary'
+            danger
+            className='text-sm font-semibold capitalize'
+            disabled={!hasSelected}
+            // loading={loading}
+          >
             Xóa tất cả
-          </Button>
+          </ButtonAntd>
         </Popconfirm>
       </Space>
       <Table
-        className='dark:bg-graydark mt-4'
+        className='dark:bg-graydark mt-3'
         columns={columns}
         dataSource={vouchers}
         pagination={{
@@ -228,7 +246,11 @@ const ListVoucher = () => {
           total: voucherData && voucherData?.data?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
-          }
+          },
+          showQuickJumper: true
+          //   pageSizeOptions: ['10', '25', '50', '100'],
+          //   defaultPageSize: 10,
+          //   showSizeChanger: true
         }}
         rowSelection={rowSelection}
         // scroll={{ y: '60vh' }}

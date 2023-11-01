@@ -1,5 +1,5 @@
 import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table, Button as ButtonAnt, Input } from 'antd'
+import { Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
 import { Button } from '~/components'
 import { ColumnsType } from 'antd/es/table'
 import { NotFound } from '~/pages'
@@ -8,7 +8,7 @@ import { useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/ser
 import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, CloseCircleFilled, CheckOutlined, SearchOutlined } from '@ant-design/icons'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
 import { messageAlert } from '~/utils/messageAlert'
@@ -26,12 +26,14 @@ const ListPendingOrders = () => {
   const dispatch = useAppDispatch()
   const [pendingOrder, setPendingOrder] = useState<any>()
   const { orderDate } = useAppSelector((state) => state.orders)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   const [options, setoptions] = useState({
     page: 1,
     limit: 10,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    room: user._id
   })
 
   const memoOptions = useMemo(() => {
@@ -209,38 +211,50 @@ const ListPendingOrders = () => {
     },
 
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       // width: 300,
       render: (_: any, order) => (
-        <Space size='middle'>
-          <Button
-            variant='warning'
-            icon={<EyeFilled />}
-            onClick={() => {
-              // dispatch(setCategory({ _id: category._id, name: category.name }))
-              dispatch(setOpenDrawer(true))
-              dispatch(setOrderData({ ...order }))
-            }}
-          />
-          <Button
-            icon={<CheckOutlined />}
-            onClick={() => {
-              onConfirmOrder(order.key)
-              ClientSocket.confirmOrder(order.key)
-            }}
-          />
+        <div className='flex items-center justify-center'>
+          <Space>
+            <Tooltip title='Xem chi tiết đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-6 hover:!text-white flex items-center justify-center text-white'
+                icon={<EyeFilled />}
+                onClick={() => {
+                  // dispatch(setCategory({ _id: category._id, name: category.name }))
+                  dispatch(setOpenDrawer(true))
+                  dispatch(setOrderData({ ...order }))
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Xác nhận đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
+                icon={<CheckOutlined />}
+                onClick={() => {
+                  onConfirmOrder(order.key)
+                  ClientSocket.confirmOrder(order.key)
+                }}
+              />
+            </Tooltip>
 
-          <Button
-            variant='danger'
-            icon={<CloseCircleFilled />}
-            onClick={() => {
-              dispatch(setOpenModal(true))
-              dispatch(setIdOrderCancel(order.key))
-            }}
-          />
-        </Space>
+            <Tooltip title='Hủy đơn hàng'>
+              <ButtonAnt
+                size='large'
+                className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                icon={<CloseCircleFilled />}
+                onClick={() => {
+                  dispatch(setOpenModal(true))
+                  dispatch(setIdOrderCancel(order.key))
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]

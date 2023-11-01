@@ -11,7 +11,9 @@ const UserInfoRow = ({ user }: UserInfoRowProps) => {
     <div className='flex items-center gap-x-2'>
       <img className='h-10 w-10 rounded-full' src={user?.avatar} alt='' />
       <div className='text-sm font-normal text-gray-500 dark:text-gray-400'>
-        <div className='text-base font-semibold text-gray-900 dark:text-white'>{user?.username}</div>
+        <div className='text-base font-semibold text-gray-900 max-w-[120px] dark:text-white line-clamp-1'>
+          {user?.username}
+        </div>
         <div className='text-sm font-normal text-gray-500 dark:text-gray-400'>{user?.phone}</div>
       </div>
     </div>

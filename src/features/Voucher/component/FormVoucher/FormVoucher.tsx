@@ -20,11 +20,9 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   const [updateVoucher] = useUpdateVoucherMutation()
   const { voucherData } = useAppSelector((state: RootState) => state.vouchers)
 
-  // const { TextArea } = Input
-  // console.log(voucherData)
   voucherData._id &&
     form.setFieldsValue({
-      // code: voucherData.code,
+      code: voucherData.code,
       sale: voucherData.sale,
       discount: voucherData.discount,
       title: voucherData.title
@@ -74,14 +72,27 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         className='dark:text-white'
         onFinish={onFinish}
       >
-        {/* <Form.Item
+        <Form.Item
           className='dark:text-white'
           label='Tên voucher'
           name='code'
-          // rules={[{ required: true, message: 'Không được bỏ trống tên voucher!' }]}
+          rules={[
+            { required: true, message: 'Tên voucher không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên voucher không được chứa toàn khoảng trắng!')
+                }
+                if (!/^[a-z0-9]+$/.test(value)) {
+                  return Promise.reject('Tên voucher phải chứa chữ thường và số!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên voucher' />
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item
           className='dark:text-white'
           label='Số lượng'
@@ -116,21 +127,29 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
             }
           ]}
         >
-          <InputNumber size='large' placeholder='Giảm giá voucher voucher(vnd)' className='w-full' />
+          <InputNumber
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+            parser={(value: any) => value.replace(/ \s?|(\.*)/g, '')}
+            size='large'
+            placeholder='Giảm giá voucher(vnd)'
+            className='w-full'
+          />
         </Form.Item>
-        {/* <Form.Item
-          className='dark:text-white'
-          label='Giảm giá từ '
-          name='sale'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
-        >
-          <Input size='large' placeholder='Giảm giá cho đơn từ ' />
-        </Form.Item> */}
         <Form.Item
           className='dark:text-white'
           label='Mô tả voucher'
           name='title'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Tên size không được chứa toàn khoảng trắng!')
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
         >
           <TextArea rows={4} placeholder='Mô tả voucher' />
         </Form.Item>

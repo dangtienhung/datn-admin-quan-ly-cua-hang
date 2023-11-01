@@ -1,4 +1,4 @@
-import { Popconfirm, Space, Table, message } from 'antd'
+import { Popconfirm, Space, Table, message, Button as ButtonAnt, Tooltip } from 'antd'
 import { useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button } from '~/components'
@@ -31,7 +31,7 @@ const ListBlog = () => {
   }
   const handleDeleteMany = async () => {
     selectedRowKeys.forEach((selectedItems) => {
-      deleteBlog(selectedItems)
+      deleteBlog(selectedItems as string)
         .unwrap()
         .then(() => {
           messageAlert('Xóa thành công', 'success')
@@ -77,34 +77,43 @@ const ListBlog = () => {
       render: (text: string) => <div>{truncateDescription(ReactHtmlParser(text) as any, 120)}</div>
     },
     {
-      title: 'Action',
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 300,
       render: (_: any, blog: IBlogs) => (
-        <Space size='middle'>
-          <Button
-            icon={<BsFillPencilFill />}
-            onClick={() => {
-              dispatch(setBlog(blog))
-              dispatch(setOpenDrawer(true))
-            }}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title='Bạn có muốn xóa bài viết này?'
-            description='Are you sure to delete this task?'
-            okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-            okText='Có'
-            cancelText='Không'
-            // onCancel={cancelDelete}
-            onConfirm={() => handleDelete(blog._id!)}
-          >
-            <Button variant='danger' icon={<BsFillTrashFill />}>
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
+        <div className='flex items-center justify-center'>
+          <Space size='middle'>
+            <Tooltip title='Sủa bài viết này'>
+              <ButtonAnt
+                size='large'
+                className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                icon={<BsFillPencilFill />}
+                onClick={() => {
+                  dispatch(setBlog(blog))
+                  dispatch(setOpenDrawer(true))
+                }}
+              />
+            </Tooltip>
+
+            <Tooltip title='Xóa bài viêt này'>
+              <Popconfirm
+                title='Bạn có muốn xóa bài viết này?'
+                description='Bạn chắc chắn muốn xóa bài viết này?'
+                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
+                // okText='Có'
+                // cancelText='Không'
+                // onCancel={cancelDelete}
+                onConfirm={() => handleDelete(blog._id!)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<BsFillTrashFill />}
+                />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        </div>
       )
     }
   ]
@@ -134,7 +143,7 @@ const ListBlog = () => {
           }
         }}
         rowSelection={rowSelection}
-        scroll={{ y: '60vh' }}
+        scroll={{ y: '60vh', x: 1000 }}
         bordered
       />
     </div>

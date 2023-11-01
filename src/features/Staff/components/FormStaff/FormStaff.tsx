@@ -26,7 +26,6 @@ export const FormStaff = ({ open }: FormStaffProps) => {
   const [addUser, { isLoading: isAdding }] = useAddUserMutation()
   const [uploadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
-  console.log(userData, fileList)
 
   userData._id &&
     form.setFieldsValue({
@@ -142,7 +141,18 @@ export const FormStaff = ({ open }: FormStaffProps) => {
           className='dark:text-white'
           label='Tên nhân viên'
           name='username'
-          rules={[{ required: true, message: 'Không được bỏ trống tên nhân viên!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống tên nhân viên!' },
+            {
+              validator: (_, value, callback) => {
+                if (value && value.trim() === '') {
+                  callback('Không được để trống')
+                } else {
+                  callback()
+                }
+              }
+            }
+          ]}
         >
           <Input size='large' placeholder='Tên người dùng' />
         </Form.Item>
