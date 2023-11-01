@@ -1,25 +1,28 @@
-import { LoadingOutlined } from '@ant-design/icons'
-import { Drawer, Form, Image, Input } from 'antd'
-import { RcFile } from 'antd/es/upload'
-import { useRef, useState } from 'react'
-import { Button } from '~/components'
-import { useAppSelector } from '~/store/hooks'
-import { useAddBlogMutation, useUpLoadImageBlogMutation, useUpdateBlogMutation } from '~/store/services'
-import { setBlog, setOpenDrawer } from '~/store/slices'
-import { RootState, useAppDispatch } from '~/store/store'
-import { IBlogs } from '~/types'
-import { messageAlert } from '~/utils/messageAlert'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import UploadFile from '~/components/UploadFile'
+
+import { Drawer, Form, Image, Input } from 'antd'
+import { RootState, useAppDispatch } from '~/store/store'
 import { container, formats } from '../../utils/ReactQuill'
+import { setBlog, setOpenDrawer } from '~/store/slices'
+import { useAddBlogMutation, useUpLoadImageBlogMutation, useUpdateBlogMutation } from '~/store/services'
+import { useRef, useState } from 'react'
+
+import { Button } from '~/components'
+import { IBlogs } from '~/types'
+import { LoadingOutlined } from '@ant-design/icons'
+import { RcFile } from 'antd/es/upload'
+import ReactQuill from 'react-quill'
+import UploadFile from '~/components/UploadFile'
+import { messageAlert } from '~/utils/messageAlert'
+import { useAppSelector } from '~/store/hooks'
+
 interface BlogFormProps {
   open: boolean
 }
 const FormBlog = ({ open }: BlogFormProps) => {
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
-  const { blogData } = useAppSelector((state: RootState) => state.blogs)
+  const { blogData, blogId } = useAppSelector((state: RootState) => state.blogs)
   const [addBlog, { isLoading: isAdding }] = useAddBlogMutation()
   const [updateBlog, { isLoading: isUpdating }] = useUpdateBlogMutation()
 
@@ -117,7 +120,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
       destroyOnClose
       onClose={onClose}
       getContainer={false}
-      open={open}
+      open={blogId ? false : open}
     >
       <Form
         name='basic'

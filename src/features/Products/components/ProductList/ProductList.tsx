@@ -8,7 +8,6 @@ import { useRef, useState } from 'react'
 import { AiFillEdit } from 'react-icons/ai'
 import type { ColumnType } from 'antd/es/table'
 import { DeleteIcon } from '~/components'
-import { FaFilePdf } from 'react-icons/fa6'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import { HiDocumentDownload } from 'react-icons/hi'
 import Highlighter from 'react-highlight-words'
@@ -328,13 +327,6 @@ const ProductList = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
-        <ButtonAntd
-          icon={<FaFilePdf />}
-          size='large'
-          className='bg-red text-red-d10 hover:text-red-d10 hover:bg-red flex items-center text-sm font-semibold capitalize'
-        >
-          Xuất PDF
         </ButtonAntd>
       </div>
       <Table

@@ -1,5 +1,6 @@
-import { IBlogs } from './../../../types/Blogs/blog.type'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+
+import { IBlogs } from './../../../types/Blogs/blog.type'
 import { IImage } from '~/types'
 
 interface IBlogState {
@@ -9,6 +10,7 @@ interface IBlogState {
     images: IImage[]
     description: string
   }
+  blogId: string | null
 }
 
 const initialState: IBlogState = {
@@ -17,7 +19,8 @@ const initialState: IBlogState = {
     name: '',
     description: '',
     images: []
-  }
+  },
+  blogId: null
 }
 
 export const blogSlice = createSlice({
@@ -26,8 +29,11 @@ export const blogSlice = createSlice({
   reducers: {
     setBlog: (state, action: PayloadAction<IBlogs>) => {
       state.blogData = action.payload
+    },
+    setBlogId: (state, action: PayloadAction<string | null>) => {
+      state.blogId = action.payload
     }
   }
 })
-export const { setBlog } = blogSlice.actions
+export const { setBlog, setBlogId } = blogSlice.actions
 export const blogReducer = blogSlice.reducer

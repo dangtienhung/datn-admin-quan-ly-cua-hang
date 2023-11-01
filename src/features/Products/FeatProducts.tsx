@@ -34,13 +34,10 @@ const FeatureProducts = ({ data }: FeatureProductsProps) => {
 
       <Tabs defaultActiveKey='1' items={items} />
 
-      <FormProduct open={openDrawer} />
+      <FormProduct />
 
       {/* preview product */}
-      <PreviewProduct
-        open={openPreProduct}
-        onClose={() => handleTogglePreviewProduct(openPreProduct, setOpenPreProduct)}
-      />
+      <PreviewProduct />
     </div>
   )
 }
