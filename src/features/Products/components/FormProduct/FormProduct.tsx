@@ -45,8 +45,6 @@ const FormProduct = () => {
   const [editProduct] = useEditProductMutation()
 
   useEffect(() => {
-    console.log(dataSizeDefault)
-
     if (dataCategories && dataToppings && dataSizeDefault) {
       setCategories(dataCategories?.docs)
       setToppings(dataToppings?.data)
