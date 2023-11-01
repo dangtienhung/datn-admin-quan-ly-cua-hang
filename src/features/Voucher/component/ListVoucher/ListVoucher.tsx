@@ -1,20 +1,21 @@
-import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAnt } from 'antd'
-import { FilterConfirmProps } from 'antd/es/table/interface'
-import { ColumnType } from 'antd/lib/table'
-import { useRef, useState } from 'react'
-import Highlighter from 'react-highlight-words'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button as ButtonAnt, Input, InputRef, Popconfirm, Space, Table, message } from 'antd'
+import { setOpenDrawer, setVoucher } from '~/store/slices'
+import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
+import { useRef, useState } from 'react'
+
 import { Button } from '~/components'
+import { ColumnType } from 'antd/lib/table'
+import { FilterConfirmProps } from 'antd/es/table/interface'
+import Highlighter from 'react-highlight-words'
+import { IVoucher } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
-import { setOpenDrawer, setVoucher } from '~/store/slices'
-import { useAppDispatch } from '~/store/store'
-import { IVoucher } from '~/types'
+import { SearchOutlined } from '@ant-design/icons'
 import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
+import { useAppDispatch } from '~/store/store'
 
 const ListVoucher = () => {
   const dispatch = useAppDispatch()
@@ -36,7 +37,7 @@ const ListVoucher = () => {
   const handleDeleteMany = async () => {
     await pause(700)
     selectedRowKeys.forEach((selectedItem) => {
-      deleteVoucher({ id: selectedItem })
+      deleteVoucher({ id: selectedItem as string })
         .unwrap()
         .then(() => {
           messageAlert('Xóa thành công', 'success')
@@ -230,7 +231,7 @@ const ListVoucher = () => {
           }
         }}
         rowSelection={rowSelection}
-        scroll={{ y: '60vh' }}
+        // scroll={{ y: '60vh' }}
         bordered
       />
     </div>

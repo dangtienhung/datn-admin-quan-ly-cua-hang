@@ -1,4 +1,5 @@
 import { Socket, io } from 'socket.io-client'
+
 const socket: Socket = io('ws://localhost:8000', {
   transports: ['websocket', 'pulling', 'flashsocket']
 })
