@@ -60,6 +60,20 @@ export const blogApi = createApi({
     getBlog: builder.query<IBlogs, string>({
       query: (id) => `/newBlog/${id}`,
       providesTags: (_, __, id) => [{ type: 'Blogs', _id: id }]
+    }),
+    /* getAll active blog */
+    getAllBlogsActive: builder.query<IBlogsDocs, number | string>({
+      query: () => `newsBlog-update/active`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.docs.map(({ _id }) => ({ type: 'Blogs' as const, _id })),
+            { type: 'Blogs' as const, id: 'LIST' }
+          ]
+          return final
+        }
+        return [{ type: 'Blogs', id: 'LIST' }]
+      }
     })
   })
 })
@@ -70,5 +84,6 @@ export const {
   useDeleteBlogMutation,
   useUpdateBlogMutation,
   useUpLoadImageBlogMutation,
-  useGetBlogQuery
+  useGetBlogQuery,
+  useGetAllBlogsActiveQuery
 } = blogApi

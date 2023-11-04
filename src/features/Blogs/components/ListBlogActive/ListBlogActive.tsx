@@ -4,7 +4,7 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
-import { useDeleteBlogMutation, useGetAllBlogsActiveQuery, useGetAllBlogsQuery } from '~/store/services'
+import { useDeleteBlogMutation, useGetAllBlogsActiveQuery } from '~/store/services'
 
 import { Button } from '~/components'
 import { IBlogs } from '~/types'
@@ -16,13 +16,11 @@ import { useAppSelector } from '~/store/hooks'
 import { useState } from 'react'
 import clsxm from '~/utils/clsxm'
 
-const ListBlog = () => {
+const ListBlogActive = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
-  const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
-  const { data: BlogActive } = useGetAllBlogsActiveQuery(0)
-  console.log(BlogActive)
+  const { data: BlogDatactive, isLoading, isError } = useGetAllBlogsActiveQuery(currentPage)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
@@ -45,10 +43,11 @@ const ListBlog = () => {
         })
     })
   }
-  const blogs = BlogData?.docs?.map((blog) => ({
+  const blogs = BlogDatactive?.docs?.map((blog) => ({
     ...blog,
     key: blog._id
   }))
+  console.log(blogs)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
@@ -86,7 +85,7 @@ const ListBlog = () => {
               color={clsxm(
                 { success: !blog.is_deleted && blog.is_active },
                 { '#333': blog.is_deleted },
-                { red: !blog.is_active }
+                { red: !blog.is_deleted && !blog.is_active }
               )}
             >
               {blog.is_active && !blog.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
@@ -169,8 +168,8 @@ const ListBlog = () => {
         columns={columns}
         dataSource={blogs}
         pagination={{
-          pageSize: BlogData && BlogData?.limit,
-          total: BlogData && BlogData?.totalDocs,
+          pageSize: BlogDatactive && BlogDatactive?.limit,
+          total: BlogDatactive && BlogDatactive?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
           }
@@ -183,4 +182,4 @@ const ListBlog = () => {
   )
 }
 
-export default ListBlog
+export default ListBlogActive

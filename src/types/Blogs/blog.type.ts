@@ -19,4 +19,6 @@ export interface IBlogs {
   description: string
   createdAt?: string
   updatedAt?: string
+  is_active: boolean
+  is_deleted: boolean
 }
