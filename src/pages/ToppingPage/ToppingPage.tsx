@@ -4,7 +4,7 @@ import { useGetAllToppingsQuery } from '~/store/services'
 import { useState } from 'react'
 
 const ToppingPage = () => {
-  const [value, setValue] = useState({ _page: 1, _limit: 10, query: '' })
+  const [value, _] = useState({ _page: 1, _limit: 10, query: '' })
   const {
     isError: errorTopping,
     isFetching: fetchingTopping,

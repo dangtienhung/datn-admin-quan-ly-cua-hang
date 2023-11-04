@@ -168,7 +168,7 @@ export const ListStaffs = () => {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      width: 80,
+      width: 90,
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
