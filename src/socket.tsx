@@ -15,7 +15,9 @@ interface Options {
 }
 
 const JoinRoom = () => {
-  const UserId = JSON.parse(JSON.parse(String(localStorage?.getItem('persist:root')))?.auth)?.user?._id
+  const UserId = localStorage?.getItem('persist:root')
+    ? JSON.parse(JSON.parse(String(localStorage?.getItem('persist:root')))?.auth)?.user?._id
+    : ''
   if (!UserId) return <Navigate to='/' />
 
   socket.emit('join', UserId)

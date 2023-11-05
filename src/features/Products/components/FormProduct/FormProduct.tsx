@@ -159,9 +159,9 @@ const FormProduct = () => {
           <label
             htmlFor='button-submit-form'
             onClick={() => {}}
-            className='bg-primary px-6 py-2 flex justify-center items-center w-[180px] h-[44px] text-white rounded-lg cursor-pointer'
+            className='bg-primary py-2 px-4 flex justify-center items-center h-[44px] text-white rounded-lg cursor-pointer'
           >
-            {!isCreateLoading && <p>{productId === null ? 'Thêm' : 'Cập nhật'} sản phẩm</p>}
+            {!isCreateLoading && <p>{productId === null ? 'Thêm' : 'Cập nhật'} </p>}
             {isCreateLoading && (
               <div className='border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full'></div>
             )}

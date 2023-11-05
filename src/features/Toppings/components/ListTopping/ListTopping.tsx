@@ -72,7 +72,7 @@ const ToppingList = () => {
     },
     { title: 'Giá topping', dataIndex: 'price', key: 'price', render: (price: number) => `${formatCurrency(price)}` },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       fixed: 'right',
       width: 200,
