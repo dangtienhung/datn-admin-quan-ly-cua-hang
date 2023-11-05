@@ -92,7 +92,7 @@ export const ListSliders = () => {
       )
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, slider: ISLider) => (

@@ -24,7 +24,7 @@ const FeatureProducts = ({ data }: FeatureProductsProps) => {
 
   return (
     <div>
-      <Breadcrumb pageName='Toppings'>
+      <Breadcrumb pageName='Sản phẩm'>
         <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
           Thêm
         </Button>

@@ -171,7 +171,7 @@ const ListVoucher = () => {
       ...getColumnSearchProps('title')
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, voucher: IVoucher) => (
