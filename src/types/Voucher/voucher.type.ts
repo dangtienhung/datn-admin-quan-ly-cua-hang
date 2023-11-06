@@ -24,4 +24,5 @@ export interface IVoucher {
   isActive?: boolean
   createdAt?: string
   updatedAt?: string
+  desc: string
 }
