@@ -4,10 +4,10 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
-import { useDeleteBlogMutation, useGetAllBlogsActiveQuery, useGetAllBlogsQuery } from '~/store/services'
+import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
 
 import { Button } from '~/components'
-import { IBlogs } from '~/types'
+import { IBlogs, ICategoryBlogRefBlog } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { messageAlert } from '~/utils/messageAlert'
@@ -21,8 +21,7 @@ const ListBlog = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
   const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
-  const { data: BlogActive } = useGetAllBlogsActiveQuery(0)
-  console.log(BlogActive)
+  console.log('List Blog', BlogData)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
@@ -82,15 +81,11 @@ const ListBlog = () => {
             />
           </div>
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <Tag
-              color={clsxm(
-                { success: !blog.is_deleted && blog.is_active },
-                { '#333': blog.is_deleted },
-                { red: !blog.is_active }
-              )}
-            >
-              {blog.is_active && !blog.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
-            </Tag>
+            <div>
+              <Tag color={clsxm({ success: !blog.is_deleted && blog.is_active }, { red: !blog.is_active })}>
+                {blog.is_active && !blog.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
+              </Tag>
+            </div>
             <div
               className='hover:underline flex-1 text-base capitalize cursor-pointer'
               onClick={() => {
@@ -104,7 +99,16 @@ const ListBlog = () => {
       )
     },
     {
-      title: 'Mô tả blog',
+      title: 'Danh mục bài viết',
+      dataIndex: 'category',
+      key: 'category',
+      width: 150,
+      render: (category: ICategoryBlogRefBlog) => (
+        <div className='line-clamp-3 text-base'>{category?.name || 'Không có dữ liệu'}</div>
+      )
+    },
+    {
+      title: 'Mô tả bài viết',
       dataIndex: 'description',
       key: 'description',
       render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
@@ -112,7 +116,7 @@ const ListBlog = () => {
     {
       title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 200,
+      width: 150,
       render: (_: any, blog: IBlogs) => (
         <div className='flex items-center justify-center'>
           <Space size='middle'>

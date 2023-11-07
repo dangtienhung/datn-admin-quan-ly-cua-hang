@@ -1,14 +1,16 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import { IBlogs } from './../../../types/Blogs/blog.type'
-import { IImage } from '~/types'
+import { ICategoryBlogRefBlog, IImage } from '~/types'
 
 interface IBlogState {
   blogData: {
     _id?: string
     name: string
     images: IImage[]
+    category: ICategoryBlogRefBlog
     description: string
+    is_active: boolean
   }
   blogId: string | null
 }
@@ -18,7 +20,9 @@ const initialState: IBlogState = {
     _id: '',
     name: '',
     description: '',
-    images: []
+    category: { _id: '', name: '' },
+    images: [],
+    is_active: true
   },
   blogId: null
 }

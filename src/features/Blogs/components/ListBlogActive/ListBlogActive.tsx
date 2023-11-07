@@ -7,7 +7,7 @@ import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
 import { useDeleteBlogMutation, useGetAllBlogsActiveQuery } from '~/store/services'
 
 import { Button } from '~/components'
-import { IBlogs } from '~/types'
+import { IBlogs, ICategoryBlogRefBlog } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { messageAlert } from '~/utils/messageAlert'
@@ -103,6 +103,15 @@ const ListBlogActive = () => {
       )
     },
     {
+      title: 'Danh mục bài viết',
+      dataIndex: 'category',
+      key: 'category',
+      width: 150,
+      render: (category: ICategoryBlogRefBlog) => (
+        <div className='line-clamp-3 text-base'>{category?.name || 'Không có dữ liệu'}</div>
+      )
+    },
+    {
       title: 'Mô tả blog',
       dataIndex: 'description',
       key: 'description',
@@ -111,7 +120,7 @@ const ListBlogActive = () => {
     {
       title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 200,
+      width: 150,
       render: (_: any, blog: IBlogs) => (
         <div className='flex items-center justify-center'>
           <Space size='middle'>
@@ -132,9 +141,6 @@ const ListBlogActive = () => {
                 title='Bạn có muốn xóa bài viết này?'
                 description='Bạn chắc chắn muốn xóa bài viết này?'
                 okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                // okText='Có'
-                // cancelText='Không'
-                // onCancel={cancelDelete}
                 onConfirm={() => handleDelete(blog._id!)}
               >
                 <ButtonAnt
