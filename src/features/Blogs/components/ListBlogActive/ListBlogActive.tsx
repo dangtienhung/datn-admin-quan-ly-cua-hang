@@ -4,7 +4,7 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
-import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
+import { useDeleteBlogMutation, useGetAllBlogsActiveQuery } from '~/store/services'
 
 import { Button } from '~/components'
 import { IBlogs, ICategoryBlogRefBlog } from '~/types'
@@ -16,12 +16,11 @@ import { useAppSelector } from '~/store/hooks'
 import { useState } from 'react'
 import clsxm from '~/utils/clsxm'
 
-const ListBlog = () => {
+const ListBlogActive = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
-  const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
-  console.log('List Blog', BlogData)
+  const { data: BlogDatactive, isLoading, isError } = useGetAllBlogsActiveQuery(currentPage)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
@@ -44,10 +43,11 @@ const ListBlog = () => {
         })
     })
   }
-  const blogs = BlogData?.docs?.map((blog) => ({
+  const blogs = BlogDatactive?.docs?.map((blog) => ({
     ...blog,
     key: blog._id
   }))
+  console.log(blogs)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
@@ -81,11 +81,15 @@ const ListBlog = () => {
             />
           </div>
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <div>
-              <Tag color={clsxm({ success: !blog.is_deleted && blog.is_active }, { red: !blog.is_active })}>
-                {blog.is_active && !blog.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
-              </Tag>
-            </div>
+            <Tag
+              color={clsxm(
+                { success: !blog.is_deleted && blog.is_active },
+                { '#333': blog.is_deleted },
+                { red: !blog.is_deleted && !blog.is_active }
+              )}
+            >
+              {blog.is_active && !blog.is_deleted ? 'Đang hoạt động' : 'Không hoạt động'}
+            </Tag>
             <div
               className='hover:underline flex-1 text-base capitalize cursor-pointer'
               onClick={() => {
@@ -108,13 +112,13 @@ const ListBlog = () => {
       )
     },
     {
-      title: 'Mô tả bài viết',
+      title: 'Mô tả blog',
       dataIndex: 'description',
       key: 'description',
       render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
     },
     {
-      // title: <span className='block text-center'>Action</span>,
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 150,
       render: (_: any, blog: IBlogs) => (
@@ -137,9 +141,6 @@ const ListBlog = () => {
                 title='Bạn có muốn xóa bài viết này?'
                 description='Bạn chắc chắn muốn xóa bài viết này?'
                 okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                // okText='Có'
-                // cancelText='Không'
-                // onCancel={cancelDelete}
                 onConfirm={() => handleDelete(blog._id!)}
               >
                 <ButtonAnt
@@ -173,8 +174,8 @@ const ListBlog = () => {
         columns={columns}
         dataSource={blogs}
         pagination={{
-          pageSize: BlogData && BlogData?.limit,
-          total: BlogData && BlogData?.totalDocs,
+          pageSize: BlogDatactive && BlogDatactive?.limit,
+          total: BlogDatactive && BlogDatactive?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
           }
@@ -187,4 +188,4 @@ const ListBlog = () => {
   )
 }
 
-export default ListBlog
+export default ListBlogActive
