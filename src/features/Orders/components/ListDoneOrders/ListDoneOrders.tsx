@@ -166,7 +166,7 @@ const ListDoneOrders = () => {
     },
 
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 100,

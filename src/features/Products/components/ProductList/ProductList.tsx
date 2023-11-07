@@ -90,7 +90,7 @@ const ProductList = () => {
       </Tooltip>
     ),
     onFilter: (value: any, record: any) => {
-      return record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+      return record[dataIndex as unknown as number].toString().toLowerCase().includes(value.toLowerCase())
     },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -203,7 +203,7 @@ const ProductList = () => {
       ...getColumnSearchProps('name' as unknown as IProduct)
     },
     {
-      title: 'Size sản phẩm',
+      title: 'Size  ',
       dataIndex: 'sizes',
       key: 'sizes',
       width: 200,
@@ -222,7 +222,7 @@ const ProductList = () => {
       )
     },
     {
-      title: 'Topping sản phẩm',
+      title: 'Topping ',
       dataIndex: 'toppings',
       key: 'toppings',
       render: (toppings: IToppingRefProduct[]) => (
@@ -241,7 +241,7 @@ const ProductList = () => {
       )
     },
     {
-      title: 'Danh mục sản phẩm',
+      title: 'Danh mục  ',
       dataIndex: 'category',
       key: 'category',
       render: (category: ICategoryRefProduct) => <p className='capitalize'>{category?.name || 'Không có thông tin'}</p>,
@@ -251,7 +251,7 @@ const ProductList = () => {
       ellipsis: true
     },
     {
-      title: 'Action',
+      // title: 'Action',
       dataIndex: 'action',
       width: 100,
       key: 'action',

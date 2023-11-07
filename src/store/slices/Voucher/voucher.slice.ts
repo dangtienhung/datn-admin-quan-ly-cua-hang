@@ -8,6 +8,8 @@ interface IVoucherState {
     title: string
     discount: number
     sale: number
+    desc: string
+    isActive: boolean
   }
 }
 const initialState: IVoucherState = {
@@ -16,7 +18,9 @@ const initialState: IVoucherState = {
     code: '',
     title: '',
     discount: 0,
-    sale: 0
+    sale: 0,
+    desc: '',
+    isActive: true
   }
 }
 export const voucherSlice = createSlice({

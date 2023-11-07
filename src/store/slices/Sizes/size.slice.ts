@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { ISize } from '~/types'
+// import { ISize } from '~/types'
 
 interface SizeState {
   sizeData: {

@@ -135,11 +135,19 @@ const ListVoucher = () => {
       width: 50
     },
     {
-      title: 'Mã giảm giá',
+      title: 'Tiêu đề',
+      dataIndex: 'title',
+      key: 'title',
+      width: '25%',
+      render: (name: string) => <p className='uppercase'>{name}</p>,
+      ...getColumnSearchProps('title')
+    },
+    {
+      title: 'Mã Code',
       dataIndex: 'code',
       key: 'code',
       width: '25%',
-      render: (name: string) => <p className='uppercase'>{name}</p>,
+      render: (name: string) => <p className=''>{name}</p>,
       ...getColumnSearchProps('code')
     },
     {
@@ -148,6 +156,13 @@ const ListVoucher = () => {
       key: 'discount',
       width: '15%',
       render: (discount: number) => `${discount}`
+    },
+    {
+      title: 'Hoạt động',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      width: '15%',
+      render: (data: boolean) => (data ? 'Hoạt Động' : 'Ẩn')
     },
     {
       title: 'Giảm giá',
@@ -162,16 +177,9 @@ const ListVoucher = () => {
       },
       render: (sale: number) => `${formatCurrency(sale)}`
     },
+
     {
-      title: 'Mô tả mã',
-      dataIndex: 'title',
-      key: 'title',
-      width: '25%',
-      render: (name: string) => <span>{name}</span>,
-      ...getColumnSearchProps('title')
-    },
-    {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, voucher: IVoucher) => (

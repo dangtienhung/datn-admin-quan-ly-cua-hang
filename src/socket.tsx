@@ -1,7 +1,5 @@
 import { Socket, io } from 'socket.io-client'
 
-import { Navigate } from 'react-router-dom'
-
 const socket: Socket = io('ws://localhost:8000', {
   transports: ['websocket', 'pulling', 'flashsocket']
 })
@@ -14,16 +12,14 @@ interface Options {
   room: string
 }
 
-const JoinRoom = () => {
-  const UserId = JSON.parse(JSON.parse(String(localStorage?.getItem('persist:root')))?.auth)?.user?._id
-  if (!UserId) return <Navigate to='/' />
-
-  socket.emit('join', UserId)
-}
-
-JoinRoom()
-
 export const ClientSocket = {
+  JoinRoom: (id: string) => {
+    socket.connect()
+    socket.emit('join', id)
+  },
+  Disconnect: () => {
+    socket.disconnect()
+  },
   getAllOrder: (setAllOrder: React.Dispatch<React.SetStateAction<undefined>>) => {
     socket.emit('client:requestAllOrder', '')
     socket.on('server:loadAllOrder', (data) => {
@@ -37,6 +33,7 @@ export const ClientSocket = {
   getPendingOrder: (setPendingOrder: React.Dispatch<React.SetStateAction<undefined>>, options: Options) => {
     socket.emit('client:requestPendingOrder', options)
     socket.on('server:loadPendingOrder', (data) => {
+      console.log(data)
       setPendingOrder(data)
     })
     return () => {

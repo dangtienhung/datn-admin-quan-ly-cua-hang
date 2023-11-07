@@ -1,6 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import { Drawer, Form, Input, InputNumber } from 'antd'
+import { Checkbox, Drawer, Form, Input, InputNumber } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import { useEffect, useState } from 'react'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
 import { useAddVoucherMutation, useUpdateVoucherMutation } from '~/store/services'
@@ -19,25 +20,31 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   const [addVoucher, { isLoading: isAdding }] = useAddVoucherMutation()
   const [updateVoucher] = useUpdateVoucherMutation()
   const { voucherData } = useAppSelector((state: RootState) => state.vouchers)
-
+  const [checkedVoucher, setCheckedVoucher] = useState<boolean>()
   voucherData._id &&
     form.setFieldsValue({
       code: voucherData.code,
       sale: voucherData.sale,
       discount: voucherData.discount,
-      title: voucherData.title
+      title: voucherData.title,
+      desc: voucherData.desc,
+      isActive: voucherData.isActive
     })
+  useEffect(() => {
+    voucherData && voucherData._id && setCheckedVoucher(voucherData.isActive)
+  }, [voucherData])
   const onFinish = async (values: IVoucher) => {
     if (voucherData._id) {
-      updateVoucher({ _id: voucherData._id, ...values })
+      console.log(values, ':::')
+      updateVoucher({ _id: voucherData._id, ...values, isActive: checkedVoucher })
         .unwrap()
         .then(() => {
           messageAlert('Cập nhật thành công', 'success')
           onClose()
         })
         .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-      return
       console.log('update', { ...values, _id: voucherData._id })
+      return
     }
 
     addVoucher(values)
@@ -54,7 +61,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
     dispatch(setVoucher({ _id: '', code: '', title: '', discount: 0, sale: 0 }))
     form.resetFields()
   }
-
+  console.log(checkedVoucher)
   return (
     <Drawer
       title={voucherData._id ? 'Cập nhật voucher' : 'Thêm voucher mới'}
@@ -75,7 +82,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         <Form.Item
           className='dark:text-white'
           label='Tên voucher'
-          name='code'
+          name='title'
           rules={[
             { required: true, message: 'Tên voucher không được bỏ trống!' },
             {
@@ -83,8 +90,30 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
                 if (value.trim() === '') {
                   return Promise.reject('Tên voucher không được chứa toàn khoảng trắng!')
                 }
-                if (!/^[a-z0-9]+$/.test(value)) {
-                  return Promise.reject('Tên voucher phải chứa chữ thường và số!')
+
+                return Promise.resolve()
+              }
+            }
+          ]}
+        >
+          <Input size='large' placeholder='Tên voucher' />
+        </Form.Item>
+        <Form.Item
+          className='dark:text-white'
+          label='Mã code voucher'
+          name='code'
+          rules={[
+            { required: true, message: 'Mã Code voucher không được bỏ trống!' },
+            {
+              validator: (_, value) => {
+                if (value.trim() === '') {
+                  return Promise.reject('Mã Code voucher không được chứa toàn khoảng trắng!')
+                }
+                if (!/^[^~\-.A-Z]*[0-9]+[^~\-.A-Z]*$/.test(value) && value.length < 15) {
+                  return Promise.reject('Mã Code voucher phải chứa chữ thường, hoa và số!')
+                }
+                if (value.length !== 15) {
+                  return Promise.reject('Mã Code voucher dài 15 kí tự!')
                 }
                 return Promise.resolve()
               }
@@ -135,10 +164,17 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
             className='w-full'
           />
         </Form.Item>
+        {voucherData && voucherData._id && (
+          <Form.Item className='dark:text-white' label='Trạng thái' name='isActive'>
+            <Checkbox checked={checkedVoucher} onChange={() => setCheckedVoucher(!checkedVoucher)}>
+              Hoạt Động
+            </Checkbox>
+          </Form.Item>
+        )}
         <Form.Item
           className='dark:text-white'
           label='Mô tả voucher'
-          name='title'
+          name='desc'
           rules={[
             { required: true, message: 'Không được bỏ trống!' },
             {

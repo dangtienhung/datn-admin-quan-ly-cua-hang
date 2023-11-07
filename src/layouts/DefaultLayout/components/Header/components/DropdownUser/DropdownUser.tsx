@@ -7,6 +7,7 @@ import { RootState } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import toast from 'react-hot-toast'
 import { useLogOutMutation } from '~/store/services/Auth'
+import { ClientSocket } from '~/socket'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -21,6 +22,7 @@ const DropdownUser = () => {
       .unwrap()
       .then(() => {
         // navigate('/', { replace: true, relative: 'path' })
+        ClientSocket.Disconnect()
         toast.success('Đăng xuất thành công')
       })
       .catch(() => toast.error('Đăng xuất thất bại'))

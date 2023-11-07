@@ -170,11 +170,11 @@ export const ListCustomers = () => {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      width: 80,
+      width: 90,
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, customer: IUser) => (

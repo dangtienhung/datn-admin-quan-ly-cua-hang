@@ -1,14 +1,14 @@
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tooltip, message } from 'antd'
+import { useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { HiDocumentDownload } from 'react-icons/hi'
-import { Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
+import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
+import { setOpenDrawer, setSize } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
 import { ISize } from '~/types'
 import { exportDataToExcel, formatCurrency } from '~/utils'
-import { setOpenDrawer, setSize } from '~/store/slices'
-import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
-import { useState } from 'react'
-import Loading from '~/components/Loading/Loading'
-import { NotFound } from '~/pages'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 
@@ -73,7 +73,7 @@ export const ListSizes = () => {
       render: (price: number) => `${formatCurrency(price)}`
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, size: ISize) => (

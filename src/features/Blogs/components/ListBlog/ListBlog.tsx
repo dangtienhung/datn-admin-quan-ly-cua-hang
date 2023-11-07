@@ -114,7 +114,7 @@ const ListBlog = () => {
       render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 150,
       render: (_: any, blog: IBlogs) => (

@@ -11,7 +11,7 @@ const StaffFeature = () => {
   const { openDrawer } = useAppSelector((state) => state.drawer)
   return (
     <div>
-      <Breadcrumb pageName='Customers'>
+      <Breadcrumb pageName='Nhân viên'>
         <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
           Thêm
         </Button>
