@@ -14,7 +14,6 @@ export const PreviewBlog = () => {
   const { blogId } = useAppSelector((state: RootState) => state.blogs)
 
   const { data: blogDetail } = useGetBlogQuery(idBlog)
-  console.log(blogDetail)
 
   useEffect(() => {
     if (blogId) {

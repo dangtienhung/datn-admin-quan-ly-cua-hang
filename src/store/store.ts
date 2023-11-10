@@ -88,7 +88,7 @@ export const store = configureStore({
     vouchers: voucherReducer,
     blogs: blogReducer,
     user: userReducer,
-    categoryblog: categoryBlogReducer
+    categoryBlog: categoryBlogReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

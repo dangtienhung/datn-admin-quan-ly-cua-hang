@@ -16,6 +16,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
 import { GuardAccount } from '.'
+import CategoryBlogPage from '~/pages/CategoryBlogPage'
 
 const routers = createBrowserRouter([
   {
@@ -45,6 +46,7 @@ const routers = createBrowserRouter([
           { path: 'vouchers', element: <VoucherPage /> },
           { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: <OrderPage /> },
+          { path: 'category-blog', element: <CategoryBlogPage /> },
           { path: 'blogs', element: <BlogPage /> },
           { path: 'sliders', element: <SliderPage /> }
         ]
