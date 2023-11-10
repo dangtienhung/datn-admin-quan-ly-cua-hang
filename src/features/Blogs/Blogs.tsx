@@ -14,7 +14,7 @@ interface BlogFeatureProps {
 }
 
 const BlogFeature = ({ data }: BlogFeatureProps) => {
-  console.log(data)
+  // console.log(data)
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
 

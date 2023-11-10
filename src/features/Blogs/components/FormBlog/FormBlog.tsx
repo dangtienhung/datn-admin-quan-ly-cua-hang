@@ -58,9 +58,9 @@ const FormBlog = ({ open }: BlogFormProps) => {
       is_active: blogData.is_active
     })
 
-  const onFinish = async (values: IBlogs) => {
+  const onFinish = async (values: any) => {
     if (blogData._id && fileList.length === 0) {
-      updateBlog({ ...values, _id: blogData._id, images: blogData.images })
+      updateBlog({ ...values, _id: blogData._id, images: blogData.images[0] })
         .unwrap()
         .then(() => {
           messageAlert('Cập nhật thành công', 'success')
@@ -69,10 +69,11 @@ const FormBlog = ({ open }: BlogFormProps) => {
         .catch(() => {
           messageAlert('Cập nhật thất bại', 'error')
         })
-      console.log({
-        name: values.name,
-        description: values.description
-      })
+      // console.log({
+      //   name: values.name,
+      //   description: values.description,
+      //   images: blogData.images[0]
+      // })
       return
     }
     const formData = new FormData()
@@ -98,11 +99,11 @@ const FormBlog = ({ open }: BlogFormProps) => {
             .catch(() => {
               messageAlert('Cập nhật bài viết thất bại', 'error')
             })
-          console.log({
-            name: values.name,
-            description: values.description,
-            images: urls[0]
-          })
+          // console.log({
+          //   name: values.name,
+          //   description: values.description,
+          //   images: urls[0]
+          // })
         } else {
           addBlog({
             name: values.name,
@@ -120,12 +121,12 @@ const FormBlog = ({ open }: BlogFormProps) => {
               messageAlert(`Thêm bài viết thất bại! ${error.data.message}`, 'error')
               onClose()
             })
-          console.log({
-            name: values.name,
-            description: values.description,
-            category: values.category,
-            is_active: values.is_active
-          })
+          // console.log({
+          //   name: values.name,
+          //   description: values.description,
+          //   category: values.category,
+          //   is_active: values.is_active
+          // })
         }
       })
   }

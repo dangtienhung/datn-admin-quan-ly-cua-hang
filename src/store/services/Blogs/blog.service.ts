@@ -9,7 +9,7 @@ export const blogApi = createApi({
   tagTypes: ['Blogs'],
   endpoints: (builder) => ({
     getAllBlogs: builder.query<IBlogsDocs, number | string>({
-      query: () => `/newsBlog`,
+      query: (page) => `/newsBlog?_page=${page}`,
       providesTags: (result) => {
         if (result) {
           const final = [

@@ -21,7 +21,7 @@ const ListBlog = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
   const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
-  console.log('List Blog', BlogData)
+  // console.log('List Blog', BlogData)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
@@ -50,7 +50,7 @@ const ListBlog = () => {
   }))
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
