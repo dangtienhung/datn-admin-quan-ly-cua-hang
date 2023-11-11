@@ -83,7 +83,7 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to='#'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
@@ -91,8 +91,8 @@ const DropdownUser = () => {
               <ContactIcon />
               My Contacts
             </Link>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <Link
               to='/settings'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
@@ -100,7 +100,7 @@ const DropdownUser = () => {
               <SettingIcon />
               Account Settings
             </Link>
-          </li>
+          </li> */}
         </ul>
         <button
           className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'

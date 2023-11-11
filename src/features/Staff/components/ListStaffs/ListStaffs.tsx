@@ -145,13 +145,13 @@ export const ListStaffs = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Avatar',
+      title: 'Ảnh',
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => <Image className='!w-[100px] !h-[100px]' src={avatar} />
     },
     {
-      title: 'Username',
+      title: 'Họ tên',
       dataIndex: 'username',
       key: 'username',
       ...getColumnSearchProps('username'),

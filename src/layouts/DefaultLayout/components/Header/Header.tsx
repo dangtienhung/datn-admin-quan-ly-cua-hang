@@ -58,7 +58,7 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
         </div>
 
         <div className='sm:block hidden'>
-          <form>
+          {/* <form>
             <div className='relative'>
               <button className='top-1/2 absolute left-0 -translate-y-1/2'>
                 <SearchIcon />
@@ -70,7 +70,7 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
                 className='pl-9 focus:outline-none w-full pr-4 bg-transparent'
               />
             </div>
-          </form>
+          </form> */}
         </div>
 
         <div className='2xsm:gap-7 flex items-center gap-3'>
