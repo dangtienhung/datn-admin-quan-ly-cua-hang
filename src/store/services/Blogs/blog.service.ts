@@ -74,6 +74,30 @@ export const blogApi = createApi({
         }
         return [{ type: 'Blogs', id: 'LIST' }]
       }
+    }),
+    getAllBlogsDeleted: builder.query<IBlogsDocs, number | string>({
+      query: () => `newsBlog/deleted`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.docs.map(({ _id }) => ({ type: 'Blogs' as const, _id })),
+            { type: 'Blogs' as const, id: 'LIST' }
+          ]
+          return final
+        }
+        return [{ type: 'Blogs', id: 'LIST' }]
+      }
+    }),
+    updateIsDeletedBlog: builder.mutation<IBlogs, any>({
+      query(data) {
+        const { _id, status, ...body } = data
+        return {
+          url: `newsBlog-update/deleted/${_id}?status=${status}`,
+          method: 'PUT',
+          body
+        }
+      },
+      invalidatesTags: (_, __, { _id }) => [{ type: 'Blogs', _id }]
     })
   })
 })
@@ -85,5 +109,7 @@ export const {
   useUpdateBlogMutation,
   useUpLoadImageBlogMutation,
   useGetBlogQuery,
-  useGetAllBlogsActiveQuery
+  useGetAllBlogsActiveQuery,
+  useGetAllBlogsDeletedQuery,
+  useUpdateIsDeletedBlogMutation
 } = blogApi

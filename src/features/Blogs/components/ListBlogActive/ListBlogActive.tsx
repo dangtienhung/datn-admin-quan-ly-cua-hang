@@ -4,7 +4,7 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
-import { useDeleteBlogMutation, useGetAllBlogsActiveQuery } from '~/store/services'
+import { useGetAllBlogsActiveQuery, useUpdateIsDeletedBlogMutation } from '~/store/services'
 
 import { Button } from '~/components'
 import { IBlogs, ICategoryBlogRefBlog } from '~/types'
@@ -23,10 +23,10 @@ const ListBlogActive = () => {
   const { data: BlogDatactive, isLoading, isError } = useGetAllBlogsActiveQuery(currentPage)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [deleteBlog] = useDeleteBlogMutation()
-  const handleDelete = async (id: string) => {
+  const [deleteFakeBlog] = useUpdateIsDeletedBlogMutation()
+  const handleDelete = async (_id: string) => {
     try {
-      await deleteBlog(id).then(() => {
+      await deleteFakeBlog({ _id, status: true }).then(() => {
         message.success('Xóa thành công!')
       })
     } catch (error) {
@@ -34,13 +34,14 @@ const ListBlogActive = () => {
     }
   }
   const handleDeleteMany = async () => {
-    selectedRowKeys.forEach((selectedItems) => {
-      deleteBlog(selectedItems as string)
+    selectedRowKeys.forEach((_id) => {
+      deleteFakeBlog({ _id, status: true })
         .unwrap()
         .then(() => {
           messageAlert('Xóa thành công', 'success')
           setSelectedRowKeys([])
         })
+        .catch(() => messageAlert('Xóa thất bại', 'error'))
     })
   }
   const blogs = BlogDatactive?.docs?.map((blog) => ({
