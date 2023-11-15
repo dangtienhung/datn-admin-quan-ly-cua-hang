@@ -1,10 +1,10 @@
 import 'react-quill/dist/quill.snow.css'
 
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
-import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
-import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
+import { setBlogId, setOpenDrawer } from '~/store/slices'
+import { useDeleteBlogMutation, useGetAllBlogsDeletedQuery, useUpdateIsDeletedBlogMutation } from '~/store/services'
 
 import { Button } from '~/components'
 import { IBlogs, ICategoryBlogRefBlog } from '~/types'
@@ -15,14 +15,15 @@ import parse from 'html-react-parser'
 import { useAppSelector } from '~/store/hooks'
 import { useState } from 'react'
 import clsxm from '~/utils/clsxm'
+import { RedoOutlined } from '@ant-design/icons'
+import { pause } from '~/utils/pause'
 
-const ListBlog = () => {
+const ListBlogDeleted = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
-  const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
-  // console.log('List Blog', BlogData)
-
+  const { data: BlogDataDeleted, isLoading, isError } = useGetAllBlogsDeletedQuery(currentPage)
+  const [updateDeletedBlog] = useUpdateIsDeletedBlogMutation()
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
   const handleDelete = async (id: string) => {
@@ -42,12 +43,24 @@ const ListBlog = () => {
           messageAlert('Xóa thành công', 'success')
           setSelectedRowKeys([])
         })
+        .catch(() => messageAlert('Xóa thất bại', 'error'))
     })
   }
-  const blogs = BlogData?.docs?.map((blog) => ({
+  const handleRestore = async (_id: string) => {
+    try {
+      await pause(500)
+      await updateDeletedBlog({ _id, status: false }).then(() => {
+        message.success('Khôi phục bài viết thành công!')
+      })
+    } catch (error) {
+      message.error('Khôi phục thất bại')
+    }
+  }
+  const blogs = BlogDataDeleted?.docs?.map((blog) => ({
     ...blog,
     key: blog._id
   }))
+  // console.log(blogs)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
@@ -81,16 +94,9 @@ const ListBlog = () => {
             />
           </div>
           <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <div>
-              <Tag color={blog.is_active ? 'success' : 'red'}>
-                {blog.is_active ? 'Đang hoạt động' : 'Không hoạt động'}
-              </Tag>
-              {blog.is_deleted && (
-                <Tag color={clsxm({ success: !blog.is_deleted }, { red: blog.is_deleted })}>
-                  {blog.is_deleted ? 'Đã xóa' : undefined}
-                </Tag>
-              )}
-            </div>
+            <Tag color={clsxm({ success: !blog.is_deleted }, { red: blog.is_deleted })}>
+              {blog.is_deleted ? 'Đã xóa' : 'Đang hoạt động'}
+            </Tag>
             <div
               className='hover:underline flex-1 text-base capitalize cursor-pointer'
               onClick={() => {
@@ -113,38 +119,37 @@ const ListBlog = () => {
       )
     },
     {
-      title: 'Mô tả bài viết',
+      title: 'Mô tả blog',
       dataIndex: 'description',
       key: 'description',
       render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
     },
     {
-      // title: <span className='block text-center'>Action</span>,
+      title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 150,
       render: (_: any, blog: IBlogs) => (
         <div className='flex items-center justify-center'>
           <Space size='middle'>
-            <Tooltip title='Sủa bài viết này'>
-              <ButtonAnt
-                size='large'
-                className='bg-primary hover:!text-white flex items-center justify-center text-white'
-                icon={<BsFillPencilFill />}
-                onClick={() => {
-                  dispatch(setBlog(blog))
-                  dispatch(setOpenDrawer(true))
-                }}
-              />
+            <Tooltip title='Khôi phục bài viết này'>
+              <Popconfirm
+                title='Khôi phục lại bài viết'
+                description='Bạn thực sự muốn khôi phục lại bài viết?'
+                onConfirm={() => handleRestore(blog._id)}
+              >
+                <ButtonAnt
+                  size='large'
+                  className='bg-primary hover:!text-white flex items-center justify-center text-white'
+                  icon={<RedoOutlined className='text-lg' />}
+                />
+              </Popconfirm>
             </Tooltip>
 
             <Tooltip title='Xóa bài viêt này'>
               <Popconfirm
-                title='Bạn có muốn xóa bài viết này?'
-                description='Bạn chắc chắn muốn xóa bài viết này?'
+                title='Xóa vĩnh viễn bài viết?'
+                description='Bạn chắc chắn muốn xóa bài viết?'
                 okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                // okText='Có'
-                // cancelText='Không'
-                // onCancel={cancelDelete}
                 onConfirm={() => handleDelete(blog._id!)}
               >
                 <ButtonAnt
@@ -164,7 +169,7 @@ const ListBlog = () => {
       <Space>
         <Popconfirm
           title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
+          description='Hành động này sẽ xóa vĩnh viễn những danh mục đang được chọn!'
           onConfirm={handleDeleteMany}
           className='ml-[10px]'
         >
@@ -178,8 +183,8 @@ const ListBlog = () => {
         columns={columns}
         dataSource={blogs}
         pagination={{
-          pageSize: BlogData && BlogData?.limit,
-          total: BlogData && BlogData?.totalDocs,
+          pageSize: BlogDataDeleted && BlogDataDeleted?.limit,
+          total: BlogDataDeleted && BlogDataDeleted?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
           }
@@ -192,4 +197,4 @@ const ListBlog = () => {
   )
 }
 
-export default ListBlog
+export default ListBlogDeleted
