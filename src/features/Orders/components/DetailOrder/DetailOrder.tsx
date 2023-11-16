@@ -182,7 +182,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       {(isConfirming || isDoning) && <Loading overlay />}
       <Row className='mb-5' gutter={[0, 24]}>
         <Col span={24}>
-          <h1 className='text-xl font-semibold text-black dark:text-white'>Thông tin khách hàng</h1>
+          <h1 className='text-xl font-semibold text-black dark:text-white '>Thông tin khách hàng</h1>
         </Col>
         <Col span={6}>
           <div className='flex flex-col gap-y-5'>
@@ -196,7 +196,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           </div>
         </Col>
         <Col span={10}>
-          <div className='flex flex-col gap-y-5'>
+          <div className='flex flex-col gap-y-5 '>
             <div className='flex gap-x-2 text-base'>
               <span>Địa chỉ: </span>
               <span className='font-semibold text-black dark:text-white'>{orderData.user.address}</span>

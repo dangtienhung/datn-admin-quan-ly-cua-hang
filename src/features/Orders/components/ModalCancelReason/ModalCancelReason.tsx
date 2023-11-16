@@ -1,6 +1,6 @@
-import { Button, Modal, Radio } from 'antd'
+import { Button, Modal, Input } from 'antd'
 import { useState } from 'react'
-import { CheckboxChangeEvent } from 'antd/es/checkbox'
+// import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { useAppSelector } from '~/store/hooks'
 import { setOpenModal } from '~/store/slices/Modal'
 import { useAppDispatch } from '~/store/store'
@@ -19,20 +19,20 @@ const ModalCancelReason = () => {
 
   const [reason, setReason] = useState('')
 
-  const listReason: string[] = [
-    'Không muốn mua sản phẩm này nữa.',
-    'Sản phẩm bị hỏng khi nhận hàng.',
-    'Sản phẩm không đúng mô tả trên trang web.',
-    'Đã tìm thấy một sản phẩm tốt hơn ở nơi khác.',
-    'Sản phẩm không còn cần thiết.',
-    'Thay đổi ý định mua hàng.',
-    'Gặp vấn đề tài chính không thể mua sản phẩm.',
-    'Đặt hàng nhầm.',
-    'Thời gian giao hàng quá chậm.'
-  ]
-  const reasonChange = (e: CheckboxChangeEvent) => {
-    setReason(e.target.value)
-  }
+  // const listReason: string[] = [
+  //   'Không muốn mua sản phẩm này nữa.',
+  //   'Sản phẩm bị hỏng khi nhận hàng.',
+  //   'Sản phẩm không đúng mô tả trên trang web.',
+  //   'Đã tìm thấy một sản phẩm tốt hơn ở nơi khác.',
+  //   'Sản phẩm không còn cần thiết.',
+  //   'Thay đổi ý định mua hàng.',
+  //   'Gặp vấn đề tài chính không thể mua sản phẩm.',
+  //   'Đặt hàng nhầm.',
+  //   'Thời gian giao hàng quá chậm.'
+  // ]
+  // const reasonChange = (e: CheckboxChangeEvent) => {
+  //   setReason(e.target.value)
+  // }
   const onOK = () => {
     cancelOrder({ id, reasonCancelOrder: reason })
       .unwrap()
@@ -68,7 +68,7 @@ const ModalCancelReason = () => {
         </Button>
       ]}
     >
-      {listReason.map((reasonItem, index) => (
+      {/* {listReason.map((reasonItem, index) => (
         <Radio.Group
           key={index + reasonItem}
           optionType='button'
@@ -82,7 +82,13 @@ const ModalCancelReason = () => {
             {reasonItem}
           </Radio>
         </Radio.Group>
-      ))}
+      ))} */}
+      <Input.TextArea
+        placeholder='Nhập lý do hủy đơn hàng...'
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        rows={5}
+      />
     </Modal>
   )
 }
