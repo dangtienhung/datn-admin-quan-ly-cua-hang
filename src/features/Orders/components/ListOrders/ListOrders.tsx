@@ -212,7 +212,7 @@ const ListOrders = () => {
     },
 
     {
-      title: 'Action',
+      // title: 'Action',
       key: 'action',
       fixed: 'right',
       render: (_: any, order) => (

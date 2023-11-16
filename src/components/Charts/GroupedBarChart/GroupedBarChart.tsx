@@ -71,7 +71,7 @@ interface GroupedBarChartState {
 }
 
 const GroupedBarChart: React.FC = () => {
-  const [state, setState] = useState<GroupedBarChartState>({
+  const [state, _] = useState<GroupedBarChartState>({
     series: [
       {
         name: 'Sales',

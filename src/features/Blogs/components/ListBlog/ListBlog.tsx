@@ -1,25 +1,30 @@
-import { Popconfirm, Space, Table, message, Button as ButtonAnt, Tooltip } from 'antd'
-import { useState } from 'react'
+import 'react-quill/dist/quill.snow.css'
+
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button as ButtonAnt, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
+import { RootState, useAppDispatch } from '~/store/store'
+import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
+import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
+
 import { Button } from '~/components'
+import { IBlogs, ICategoryBlogRefBlog } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteBlogMutation, useGetAllBlogsQuery } from '~/store/services'
-import { setBlog, setOpenDrawer } from '~/store/slices'
-import { useAppDispatch } from '~/store/store'
-import { IBlogs } from '~/types'
-import { truncateDescription } from '../../utils'
 import { messageAlert } from '~/utils/messageAlert'
-import ReactHtmlParser from 'html-react-parser'
-import 'react-quill/dist/quill.snow.css'
+import parse from 'html-react-parser'
+import { useAppSelector } from '~/store/hooks'
+import { useState } from 'react'
+import clsxm from '~/utils/clsxm'
 
 const ListBlog = () => {
   const dispatch = useAppDispatch()
   const [currentPage, setCurrentPage] = useState(1)
+  const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
   const { data: BlogData, isLoading, isError } = useGetAllBlogsQuery(currentPage)
+  // console.log('List Blog', BlogData)
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteBlog] = useDeleteBlogMutation()
-  console.log(BlogData)
   const handleDelete = async (id: string) => {
     try {
       await deleteBlog(id).then(() => {
@@ -45,7 +50,7 @@ const ListBlog = () => {
   }))
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -58,28 +63,65 @@ const ListBlog = () => {
   if (isError) return <NotFound />
   const columns = [
     {
-      title: 'Tên blog',
+      title: 'Tên bài viết',
       dataIndex: 'name',
-      key: 'name'
-      // render: (name: string) => <span className='uppercase'>{name}</span>
+      key: 'name',
+      render: (name: string, blog: IBlogs) => (
+        <div className='grid grid-cols-[1fr,3fr] gap-5'>
+          <div
+            className='w-25 h-25 rounded-xl object-cover cursor-pointer'
+            onClick={() => {
+              dispatch(setOpenDrawer(!openDrawer)), dispatch(setBlogId(blog._id))
+            }}
+          >
+            <img
+              className='w-25 h-25 rounded-xl object-cover cursor-pointer'
+              src={blog.images[0].url}
+              alt={blog.name}
+            />
+          </div>
+          <div className='flex flex-col gap-0.5 justify-center items-start'>
+            <div>
+              <Tag color={blog.is_active ? 'success' : 'red'}>
+                {blog.is_active ? 'Đang hoạt động' : 'Không hoạt động'}
+              </Tag>
+              {blog.is_deleted && (
+                <Tag color={clsxm({ success: !blog.is_deleted }, { red: blog.is_deleted })}>
+                  {blog.is_deleted ? 'Đã xóa' : undefined}
+                </Tag>
+              )}
+            </div>
+            <div
+              className='hover:underline flex-1 text-base capitalize cursor-pointer'
+              onClick={() => {
+                dispatch(setOpenDrawer(true)), dispatch(setBlogId(blog._id))
+              }}
+            >
+              {name}
+            </div>
+          </div>
+        </div>
+      )
     },
     {
-      title: 'Ảnh blog',
-      dataIndex: 'images',
-      key: 'images',
-
-      render: (image: any) => <img className='w-full max-w-[350px]' src={image[0]?.url} alt='' />
+      title: 'Danh mục bài viết',
+      dataIndex: 'category',
+      key: 'category',
+      width: 150,
+      render: (category: ICategoryBlogRefBlog) => (
+        <div className='line-clamp-3 text-base'>{category?.name || 'Không có dữ liệu'}</div>
+      )
     },
     {
-      title: 'Mô tả blog',
+      title: 'Mô tả bài viết',
       dataIndex: 'description',
       key: 'description',
-      render: (text: string) => <div>{truncateDescription(ReactHtmlParser(text) as any, 120)}</div>
+      render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
-      width: 300,
+      width: 150,
       render: (_: any, blog: IBlogs) => (
         <div className='flex items-center justify-center'>
           <Space size='middle'>

@@ -9,7 +9,8 @@ import {
   sliderApi,
   userApi,
   orderApi,
-  categoryApi
+  categoryApi,
+  categoryBlogApi
 } from './services'
 import {
   blogReducer,
@@ -21,7 +22,8 @@ import {
   toppingReducers,
   voucherReducer,
   userReducer,
-  authReducer
+  authReducer,
+  categoryBlogReducer
   // voucherReducer,
 } from './slices'
 
@@ -54,7 +56,8 @@ const middlewares = [
   VoucherApi.middleware,
   blogApi.middleware,
   AuthApi.middleware,
-  sliderApi.middleware
+  sliderApi.middleware,
+  categoryBlogApi.middleware
 ]
 
 export const store = configureStore({
@@ -70,6 +73,7 @@ export const store = configureStore({
     [blogApi.reducerPath]: blogApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
     [sliderApi.reducerPath]: sliderApi.reducer,
+    [categoryBlogApi.reducerPath]: categoryBlogApi.reducer,
 
     /* redux toolkit */
     persistedReducer,
@@ -83,7 +87,8 @@ export const store = configureStore({
     orders: orderReducer,
     vouchers: voucherReducer,
     blogs: blogReducer,
-    user: userReducer
+    user: userReducer,
+    categoryBlog: categoryBlogReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

@@ -1,17 +1,20 @@
-import { Tabs } from 'antd'
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { useAppSelector } from '~/store/hooks'
+
+import FormBlog from './components/FormBlog/FormBlog'
+import { IBlogs } from '~/types'
+import { PreviewBlog } from './components/PreviewBlog'
+import { Tabs } from 'antd'
+import { items } from './data'
 import { setOpenDrawer } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
-import { IBlogs } from '~/types'
-import { items } from './data'
-import FormBlog from './components/FormBlog/FormBlog'
+import { useAppSelector } from '~/store/hooks'
 
 interface BlogFeatureProps {
   data: IBlogs[]
 }
 
 const BlogFeature = ({ data }: BlogFeatureProps) => {
+  // console.log(data)
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
 
@@ -26,6 +29,7 @@ const BlogFeature = ({ data }: BlogFeatureProps) => {
       <Tabs defaultActiveKey='1' items={items} />
 
       <FormBlog open={openDrawer} />
+      <PreviewBlog />
     </div>
   )
 }

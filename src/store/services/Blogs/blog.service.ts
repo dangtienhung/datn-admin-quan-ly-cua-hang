@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { IBlogs, IBlogsDocs, IResImage } from '~/types'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const blogApi = createApi({
   reducerPath: 'blogApi',
@@ -9,7 +9,7 @@ export const blogApi = createApi({
   tagTypes: ['Blogs'],
   endpoints: (builder) => ({
     getAllBlogs: builder.query<IBlogsDocs, number | string>({
-      query: () => `/newsBlog`,
+      query: (page) => `/newsBlog?_page=${page}`,
       providesTags: (result) => {
         if (result) {
           const final = [
@@ -55,6 +55,49 @@ export const blogApi = createApi({
         method: 'POST',
         body: file
       })
+    }),
+    /* get one blog */
+    getBlog: builder.query<IBlogs, string>({
+      query: (id) => `/newBlog/${id}`,
+      providesTags: (_, __, id) => [{ type: 'Blogs', _id: id }]
+    }),
+    /* getAll active blog */
+    getAllBlogsActive: builder.query<IBlogsDocs, number | string>({
+      query: () => `newsBlog-update/active`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.docs.map(({ _id }) => ({ type: 'Blogs' as const, _id })),
+            { type: 'Blogs' as const, id: 'LIST' }
+          ]
+          return final
+        }
+        return [{ type: 'Blogs', id: 'LIST' }]
+      }
+    }),
+    getAllBlogsDeleted: builder.query<IBlogsDocs, number | string>({
+      query: () => `newsBlog/deleted`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.docs.map(({ _id }) => ({ type: 'Blogs' as const, _id })),
+            { type: 'Blogs' as const, id: 'LIST' }
+          ]
+          return final
+        }
+        return [{ type: 'Blogs', id: 'LIST' }]
+      }
+    }),
+    updateIsDeletedBlog: builder.mutation<IBlogs, any>({
+      query(data) {
+        const { _id, status, ...body } = data
+        return {
+          url: `newsBlog-update/deleted/${_id}?status=${status}`,
+          method: 'PUT',
+          body
+        }
+      },
+      invalidatesTags: (_, __, { _id }) => [{ type: 'Blogs', _id }]
     })
   })
 })
@@ -64,5 +107,9 @@ export const {
   useAddBlogMutation,
   useDeleteBlogMutation,
   useUpdateBlogMutation,
-  useUpLoadImageBlogMutation
+  useUpLoadImageBlogMutation,
+  useGetBlogQuery,
+  useGetAllBlogsActiveQuery,
+  useGetAllBlogsDeletedQuery,
+  useUpdateIsDeletedBlogMutation
 } = blogApi

@@ -1,19 +1,20 @@
-import { SearchOutlined } from '@ant-design/icons'
-import { Input, InputRef, Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
-import { FilterConfirmProps } from 'antd/es/table/interface'
-import { ColumnType } from 'antd/lib/table'
-import { useRef, useState } from 'react'
-import Highlighter from 'react-highlight-words'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button as ButtonAntd, Input, InputRef, Popconfirm, Space, Table, Tooltip, message } from 'antd'
+import { setOpenDrawer, setVoucher } from '~/store/slices'
+import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
+import { useRef, useState } from 'react'
+
+import { ColumnType } from 'antd/lib/table'
+import { FilterConfirmProps } from 'antd/es/table/interface'
+import Highlighter from 'react-highlight-words'
+import { IVoucher } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteVoucherMutation, useGetAllVouchersQuery } from '~/store/services'
-import { setOpenDrawer, setVoucher } from '~/store/slices'
-import { useAppDispatch } from '~/store/store'
-import { IVoucher } from '~/types'
+import { SearchOutlined } from '@ant-design/icons'
 import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
+import { useAppDispatch } from '~/store/store'
 
 const ListVoucher = () => {
   const dispatch = useAppDispatch()
@@ -134,22 +135,40 @@ const ListVoucher = () => {
       width: 50
     },
     {
-      title: 'Mã giảm giá',
+      title: 'Tiêu đề',
+      dataIndex: 'title',
+      key: 'title',
+      width: '25%',
+      render: (name: string) => <p className='uppercase'>{name}</p>,
+      ...getColumnSearchProps('title')
+    },
+    {
+      title: 'Mã Code',
       dataIndex: 'code',
       key: 'code',
-      render: (name: string) => <span className='uppercase'>{name}</span>,
+      width: '25%',
+      render: (name: string) => <p className=''>{name}</p>,
       ...getColumnSearchProps('code')
     },
     {
       title: 'Số lượng mã',
       dataIndex: 'discount',
       key: 'discount',
+      width: '15%',
       render: (discount: number) => `${discount}`
+    },
+    {
+      title: 'Hoạt động',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      width: '15%',
+      render: (data: boolean) => (data ? 'Hoạt Động' : 'Ẩn')
     },
     {
       title: 'Giảm giá',
       dataIndex: 'sale',
       key: 'sale',
+      width: '15%',
       ...getColumnSearchProps('sale'),
       sorter: (x: { sale: number }, y: { sale: number }) => {
         const saleX = x.sale || 0
@@ -158,15 +177,9 @@ const ListVoucher = () => {
       },
       render: (sale: number) => `${formatCurrency(sale)}`
     },
+
     {
-      title: 'Mã giảm giá',
-      dataIndex: 'title',
-      key: 'title',
-      render: (name: string) => <span>{name}</span>,
-      ...getColumnSearchProps('title')
-    },
-    {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, voucher: IVoucher) => (
@@ -241,10 +254,14 @@ const ListVoucher = () => {
           total: voucherData && voucherData?.data?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
-          }
+          },
+          showQuickJumper: true
+          //   pageSizeOptions: ['10', '25', '50', '100'],
+          //   defaultPageSize: 10,
+          //   showSizeChanger: true
         }}
         rowSelection={rowSelection}
-        scroll={{ y: '60vh' }}
+        // scroll={{ y: '60vh' }}
         bordered
       />
     </div>

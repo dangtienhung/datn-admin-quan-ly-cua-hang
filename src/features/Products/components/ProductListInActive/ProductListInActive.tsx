@@ -94,7 +94,7 @@ export const ProductListInActive = () => {
       )
     },
     {
-      title: 'Size sản phẩm',
+      title: 'Size',
       dataIndex: 'sizes',
       key: 'sizes',
       width: 200,
@@ -113,7 +113,7 @@ export const ProductListInActive = () => {
       )
     },
     {
-      title: 'Topping sản phẩm',
+      title: 'Topping',
       dataIndex: 'toppings',
       key: 'toppings',
       render: (toppings: IToppingRefProduct[]) => (
@@ -132,13 +132,13 @@ export const ProductListInActive = () => {
       )
     },
     {
-      title: 'Danh mục sản phẩm',
+      title: 'Danh mục',
       dataIndex: 'category',
       key: 'category',
       render: (category: ICategoryRefProduct) => <p className='capitalize'>{category.name}</p>
     },
     {
-      title: 'Action',
+      // title: 'Action',
       dataIndex: 'action',
       width: 100,
       key: 'action',

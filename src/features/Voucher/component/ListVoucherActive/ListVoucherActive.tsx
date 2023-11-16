@@ -135,22 +135,33 @@ const ListVoucherActive = () => {
       width: 50
     },
     {
-      title: 'Mã giảm giá',
+      title: 'Tiêu đề',
+      dataIndex: 'title',
+      key: 'title',
+      width: '25%',
+      render: (name: string) => <span>{name}</span>,
+      ...getColumnSearchProps('title')
+    },
+    {
+      title: 'Mã Code',
       dataIndex: 'code',
       key: 'code',
-      render: (name: string) => <span className='uppercase'>{name}</span>,
+      width: '25%',
+      render: (name: string) => <span className=''>{name}</span>,
       ...getColumnSearchProps('code')
     },
     {
       title: 'Số lượng mã',
       dataIndex: 'discount',
       key: 'discount',
+      width: '15%',
       render: (discount: number) => `${discount}`
     },
     {
       title: 'Giảm giá',
       dataIndex: 'sale',
       key: 'sale',
+      width: '15%',
       ...getColumnSearchProps('sale'),
       sorter: (x: { sale: number }, y: { sale: number }) => {
         const saleX = x.sale || 0
@@ -159,15 +170,9 @@ const ListVoucherActive = () => {
       },
       render: (sale: number) => `${formatCurrency(sale)}`
     },
+
     {
-      title: 'Mã giảm giá',
-      dataIndex: 'title',
-      key: 'title',
-      render: (name: string) => <span>{name}</span>,
-      ...getColumnSearchProps('title')
-    },
-    {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, voucher: IVoucher) => (
@@ -239,10 +244,14 @@ const ListVoucherActive = () => {
           total: VoucherActive && VoucherActive?.data?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
-          }
+          },
+          showQuickJumper: true
+          //   pageSizeOptions: ['10', '25', '50', '100'],
+          //   defaultPageSize: 10,
+          //   showSizeChanger: true
         }}
         rowSelection={rowSelection}
-        scroll={{ y: '60vh' }}
+        // scroll={{ y: '60vh' }}
         bordered
       />
     </div>

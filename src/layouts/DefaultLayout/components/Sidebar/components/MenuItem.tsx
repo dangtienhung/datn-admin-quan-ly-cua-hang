@@ -1,7 +1,7 @@
 import { SettingOutlined, UserOutlined, BarChartOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { AiOutlineFontSize, AiOutlineControl } from 'react-icons/ai'
 import { IoTicket } from 'react-icons/io5'
-import { BiSolidCategoryAlt } from 'react-icons/bi'
+import { BiCategoryAlt, BiSolidCategoryAlt } from 'react-icons/bi'
 import { HiCollection } from 'react-icons/hi'
 import { FaUserEdit, FaUserFriends, FaClipboardList, FaRegNewspaper, FaImages } from 'react-icons/fa'
 import type { MenuProps } from 'antd'
@@ -39,6 +39,7 @@ export const items: MenuProps['items'] = [
     getItem(<NavLink to={`/manager/toppings`}>Topping</NavLink>, 'toppings', <HiCollection />),
     getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'sizes', <AiOutlineFontSize />),
     getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'vouchers', <IoTicket />),
+    getItem(<NavLink to={`/manager/category-blog`}>Danh mục blog</NavLink>, 'category-blog', <BiCategoryAlt />),
     getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'blogs', <FaRegNewspaper />),
     getItem(<NavLink to={`/manager/sliders`}>Sliders</NavLink>, 'sliders', <FaImages />)
   ]),

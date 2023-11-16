@@ -146,17 +146,16 @@ const ListCancelOrders = () => {
       },
       render: (user: any) => <UserInfoRow user={user} />
     },
-    // {
-    //   title: 'Ghi chú',
-    //   dataIndex: 'note',
-    //   key: 'note'
-    //   // render: (name: string) => <span className='capitalize'>{name}</span>
-    // },
+    {
+      title: 'Khách hàng',
+      width: 110,
+      render: (data) => (data && data?.user_order ? 'Cửa hàng' : 'Vãng lai')
+    },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: 200,
+      width: 110,
       render: (status: string) => (
         <span className={`text-white capitalize font-semibold bg-meta-1 rounded inline-block px-2 py-1`}>{status}</span>
       )
@@ -172,7 +171,7 @@ const ListCancelOrders = () => {
     },
 
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 100,
@@ -204,7 +203,7 @@ const ListCancelOrders = () => {
       address: item.inforOrderShipping?.address
     },
     payment: item.paymentMethodId,
-    // username: item.inforOrderShipping.name,
+    user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
     priceShip: item.priceShipping,
     products: item.items,

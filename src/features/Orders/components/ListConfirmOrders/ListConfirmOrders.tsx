@@ -167,7 +167,7 @@ const ListConfirmOrders = () => {
       title: 'Mã đơn hàng',
       dataIndex: 'orderCode',
       key: 'orderCode',
-      width: 250,
+      width: 245,
       ...getColumnSearchProps('orderCode')
     },
     {
@@ -181,12 +181,11 @@ const ListConfirmOrders = () => {
       },
       render: (user: any) => <UserInfoRow user={user} />
     },
-    // {
-    //   title: 'Ghi chú',
-    //   dataIndex: 'note',
-    //   key: 'note'
-    //   // render: (name: string) => <span className='capitalize'>{name}</span>
-    // },
+    {
+      title: 'Khách hàng',
+      width: 110,
+      render: (data) => (data && data?.user_order ? 'Cửa hàng' : 'Vãng lai')
+    },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
@@ -207,7 +206,7 @@ const ListConfirmOrders = () => {
     },
 
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       // fixed: 'right',
       width: 110,
@@ -250,7 +249,7 @@ const ListConfirmOrders = () => {
       address: item.inforOrderShipping?.address
     },
     payment: item.paymentMethodId,
-    // username: item.inforOrderShipping.name,
+    user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
     priceShip: item.priceShipping,
     products: item.items,

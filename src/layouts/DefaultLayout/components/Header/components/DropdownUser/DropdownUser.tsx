@@ -7,6 +7,7 @@ import { RootState } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import toast from 'react-hot-toast'
 import { useLogOutMutation } from '~/store/services/Auth'
+import { ClientSocket } from '~/socket'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -21,6 +22,7 @@ const DropdownUser = () => {
       .unwrap()
       .then(() => {
         // navigate('/', { replace: true, relative: 'path' })
+        ClientSocket.Disconnect()
         toast.success('Đăng xuất thành công')
       })
       .catch(() => toast.error('Đăng xuất thất bại'))
@@ -81,7 +83,7 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to='#'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
@@ -89,8 +91,8 @@ const DropdownUser = () => {
               <ContactIcon />
               My Contacts
             </Link>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <Link
               to='/settings'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
@@ -98,7 +100,7 @@ const DropdownUser = () => {
               <SettingIcon />
               Account Settings
             </Link>
-          </li>
+          </li> */}
         </ul>
         <button
           className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'

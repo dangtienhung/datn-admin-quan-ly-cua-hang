@@ -147,13 +147,13 @@ export const ListCustomers = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Avatar',
+      title: 'Ảnh',
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => <Image className='!w-[100px] !h-[100px]' src={avatar} />
     },
     {
-      title: 'Username',
+      title: 'Họ tên',
       dataIndex: 'username',
       key: 'username',
       ...getColumnSearchProps('username'),
@@ -170,11 +170,11 @@ export const ListCustomers = () => {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      width: 80,
+      width: 90,
       render: (gender: string) => <span>{gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác'}</span>
     },
     {
-      title: <span className='block text-center'>Action</span>,
+      // title: <span className='block text-center'>Action</span>,
       key: 'action',
       width: 200,
       render: (_: any, customer: IUser) => (
