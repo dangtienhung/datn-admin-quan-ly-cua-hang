@@ -23,7 +23,8 @@ export default function SignIn() {
       if (data.error) {
         return toast.error(data.error.data.message)
       } else {
-        if (data.data.user.role.includes('admin' || 'staff')) {
+        console.log('🚀 ~ file: SignIn.tsx:23 ~ loginUser ~ data:', data)
+        if (data.data.user.role.includes('admin') || data.data.user.role.includes('staff')) {
           navigate('/dashboard')
           toast.success('Đăng nhập thành công')
         } else {

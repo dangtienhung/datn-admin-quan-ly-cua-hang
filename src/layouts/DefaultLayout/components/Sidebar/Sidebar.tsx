@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
+import { NavLink, useLocation } from 'react-router-dom'
+import { items, itemsStaff } from './components'
 import { useEffect, useRef, useState } from 'react'
 
 import { BarsIcon } from '~/components'
 import { Menu } from 'antd'
-import { NavLink, useLocation } from 'react-router-dom'
-import { items } from './components'
+import { RootState } from '~/store/store'
+import { useAppSelector } from '~/store/hooks'
 
 interface SidebarProps {
   sidebarOpen: boolean
@@ -17,6 +19,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null)
   const sidebar = useRef<any>(null)
   const currentPath = pathname.split('/').pop()
+
+  // get user info
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, _] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
@@ -87,7 +92,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               defaultSelectedKeys={[`${currentPath}`]}
               defaultOpenKeys={['manager']}
               mode='inline'
-              items={items}
+              items={user && user.role === 'admin' ? items : itemsStaff}
             />
           </div>
         </nav>

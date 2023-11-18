@@ -44,3 +44,9 @@ export interface IUserDataType {
   account: string
   gender: string
 }
+
+export enum IRoleUser {
+  ADMIN = 'admin',
+  CUSTOMER = 'customer',
+  STAFF = 'staff'
+}
