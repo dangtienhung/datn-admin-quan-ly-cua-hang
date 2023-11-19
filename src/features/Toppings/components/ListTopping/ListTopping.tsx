@@ -1,27 +1,27 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { HiDocumentDownload } from 'react-icons/hi'
-import { Popconfirm, Space, Table, message, Button as ButtonAntd, Tooltip } from 'antd'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tooltip, message } from 'antd'
+import { IRoleUser, ITopping } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer, setToppingId } from '~/store/slices'
-import { ColumnsType } from 'antd/es/table'
-import { ITopping } from '~/types'
-import { cancelDelete } from '../..'
 import { exportDataToExcel, formatCurrency } from '~/utils'
+import { setOpenDrawer, setToppingId } from '~/store/slices'
+
+import { ColumnsType } from 'antd/es/table'
+import { HiDocumentDownload } from 'react-icons/hi'
+import { cancelDelete } from '../..'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteToppingMutation } from '~/store/services'
+import { useRenderTopping } from '../../hooks'
 import { useState } from 'react'
 
 const ToppingList = () => {
   const dispatch = useAppDispatch()
-
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const { toppingsList } = useAppSelector((state: RootState) => state.toppings)
+  console.log('🚀 ~ file: ListTopping.tsx:20 ~ ToppingList ~ toppingsList:', toppingsList)
   const [deleteTopping] = useDeleteToppingMutation()
-
-  console.log('toppingsList:', toppingsList)
 
   /* topping delete */
   const handleDelete = async (id: string) => {
-    console.log('🚀 ~ file: ListTopping.tsx:22 ~ handleDelete ~ id:', id)
     try {
       await deleteTopping({ id }).then(() => {
         message.success('Xoá thành công!')
@@ -112,28 +112,32 @@ const ToppingList = () => {
     }
   ]
 
-  const toppings = toppingsList.map((topping) => ({ ...topping, key: topping._id }))
+  const toppings = toppingsList.map((topping, index) => ({ ...topping, key: topping._id, index: index }))
+
+  const toppingData = useRenderTopping(toppings)
 
   return (
     <div>
       <Space>
-        <Popconfirm
-          title='Bạn thực sự muốn xóa những topping này?'
-          description='Hành động này sẽ xóa những topping đang được chọn!'
-          onConfirm={start}
-          className='ml-[10px]'
-        >
-          <ButtonAntd
-            size='large'
-            type='primary'
-            danger
-            className='text-sm font-semibold capitalize'
-            disabled={!hasSelected}
-            loading={loading}
+        {user && user.role === IRoleUser.ADMIN && (
+          <Popconfirm
+            title='Bạn thực sự muốn xóa những topping này?'
+            description='Hành động này sẽ xóa những topping đang được chọn!'
+            onConfirm={start}
+            className='ml-[10px]'
           >
-            Xóa tất cả
-          </ButtonAntd>
-        </Popconfirm>
+            <ButtonAntd
+              size='large'
+              type='primary'
+              danger
+              className='text-sm font-semibold capitalize'
+              disabled={!hasSelected}
+              loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Popconfirm>
+        )}
         <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
@@ -151,14 +155,15 @@ const ToppingList = () => {
       </Space>
       <Table
         className='dark:bg-graydark mt-3'
-        columns={columns}
+        // columns={columns}
+        columns={toppingData}
         dataSource={toppings}
         pagination={{
           pageSize: 5,
           showSizeChanger: false,
           pageSizeOptions: ['5', '10', '15', '20']
         }}
-        rowSelection={rowSelection}
+        rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
         bordered
       />
     </div>
