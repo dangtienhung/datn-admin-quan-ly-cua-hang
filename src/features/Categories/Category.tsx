@@ -1,23 +1,26 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { setOpenDrawer } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
 
+import FormCategory from './components/FormCategory/FormCategory'
+import { IRoleUser } from '~/types'
 import { Tabs } from 'antd'
 import { items } from './data'
-import { useAppDispatch } from '~/store/store'
+import { setOpenDrawer } from '~/store/slices'
 import { useAppSelector } from '~/store/hooks'
-import FormCategory from './components/FormCategory/FormCategory'
 
 const Category = () => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
-  // console.log(data)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   return (
     <div>
       <Breadcrumb pageName='Danh mục'>
-        <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
-          Thêm
-        </Button>
+        {user && user.role === IRoleUser.ADMIN && (
+          <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
+            Thêm
+          </Button>
+        )}
       </Breadcrumb>
       <Tabs defaultActiveKey='1' items={items} className='text-white' />
       <FormCategory open={openDrawer} />

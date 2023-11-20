@@ -1,32 +1,24 @@
-import { Button as ButtonAnt, Image, Popconfirm, Space, Switch, Table, Tooltip } from 'antd'
+import { Button as ButtonAnt, Image, Popconfirm, Space, Switch, Tooltip } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { IRoleUser, ISLider } from '~/types'
-import {
-  useDeleteImageSliderMutation,
-  useDeleteSliderMutation,
-  useGetAllSlidersQuery,
-  useUpdateStatusMutation
-} from '~/store/services'
+import { useDeleteImageSliderMutation, useDeleteSliderMutation, useUpdateStatusMutation } from '~/store/services'
 
 import { BsFillTrashFill } from 'react-icons/bs'
-import { Button } from '~/components'
-import Loading from '~/components/Loading/Loading'
-import { NotFound } from '~/pages'
 import { RootState } from '~/store/store'
 import { cancelDelete } from '~/features/Toppings'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 import { useAppSelector } from '~/store/hooks'
-import { useRenderSlider } from '../../hooks'
-import { useState } from 'react'
 
-export const ListSliders = () => {
-  const { data: sliders, isLoading, isError } = useGetAllSlidersQuery()
+export const useRenderSlider = (sliders: ISLider[]) => {
+  const [updateStatus] = useUpdateStatusMutation()
   const [deleteSlider] = useDeleteSliderMutation()
   const [deleteImageSlider] = useDeleteImageSliderMutation()
-  const [updateStatus] = useUpdateStatusMutation()
-
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
+  const countActive = sliders?.filter((item) => {
+    return item.is_active === true
+  })
 
   const onHandleDelete = async (id: string) => {
     await pause(2000)
@@ -48,29 +40,37 @@ export const ListSliders = () => {
       .catch(() => messageAlert('Cập nhật thất bại', 'error'))
   }
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const onHandleDeleteMany = () => {
-    selectedRowKeys.forEach((selectItem) => {
-      deleteSlider(selectItem as string)
-        .unwrap()
-        .then(({ banner }: any) => {
-          deleteImageSlider(banner.publicId)
-          messageAlert('Xóa thành công', 'success')
-        })
-        .catch(() => messageAlert('Xóa thất bại!', 'error'))
-    })
-    setSelectedRowKeys([])
-  }
-  // console.log(idSlider)
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange
-  }
-  const hasSelected = selectedRowKeys.length > 1
-  const columns = [
+  const columnsStaff = [
+    {
+      title: '#',
+      dataIndex: 'index',
+      width: 50
+    },
+    {
+      title: 'Ảnh',
+      dataIndex: 'url',
+      key: 'url',
+      render: (img: string) => <Image src={img} width={300} />
+    },
+    {
+      title: 'Hiển thị',
+      key: 'show',
+      width: 200,
+      render: (_: any, slider: ISLider) => (
+        <Tooltip title='Thay đổi trang thái'>
+          <Switch
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            onChange={() => onSwitchChange(slider._id)}
+            defaultChecked={slider.is_active}
+            disabled={countActive && countActive.length <= 1 && slider.is_active}
+          />
+        </Tooltip>
+      )
+    }
+  ]
+
+  const columnsAdmin = [
     {
       title: '#',
       dataIndex: 'index',
@@ -126,51 +126,5 @@ export const ListSliders = () => {
       )
     }
   ]
-  const sliderData = sliders?.banners?.map((item, index) => ({
-    ...item,
-    key: item._id,
-    index: index + 1
-  }))
-  const countActive = sliderData?.filter((item) => {
-    return item.is_active === true
-  })
-
-  const sliderDataColumns = useRenderSlider(sliders?.banners || [])
-
-  if (isLoading) return <Loading />
-  if (isError) return <NotFound />
-  return (
-    <div>
-      {hasSelected && (
-        <Space>
-          <Popconfirm
-            title='Bạn thực sự muốn xóa những danh mục này?'
-            description='Hành động này sẽ xóa những danh mục đang được chọn!'
-            onConfirm={onHandleDeleteMany}
-          >
-            <Button variant='danger' styleClass='mb-4'>
-              Xóa tất cả
-            </Button>
-          </Popconfirm>
-        </Space>
-      )}
-
-      <Table
-        className='dark:bg-graydark'
-        // columns={columns}
-        columns={sliderDataColumns}
-        dataSource={sliderData}
-        bordered
-        pagination={{
-          pageSize: 10
-          // total: sizeList?.totalDocs,
-          // onChange(page) {
-          //   setCurrentPage(page)
-          // }
-        }}
-        scroll={{ y: '50vh' }}
-        rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
-      />
-    </div>
-  )
+  return user && user.role === IRoleUser.ADMIN ? columnsAdmin : columnsStaff
 }

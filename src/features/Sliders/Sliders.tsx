@@ -1,21 +1,26 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { setOpenDrawer } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
 
+import { FormSliders } from './components'
+import { IRoleUser } from '~/types'
 import { Tabs } from 'antd'
 import { items } from './data'
-import { useAppDispatch } from '~/store/store'
+import { setOpenDrawer } from '~/store/slices'
 import { useAppSelector } from '~/store/hooks'
-import { FormSliders } from './components'
 
 const SlidersFeature = () => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
+
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   return (
     <div>
       <Breadcrumb pageName='Sliders'>
-        <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
-          Thêm
-        </Button>
+        {user && user.role === IRoleUser.ADMIN && (
+          <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
+            Thêm
+          </Button>
+        )}
       </Breadcrumb>
 
       {/* ==================== body table ==================== */}
