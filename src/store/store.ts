@@ -10,7 +10,8 @@ import {
   userApi,
   orderApi,
   categoryApi,
-  categoryBlogApi
+  categoryBlogApi,
+  notificationApi
 } from './services'
 import {
   blogReducer,
@@ -57,7 +58,8 @@ const middlewares = [
   blogApi.middleware,
   AuthApi.middleware,
   sliderApi.middleware,
-  categoryBlogApi.middleware
+  categoryBlogApi.middleware,
+  notificationApi.middleware
 ]
 
 export const store = configureStore({
@@ -74,6 +76,7 @@ export const store = configureStore({
     [AuthApi.reducerPath]: AuthApi.reducer,
     [sliderApi.reducerPath]: sliderApi.reducer,
     [categoryBlogApi.reducerPath]: categoryBlogApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
 
     /* redux toolkit */
     persistedReducer,

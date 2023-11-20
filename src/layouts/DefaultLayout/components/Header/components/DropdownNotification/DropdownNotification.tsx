@@ -3,13 +3,25 @@ import { useEffect, useRef, useState } from 'react'
 
 import { BellIcon } from '~/components'
 import { Link } from 'react-router-dom'
+import { ClientSocket } from '~/socket'
+import { formatDate } from '~/utils/formatDate'
+import { useUpdateNotificationMutation } from '~/store/services'
+import { Empty } from 'antd'
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-
+  const [notification, setNotification] = useState<any[]>([])
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
+  const [updateNotification] = useUpdateNotificationMutation()
 
+  const handleUpdateNotification = (id: string) => {
+    updateNotification(id)
+      .unwrap()
+      .then(() => {
+        ClientSocket.getUnReadNotification(setNotification)
+      })
+  }
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return
@@ -30,6 +42,10 @@ const DropdownNotification = () => {
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
 
+  useEffect(() => {
+    ClientSocket.getUnReadNotification(setNotification)
+  }, [])
+
   return (
     <li className='relative'>
       <Link
@@ -38,9 +54,11 @@ const DropdownNotification = () => {
         to='#'
         className='relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white'
       >
-        <span className='absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1'>
-          <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
-        </span>
+        {notification.length > 0 && (
+          <span className='absolute -top-[5px] right-0 z-1 h-3 w-3 rounded-full bg-meta-1'>
+            <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
+          </span>
+        )}
 
         <BellIcon />
       </Link>
@@ -49,29 +67,44 @@ const DropdownNotification = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${
+        className={`absolute -right-27 mt-2.5 flex max-h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
         <div className='px-4.5 py-3'>
-          <h5 className='text-bodydark2 text-sm font-medium'>Notification</h5>
+          <h5 className='text-bodydark2 text-sm font-medium'>Thông báo</h5>
         </div>
 
-        <ul className='flex flex-col h-auto overflow-y-auto'>
-          <li>
-            <Link
-              className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
-              to='#'
-            >
-              <p className='text-sm'>
-                <span className='dark:text-white text-black'>Edit your information in a swipe</span> Sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.
-              </p>
+        <ul className='flex flex-col h-auto overflow-y-auto hidden-scroll-bar'>
+          {notification.length > 0 ? (
+            notification?.map((item, index) => (
+              <li key={index}>
+                <Link
+                  onClick={() => {
+                    handleUpdateNotification(item._id)
+                    setDropdownOpen(false)
+                  }}
+                  className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
+                  to={`/manager/orders`}
+                >
+                  <p className='text-sm'>
+                    <span className='dark:text-white text-black'>{item.content}</span>
+                  </p>
 
-              <p className='text-xs'>12 May, 2025</p>
-            </Link>
-          </li>
-          <li>
+                  <p className='text-xs'>{formatDate(item.createdAt)}</p>
+                </Link>
+              </li>
+            ))
+          ) : (
+            <Empty
+              className='flex items-center flex-col mb-2'
+              image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
+              imageStyle={{ height: 200 }}
+              description={<span>Hiện tại không có thông báo nào!</span>}
+            />
+          )}
+
+          {/* <li>
             <Link
               className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
               to='#'
@@ -109,7 +142,7 @@ const DropdownNotification = () => {
 
               <p className='text-xs'>01 Dec, 2024</p>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </li>

@@ -123,11 +123,16 @@ const ListPendingOrders = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [confirmOrder] = useConfirmOrderMutation()
-  const onConfirmOrder = (id: string) => {
-    confirmOrder(id)
+  const onConfirmOrder = ({ idOrder, idUser }: { idOrder: string; idUser: string }) => {
+    confirmOrder(idOrder)
       .unwrap()
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+        ClientSocket.sendNotification({
+          idUser,
+          idOrder,
+          content: `Đơn hàng "${idOrder.toUpperCase()}" đã được xác nhận`
+        })
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
@@ -136,8 +141,15 @@ const ListPendingOrders = () => {
     selectedRowKeys.forEach((selectItem) => {
       confirmOrder(selectItem as string)
         .unwrap()
-        .then(() => {
+        .then(({ order }) => {
           messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+          if (order.user._id) {
+            ClientSocket.sendNotification({
+              idUser: order.user._id,
+              idOrder: selectItem as string,
+              content: `Đơn hàng "${(selectItem as string).toUpperCase()}" đã được xác nhận`
+            })
+          }
         })
         .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
     })
@@ -150,7 +162,7 @@ const ListPendingOrders = () => {
     selectedRowKeys,
     onChange: onSelectChange
   }
-  const hasSelected = selectedRowKeys.length > 1
+  const hasSelected = selectedRowKeys.length > 2
 
   const { isLoading, isError } = useGetAllOrderPendingQuery(options)
   const columns: ColumnsType<any> = [
@@ -184,7 +196,7 @@ const ListPendingOrders = () => {
       title: 'Khách hàng',
       width: 110,
       render: (_: any, order) => {
-        console.log(order, ':::')
+        // console.log(order, ':::')
         return order && order?.user_order ? 'Cửa hàng' : 'Vãng lai'
       }
     },
@@ -238,7 +250,7 @@ const ListPendingOrders = () => {
                 className='bg-meta-5 hover:!text-white flex items-center justify-center text-white'
                 icon={<CheckOutlined />}
                 onClick={() => {
-                  onConfirmOrder(order.key)
+                  onConfirmOrder({ idOrder: order.key, idUser: order.user_order })
                   ClientSocket.confirmOrder(order.key)
                 }}
               />

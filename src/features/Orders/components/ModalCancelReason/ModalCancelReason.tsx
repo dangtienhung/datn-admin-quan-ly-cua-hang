@@ -14,7 +14,6 @@ const ModalCancelReason = () => {
   const { openModal } = useAppSelector((state) => state.modal)
   const { orderData } = useAppSelector((state) => state.orders)
   const { id } = useAppSelector((state) => state.orders)
-
   const [cancelOrder] = useCancelOrderMutation()
 
   const [reason, setReason] = useState('')
@@ -36,9 +35,16 @@ const ModalCancelReason = () => {
   const onOK = () => {
     cancelOrder({ id, reasonCancelOrder: reason })
       .unwrap()
-      .then(() => {
+      .then(({ order }) => {
         dispatch(setOpenModal(false))
         messageAlert(`Đã hủy đơn với lý do: "${reason}"`, 'success', 5)
+        if (order.user._id) {
+          ClientSocket.sendNotification({
+            idOrder: order._id,
+            idUser: order.user._id,
+            content: `Đơn hàng của bạn đã bị hủy với lý do: "${reason}"`
+          })
+        }
         if (orderData.key) {
           dispatch(setOrderData({ ...orderData, status: 'canceled', reasonCancelOrder: reason }))
         }

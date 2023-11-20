@@ -26,7 +26,6 @@ export const ListStaffs = () => {
   const dispatch = useAppDispatch()
   const [deleteUser] = useDeleteUserMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  console.log(user)
 
   const [options, setoptions] = useState({
     page: 1,
