@@ -1,12 +1,17 @@
 import { Button as ButtonAntd, Table, Tooltip, message } from 'antd'
 
 import { HiDocumentDownload } from 'react-icons/hi'
+import { IRoleUser } from '~/types'
+import { RootState } from '~/store/store'
 import { exportDataToExcel } from '~/utils'
+import { useAppSelector } from '~/store/hooks'
 import { useGeAllProductDeletedTrueQuery } from '~/store/services'
 import { useRender } from '../../hooks'
 import { useState } from 'react'
 
 export const ProductListDelete = () => {
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
   /* lấy ra tất cả các sản phẩm bị xóa mềm */
   const { data: dataProductsDeleted } = useGeAllProductDeletedTrueQuery({
     _page: 1,
@@ -77,7 +82,7 @@ export const ProductListDelete = () => {
         </ButtonAntd>
       </div>
       <Table
-        rowSelection={rowSelection}
+        rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
         // columns={columns}
         columns={columnData}
         dataSource={products}

@@ -1,7 +1,7 @@
 import { Button as ButtonAntd, Table, Tooltip, message } from 'antd'
+import { IProduct, IRoleUser } from '~/types'
 
 import { HiDocumentDownload } from 'react-icons/hi'
-import { IProduct } from '~/types'
 import { RootState } from '~/store/store'
 import { exportDataToExcel } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
@@ -12,6 +12,8 @@ const ProductList = () => {
   const { productsList } = useAppSelector((state: RootState) => state.products)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
   const products = productsList.map((product: IProduct, index: number) => ({
     ...product,
     key: product._id,
@@ -72,7 +74,7 @@ const ProductList = () => {
         </ButtonAntd>
       </div>
       <Table
-        rowSelection={rowSelection}
+        rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
         columns={columns}
         dataSource={products}
         scroll={{ x: 1300 }}
