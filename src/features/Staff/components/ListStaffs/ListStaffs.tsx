@@ -1,25 +1,22 @@
-import { Image, Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import Loading from '~/components/Loading/Loading'
-import { NotFound } from '~/pages'
-import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
-import { Button } from '~/components'
-import { useRef, useState } from 'react'
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { HiDocumentDownload } from 'react-icons/hi'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer } from '~/store/slices'
-import { setUser } from '~/store/slices/User/user.slice'
-import { IUser } from '~/types'
-import { ColumnsType } from 'antd/es/table'
-import { messageAlert } from '~/utils/messageAlert'
 import { SearchOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
+import { Button as ButtonAnt, Image, Input, Popconfirm, Space, Table, Tooltip } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { IUserDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
+import { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { exportDataToExcel } from '~/utils'
+import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button } from '~/components'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
 import { useAppSelector } from '~/store/hooks'
+import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
+import { setOpenDrawer } from '~/store/slices'
+import { setUser } from '~/store/slices/User/user.slice'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IUser, IUserDataType } from '~/types'
+import { messageAlert } from '~/utils/messageAlert'
 
 type DataIndex = keyof IUserDataType
 export const ListStaffs = () => {
@@ -219,18 +216,17 @@ export const ListStaffs = () => {
   if (isError) return <NotFound />
   return (
     <>
-      <Space className='mb-4'>
-        <Popconfirm
-          title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          onConfirm={handleDeleteMany}
-          onCancel={() => setSelectedRowKeys([])}
-        >
-          <Button variant='danger' disabled={!hasSelected}>
-            Xóa tất cả
-          </Button>
-        </Popconfirm>
-        <Button
+      {hasSelected && (
+        <Space className='mb-4'>
+          <Popconfirm
+            title='Bạn thực sự muốn xóa những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
+          >
+            <Button variant='danger'>Xóa tất cả</Button>
+          </Popconfirm>
+          {/* <Button
           icon={<HiDocumentDownload />}
           styleClass='bg-[#209E62] text-white text-sm font-semibold capitalize'
           onClick={() => {
@@ -241,9 +237,9 @@ export const ListStaffs = () => {
           }}
         >
           Xuất excel
-        </Button>
-      </Space>
-
+        </Button> */}
+        </Space>
+      )}
       <div className='dark:bg-graydark'>
         <Table
           columns={columns}

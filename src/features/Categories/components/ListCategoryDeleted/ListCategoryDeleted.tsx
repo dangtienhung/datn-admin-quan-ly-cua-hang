@@ -60,7 +60,7 @@ const ListCategoryDeleted = () => {
 
   return (
     <>
-      {user && user.role === IRoleUser.ADMIN && (
+      {user && user.role === IRoleUser.ADMIN && hasSelected && (
         <Space className='mb-4'>
           <Popconfirm
             title='Bạn thực sự muốn khôi phục những danh mục này?'

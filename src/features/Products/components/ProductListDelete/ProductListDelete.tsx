@@ -51,19 +51,20 @@ export const ProductListDelete = () => {
   return (
     <div>
       <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
-          <ButtonAntd
-            size='large'
-            danger
-            type='primary'
-            className='text-sm font-semibold capitalize'
-            onClick={start}
-            disabled={!hasSelected}
-            loading={loading}
-          >
-            Xóa tất cả
-          </ButtonAntd>
-        </Tooltip>
+        {hasSelected && (
+          <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+            <ButtonAntd
+              size='large'
+              danger
+              type='primary'
+              className='text-sm font-semibold capitalize'
+              onClick={start}
+              loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Tooltip>
+        )}
         {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'

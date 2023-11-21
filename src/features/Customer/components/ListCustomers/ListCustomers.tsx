@@ -1,26 +1,23 @@
-import { Popconfirm, Space, Table, Image, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import Loading from '~/components/Loading/Loading'
-import { NotFound } from '~/pages'
-import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
-import { Button } from '~/components'
-import { IUser } from '~/types'
-import { cancelDelete } from '~/features/Toppings'
-import { useRef, useState } from 'react'
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { HiDocumentDownload } from 'react-icons/hi'
-import { useAppDispatch } from '~/store/store'
-import { setUser } from '~/store/slices/User/user.slice'
-import { setOpenDrawer } from '~/store/slices'
-import { ColumnsType } from 'antd/es/table'
-import { messageAlert } from '~/utils/messageAlert'
-import { pause } from '~/utils/pause'
 import { SearchOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
+import { Button as ButtonAnt, Image, Input, Popconfirm, Space, Table, Tooltip } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { IUserDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
+import { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { exportDataToExcel } from '~/utils'
+import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button } from '~/components'
+import Loading from '~/components/Loading/Loading'
+import { cancelDelete } from '~/features/Toppings'
+import { NotFound } from '~/pages'
+import { useDeleteUserMutation, useGetAllUserByRoleQuery } from '~/store/services/Users'
+import { setOpenDrawer } from '~/store/slices'
+import { setUser } from '~/store/slices/User/user.slice'
+import { useAppDispatch } from '~/store/store'
+import { IUser, IUserDataType } from '~/types'
+import { messageAlert } from '~/utils/messageAlert'
+import { pause } from '~/utils/pause'
 
 // type Props = {}
 type DataIndex = keyof IUserDataType
@@ -221,19 +218,18 @@ export const ListCustomers = () => {
   if (isError) return <NotFound />
   return (
     <>
-      <Space className='mb-4'>
-        <Popconfirm
-          title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          onConfirm={handleDeleteMany}
-          onCancel={() => setSelectedRowKeys([])}
-        >
-          <Button variant='danger' disabled={!hasSelected}>
-            Xóa tất cả
-          </Button>
-        </Popconfirm>
+      {hasSelected && (
+        <Space className='mb-4'>
+          <Popconfirm
+            title='Bạn thực sự muốn xóa những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
+          >
+            <Button variant='danger'>Xóa tất cả</Button>
+          </Popconfirm>
 
-        <Button
+          {/* <Button
           // size='large'
           icon={<HiDocumentDownload />}
           styleClass='bg-[#209E62] text-white text-sm font-semibold capitalize'
@@ -245,8 +241,9 @@ export const ListCustomers = () => {
           }}
         >
           Xuất excel
-        </Button>
-      </Space>
+        </Button> */}
+        </Space>
+      )}
 
       <div className='dark:bg-graydark'>
         <Table
