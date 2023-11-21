@@ -1,17 +1,16 @@
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tooltip, message } from 'antd'
-import { IRoleUser, ITopping } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
-import { exportDataToExcel, formatCurrency } from '~/utils'
+import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { setOpenDrawer, setToppingId } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IRoleUser, ITopping } from '~/types'
+import { formatCurrency } from '~/utils'
 
 import { ColumnsType } from 'antd/es/table'
-import { HiDocumentDownload } from 'react-icons/hi'
-import { cancelDelete } from '../..'
+import { useState } from 'react'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteToppingMutation } from '~/store/services'
+import { cancelDelete } from '../..'
 import { useRenderTopping } from '../../hooks'
-import { useState } from 'react'
 
 const ToppingList = () => {
   const dispatch = useAppDispatch()
@@ -53,7 +52,7 @@ const ToppingList = () => {
     }, 1000)
   }
 
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
@@ -119,7 +118,7 @@ const ToppingList = () => {
   return (
     <div>
       <Space>
-        {user && user.role === IRoleUser.ADMIN && (
+        {user && user.role === IRoleUser.ADMIN && hasSelected && (
           <Popconfirm
             title='Bạn thực sự muốn xóa những topping này?'
             description='Hành động này sẽ xóa những topping đang được chọn!'
@@ -131,14 +130,13 @@ const ToppingList = () => {
               type='primary'
               danger
               className='text-sm font-semibold capitalize'
-              disabled={!hasSelected}
               loading={loading}
             >
               Xóa tất cả
             </ButtonAntd>
           </Popconfirm>
         )}
-        <ButtonAntd
+        {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
           className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
@@ -151,7 +149,7 @@ const ToppingList = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
+        </ButtonAntd> */}
       </Space>
       <Table
         className='dark:bg-graydark mt-3'

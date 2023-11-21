@@ -1,11 +1,9 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
 import { setOpenDrawer } from '~/store/slices'
 
-import { Tabs } from 'antd'
-import { items } from './data'
-import { useAppDispatch } from '~/store/store'
-import { FormSIze } from './components'
 import { useAppSelector } from '~/store/hooks'
+import { useAppDispatch } from '~/store/store'
+import { FormSIze, ListSizes } from './components'
 
 const FeatureSize = () => {
   const dispatch = useAppDispatch()
@@ -20,7 +18,8 @@ const FeatureSize = () => {
       </Breadcrumb>
 
       {/* ==================== body table ==================== */}
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
+      <ListSizes />
       <FormSIze open={openDrawer} />
     </div>
   )

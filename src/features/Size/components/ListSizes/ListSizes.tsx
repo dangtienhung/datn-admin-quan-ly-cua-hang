@@ -1,14 +1,13 @@
 import { Button as ButtonAntd, Popconfirm, Space, Table, Tooltip, message } from 'antd'
 import { useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { HiDocumentDownload } from 'react-icons/hi'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
 import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
 import { setOpenDrawer, setSize } from '~/store/slices'
 import { useAppDispatch } from '~/store/store'
 import { ISize } from '~/types'
-import { exportDataToExcel, formatCurrency } from '~/utils'
+import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 
@@ -43,7 +42,7 @@ export const ListSizes = () => {
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
@@ -58,7 +57,8 @@ export const ListSizes = () => {
   const columns = [
     {
       title: '#',
-      dataIndex: 'index'
+      dataIndex: 'index',
+      width: 50
     },
     {
       title: 'Name',
@@ -116,24 +116,26 @@ export const ListSizes = () => {
   return (
     <div>
       <Space>
-        <Popconfirm
-          title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          onConfirm={handleDeleteMany}
-          className='ml-[10px]'
-        >
-          <ButtonAntd
-            size='large'
-            type='primary'
-            danger
-            className='text-sm font-semibold capitalize'
-            disabled={!hasSelected}
-            loading={loading}
+        {hasSelected && (
+          <Popconfirm
+            title='Bạn thực sự muốn xóa những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+            className='ml-[10px]'
           >
-            Xóa tất cả
-          </ButtonAntd>
-        </Popconfirm>
-        <ButtonAntd
+            <ButtonAntd
+              size='large'
+              type='primary'
+              danger
+              className='text-sm font-semibold capitalize'
+              disabled={!hasSelected}
+              loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Popconfirm>
+        )}
+        {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
           className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
@@ -146,7 +148,7 @@ export const ListSizes = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
+        </ButtonAntd> */}
       </Space>
       <Table
         className='dark:bg-graydark mt-3'

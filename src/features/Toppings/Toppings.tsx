@@ -1,13 +1,12 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { IRoleUser, ITopping } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingsList } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IRoleUser, ITopping } from '~/types'
 
-import { Tabs } from 'antd'
-import { ToppingAdd } from './components'
-import { items } from './data'
-import { useAppSelector } from '~/store/hooks'
 import { useEffect } from 'react'
+import { useAppSelector } from '~/store/hooks'
+import { ToppingAdd } from './components'
+import ToppingList from './components/ListTopping/ListTopping'
 
 interface ToppingFeatureProps {
   data: ITopping[]
@@ -36,8 +35,8 @@ const ToppingFeature = ({ data }: ToppingFeatureProps) => {
       </Breadcrumb>
 
       {/* ==================== body table ==================== */}
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
-
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
+      <ToppingList />
       {/* ==================== Add Topping ==================== */}
       <ToppingAdd open={openDrawer} />
     </div>

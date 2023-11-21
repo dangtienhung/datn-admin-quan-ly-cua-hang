@@ -1,15 +1,13 @@
-import { Button as ButtonAntd, Popconfirm, Space, Table, message } from 'antd'
-import { ICategory, IRoleUser } from '~/types'
+import { Button as ButtonAntd, Popconfirm, Space, Table } from 'antd'
 import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
+import { ICategory, IRoleUser } from '~/types'
 
-import { HiDocumentDownload } from 'react-icons/hi'
-import { RootState } from '~/store/store'
-import { cancelDelete } from '../..'
-import { exportDataToExcel } from '~/utils'
-import { messageAlert } from '~/utils/messageAlert'
-import { useAppSelector } from '~/store/hooks'
-import { useRenderCategory } from '../../hooks'
 import { useState } from 'react'
+import { useAppSelector } from '~/store/hooks'
+import { RootState } from '~/store/store'
+import { messageAlert } from '~/utils/messageAlert'
+import { cancelDelete } from '../..'
+import { useRenderCategory } from '../../hooks'
 
 const ListCategory = () => {
   const [options, setOptions] = useState({ _page: 1, _limit: 10 })
@@ -52,26 +50,19 @@ const ListCategory = () => {
   return (
     <>
       <Space>
-        {user && user.role === IRoleUser.ADMIN && (
+        {user && user.role === IRoleUser.ADMIN && hasSelected && (
           <Popconfirm
             title='Bạn muốn xóa những danh mục này?'
             description='Hành động này sẽ xóa những danh mục đang được chọn!'
             onConfirm={handleDeleteMany}
             onCancel={() => setSelectedRowKeys([])}
           >
-            <ButtonAntd
-              size='large'
-              type='primary'
-              danger
-              className='text-sm font-semibold capitalize'
-              disabled={!hasSelected}
-              // loading={loading}
-            >
+            <ButtonAntd size='large' type='primary' danger className='text-sm font-semibold capitalize'>
               Xóa tất cả
             </ButtonAntd>
           </Popconfirm>
         )}
-        <ButtonAntd
+        {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
           className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
@@ -84,7 +75,7 @@ const ListCategory = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
+        </ButtonAntd> */}
       </Space>
       <div className='dark:bg-graydark mt-3'>
         <Table
