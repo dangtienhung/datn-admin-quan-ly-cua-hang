@@ -1,12 +1,10 @@
-import { Button as ButtonAntd, Table, Tooltip, message } from 'antd'
+import { Button as ButtonAntd, Table, Tooltip } from 'antd'
 import { IProduct, IRoleUser } from '~/types'
 
-import { HiDocumentDownload } from 'react-icons/hi'
-import { RootState } from '~/store/store'
-import { exportDataToExcel } from '~/utils'
-import { useAppSelector } from '~/store/hooks'
-import { useRender } from '../../hooks'
 import { useState } from 'react'
+import { useAppSelector } from '~/store/hooks'
+import { RootState } from '~/store/store'
+import { useRender } from '../../hooks'
 
 const ProductList = () => {
   const { productsList } = useAppSelector((state: RootState) => state.products)
@@ -58,7 +56,7 @@ const ProductList = () => {
             Xóa tất cả
           </ButtonAntd>
         </Tooltip>
-        <ButtonAntd
+        {/* <ButtonAntd
           size='large'
           icon={<HiDocumentDownload />}
           className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
@@ -71,7 +69,7 @@ const ProductList = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
+        </ButtonAntd> */}
       </div>
       <Table
         rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}

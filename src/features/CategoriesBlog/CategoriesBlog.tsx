@@ -1,12 +1,11 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
 import { RootState, useAppDispatch } from '~/store/store'
 
-import FormCategoryBlog from './component/FormCategoryBlog/FormCategoryBlog'
-import { IRoleUser } from '~/types'
-import { Tabs } from 'antd'
-import { items } from './data'
-import { setOpenDrawer } from '~/store/slices'
 import { useAppSelector } from '~/store/hooks'
+import { setOpenDrawer } from '~/store/slices'
+import { IRoleUser } from '~/types'
+import FormCategoryBlog from './component/FormCategoryBlog/FormCategoryBlog'
+import ListCategoryBlog from './component/ListCategoryBlog'
 
 const CategoriesBlog = () => {
   const dispatch = useAppDispatch()
@@ -22,7 +21,8 @@ const CategoriesBlog = () => {
           </Button>
         )}
       </Breadcrumb>
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      <ListCategoryBlog />
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
       <FormCategoryBlog open={openDrawer} />
     </div>
   )

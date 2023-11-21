@@ -1,13 +1,11 @@
-import { Button as ButtonAntd, Table, Tooltip, message } from 'antd'
+import { Button as ButtonAntd, Table, Tooltip } from 'antd'
 
-import { HiDocumentDownload } from 'react-icons/hi'
-import { IRoleUser } from '~/types'
-import { RootState } from '~/store/store'
-import { exportDataToExcel } from '~/utils'
+import { useState } from 'react'
 import { useAppSelector } from '~/store/hooks'
 import { useGeAllProductDeletedTrueQuery } from '~/store/services'
+import { RootState } from '~/store/store'
+import { IRoleUser } from '~/types'
 import { useRender } from '../../hooks'
-import { useState } from 'react'
 
 export const ProductListDelete = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
@@ -66,7 +64,7 @@ export const ProductListDelete = () => {
             Xóa tất cả
           </ButtonAntd>
         </Tooltip>
-        <ButtonAntd
+        {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
           className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
@@ -79,7 +77,7 @@ export const ProductListDelete = () => {
           }}
         >
           Xuất excel
-        </ButtonAntd>
+        </ButtonAntd> */}
       </div>
       <Table
         rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
