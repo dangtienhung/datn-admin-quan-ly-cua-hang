@@ -82,7 +82,8 @@
 /* .ant-table-cell {
   text-align: center;
 } */
-.ant-table-body::-webkit-scrollbar {
+.ant-table-body::-webkit-scrollbar,
+.hidden-scroll-bar::-webkit-scrollbar {
   display: none !important;
 }
 .background-content {

@@ -2,6 +2,7 @@ import { Col, Drawer, Row, Space, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
+import { ClientSocket } from '~/socket'
 import { useAppSelector } from '~/store/hooks'
 import { useConfirmOrderMutation, useDoneOrderMutation } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
@@ -20,6 +21,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
   const { orderData } = useAppSelector((state) => state.orders)
   const [confirmOrder, { isLoading: isConfirming }] = useConfirmOrderMutation()
   const [doneOrder, { isLoading: isDoning }] = useDoneOrderMutation()
+  console.log(orderData, 'orderData')
 
   const onClose = () => {
     dispatch(setOpenDrawer(false))
@@ -31,6 +33,13 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
         dispatch(setOrderData({ ...orderData, status: 'done' }))
+        if (orderData.user_order) {
+          ClientSocket.sendNotification({
+            idOrder: id,
+            idUser: orderData.user_order,
+            content: `Đơn hàng ${id.toUpperCase()} của bạn đã được hoàn thành`
+          })
+        }
         // onClose()
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
@@ -41,6 +50,13 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
         dispatch(setOrderData({ ...orderData, status: 'confirmed' }))
+        if (orderData.user_order) {
+          ClientSocket.sendNotification({
+            idOrder: id,
+            idUser: orderData.user_order,
+            content: `Đơn hàng ${id.toUpperCase()} của bạn đã được xác nhận`
+          })
+        }
         // onClose()
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))

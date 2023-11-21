@@ -127,11 +127,16 @@ const ListConfirmOrders = () => {
   const { isError, isLoading } = useGetAllOrderConfirmQuery(options)
   const [doneOrder] = useDoneOrderMutation()
 
-  const onDoneOrder = (id: string) => {
-    doneOrder(id)
+  const onDoneOrder = ({ idOrder, idUser }: { idOrder: string; idUser: string }) => {
+    doneOrder(idOrder)
       .unwrap()
       .then(() => {
         messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+        ClientSocket.sendNotification({
+          idOrder,
+          idUser,
+          content: `Đơn hàng ${idOrder.toUpperCase()} của bạn đã được hoàn thành`
+        })
       })
       .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
   }
@@ -139,8 +144,15 @@ const ListConfirmOrders = () => {
     selectedRowKeys.forEach((selectItem) => {
       doneOrder(selectItem as string)
         .unwrap()
-        .then(() => {
+        .then(({ order }) => {
           messageAlert('Thay đổi trạng thái thành công', 'success', 4)
+          if (order.user._id) {
+            ClientSocket.sendNotification({
+              idUser: order.user._id,
+              idOrder: selectItem as string,
+              content: `Đơn hàng "${(selectItem as string).toUpperCase()}" của bạn đã được hoàn thành`
+            })
+          }
           // onClose()
         })
         .catch(() => messageAlert('Thay đổi trạng thái thất bại', 'error'))
@@ -231,7 +243,7 @@ const ListConfirmOrders = () => {
                 className='bg-meta-3 hover:!text-white flex items-center justify-center text-white'
                 icon={<IoCheckmarkDoneCircleSharp />}
                 onClick={() => {
-                  onDoneOrder(order.key)
+                  onDoneOrder({ idOrder: order.key, idUser: order.user_order })
                   ClientSocket.doneOrder(order.key)
                 }}
               />

@@ -16,6 +16,7 @@ interface IOrderDetail {
       address: string
     }
     reasonCancelOrder?: string
+    user_order?: string
   }
   id: string
   orderDate: {
@@ -39,7 +40,8 @@ const initialState: IOrderDetail = {
       username: '',
       address: ''
     },
-    reasonCancelOrder: ''
+    reasonCancelOrder: '',
+    user_order: ''
   },
   id: '',
   orderDate: {

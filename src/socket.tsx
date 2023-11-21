@@ -91,5 +91,14 @@ export const ClientSocket = {
     return () => {
       socket.disconnect()
     }
+  },
+  sendNotification: ({ idUser, idOrder, content }: { idUser: string; idOrder: string; content: string }) => {
+    socket.emit('client:sendNotification', { idUser, idOrder, content, to: 'user' })
+  },
+  getUnReadNotification: (setNotification: React.Dispatch<any>) => {
+    socket.emit('client:requestUnReadNotificationToAdmin')
+    socket.on('server:loadUnreadNotificationToAdmin', ({ data }) => {
+      data && data.length > 0 ? setNotification([...data]) : setNotification([])
+    })
   }
 }
