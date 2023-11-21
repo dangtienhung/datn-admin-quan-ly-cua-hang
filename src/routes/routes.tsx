@@ -1,22 +1,24 @@
 import {
   CategoryPage,
+  CustomerPage,
   Dashboard,
   NotFound,
   OrderPage,
   ProductPage,
+  ProfilePage,
   SizePage,
+  SliderPage,
   StaffPage,
   ToppingPage,
-  VoucherPage,
-  CustomerPage,
-  SliderPage
+  VoucherPage
 } from '~/pages'
-import DefaultLayout from '~/layouts/DefaultLayout'
-import { createBrowserRouter } from 'react-router-dom'
+
 import BlogPage from '~/pages/BlogPage'
-import SignIn from '~/pages/SignIn'
-import { GuardAccount } from '.'
 import CategoryBlogPage from '~/pages/CategoryBlogPage'
+import DefaultLayout from '~/layouts/DefaultLayout'
+import { GuardAccount } from '.'
+import SignIn from '~/pages/SignIn'
+import { createBrowserRouter } from 'react-router-dom'
 
 const routers = createBrowserRouter([
   {
@@ -59,6 +61,15 @@ const routers = createBrowserRouter([
       {
         element: <GuardAccount JSX={DefaultLayout} />,
         children: [{ index: true, element: 'settings' }]
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    children: [
+      {
+        element: <GuardAccount JSX={DefaultLayout} />,
+        children: [{ index: true, element: <ProfilePage /> }]
       }
     ]
   },
