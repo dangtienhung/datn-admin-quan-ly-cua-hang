@@ -1,13 +1,14 @@
-import { useEffect } from 'react'
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { useAppDispatch } from '~/store/store'
 import { FormProduct, PreviewProduct } from './components'
+import { IProduct, IRoleUser } from '~/types'
+import { RootState, useAppDispatch } from '~/store/store'
 
 import { Tabs } from 'antd'
+import { items } from './data/data'
 import { setOpenDrawer } from '~/store/slices'
 import { setProductsList } from '~/store/slices/Products/product.slice'
-import { IProduct } from '~/types'
-import { items } from './data/data'
+import { useAppSelector } from '~/store/hooks'
+import { useEffect } from 'react'
 
 interface FeatureProductsProps {
   data: IProduct[]
@@ -15,8 +16,7 @@ interface FeatureProductsProps {
 
 const FeatureProducts = ({ data }: FeatureProductsProps) => {
   const dispatch = useAppDispatch()
-  // const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
-  // const [openPreProduct, setOpenPreProduct] = useState<boolean>(false)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
   useEffect(() => {
     dispatch(setProductsList(data))
@@ -25,9 +25,11 @@ const FeatureProducts = ({ data }: FeatureProductsProps) => {
   return (
     <div>
       <Breadcrumb pageName='Sản phẩm'>
-        <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
-          Thêm
-        </Button>
+        {user && user.role === IRoleUser.ADMIN && (
+          <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
+            Thêm
+          </Button>
+        )}
       </Breadcrumb>
 
       <Tabs defaultActiveKey='1' items={items} />

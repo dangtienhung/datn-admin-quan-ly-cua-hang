@@ -9,3 +9,5 @@ export * from './YourPhoto'
 export { default as Button } from './Button'
 export * from './Loading'
 // export { default } from './Icons'
+
+export { default as Loading } from './Loading'

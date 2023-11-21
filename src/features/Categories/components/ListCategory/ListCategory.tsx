@@ -1,34 +1,24 @@
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { HiDocumentDownload } from 'react-icons/hi'
-import { Popconfirm, Space, Table, Button as ButtonAntd, message, Tooltip } from 'antd'
-import { setCategory, setOpenDrawer } from '~/store/slices'
+import { Button as ButtonAntd, Popconfirm, Space, Table, message } from 'antd'
+import { ICategory, IRoleUser } from '~/types'
 import { useDeleteFakeMutation, useGetAllCategoryQuery } from '~/store/services'
 
-import { ColumnsType } from 'antd/es/table'
-import { ICategory } from '~/types'
-import Loading from '~/components/Loading/Loading'
-import { NotFound } from '~/pages'
+import { HiDocumentDownload } from 'react-icons/hi'
+import { RootState } from '~/store/store'
 import { cancelDelete } from '../..'
-import { messageAlert } from '~/utils/messageAlert'
-import { pause } from '~/utils/pause'
-import { useAppDispatch } from '~/store/store'
-import { useState } from 'react'
 import { exportDataToExcel } from '~/utils'
+import { messageAlert } from '~/utils/messageAlert'
+import { useAppSelector } from '~/store/hooks'
+import { useRenderCategory } from '../../hooks'
+import { useState } from 'react'
 
 const ListCategory = () => {
   const [options, setOptions] = useState({ _page: 1, _limit: 10 })
-  const { data: categories, isError, isLoading } = useGetAllCategoryQuery(options)
+  const { data: categories } = useGetAllCategoryQuery(options)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [deleteFakeCategory] = useDeleteFakeMutation()
-  const dispatch = useAppDispatch()
 
-  const handleDelete = async (id: string) => {
-    await pause(2000)
-    deleteFakeCategory(id)
-      .unwrap()
-      .then(() => messageAlert('Xóa thành công', 'success'))
-      .catch(() => cancelDelete())
-  }
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
   const handleDeleteMany = () => {
     selectedRowKeys.forEach((selectedItem) => {
       deleteFakeCategory(selectedItem as string)
@@ -51,89 +41,36 @@ const ListCategory = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
 
-  if (isLoading) return <Loading />
-  if (isError) return <NotFound />
-  const columns: ColumnsType<ICategory> = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      width: 50
-    },
-    {
-      title: 'Tên danh mục',
-      dataIndex: 'name',
-      key: 'name',
-      render: (name: string) => <span className='capitalize'>{name}</span>
-    },
-
-    {
-      // title: <span className='block text-center'>Action</span>,
-      key: 'action',
-      width: 200,
-      // fixed: 'right',
-
-      render: (_, category) => (
-        <div className='flex items-center justify-center'>
-          <Space size='middle'>
-            <Tooltip title='Sửa danh mục'>
-              <ButtonAntd
-                size='large'
-                className='bg-primary hover:!text-white flex items-center justify-center text-white'
-                icon={<BsFillPencilFill />}
-                onClick={() => {
-                  dispatch(setCategory({ _id: category._id, name: category.name }))
-                  dispatch(setOpenDrawer(true))
-                }}
-              />
-            </Tooltip>
-
-            <Tooltip title='Xóa danh mục'>
-              <Popconfirm
-                title='Bạn có muốn xóa danh mục này?'
-                description='Bạn chắc chắn muốn xóa danh mục này?'
-                okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                // onCancel={cancelDelete}
-                onConfirm={() => handleDelete(category._id)}
-              >
-                <ButtonAntd
-                  size='large'
-                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
-                  icon={<BsFillTrashFill />}
-                />
-              </Popconfirm>
-            </Tooltip>
-          </Space>
-        </div>
-      )
-    }
-  ]
-
   const categorriesData = categories?.docs.map((item: ICategory, index: number) => ({
     ...item,
     key: item._id,
     index: index + 1
   }))
+
+  const columnsData = useRenderCategory(categories?.docs || [])
+
   return (
     <>
       <Space>
-        <Popconfirm
-          title='Bạn thực sự muốn xóa những danh mục này?'
-          description='Hành động này sẽ xóa những danh mục đang được chọn!'
-          onConfirm={handleDeleteMany}
-          onCancel={() => setSelectedRowKeys([])}
-        >
-          <ButtonAntd
-            size='large'
-            type='primary'
-            danger
-            className='text-sm font-semibold capitalize'
-            disabled={!hasSelected}
-            // loading={loading}
+        {user && user.role === IRoleUser.ADMIN && (
+          <Popconfirm
+            title='Bạn muốn xóa những danh mục này?'
+            description='Hành động này sẽ xóa những danh mục đang được chọn!'
+            onConfirm={handleDeleteMany}
+            onCancel={() => setSelectedRowKeys([])}
           >
-            Xóa tất cả
-          </ButtonAntd>
-        </Popconfirm>
+            <ButtonAntd
+              size='large'
+              type='primary'
+              danger
+              className='text-sm font-semibold capitalize'
+              disabled={!hasSelected}
+              // loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Popconfirm>
+        )}
         <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'
@@ -151,7 +88,8 @@ const ListCategory = () => {
       </Space>
       <div className='dark:bg-graydark mt-3'>
         <Table
-          columns={columns}
+          // columns={columns}
+          columns={columnsData}
           dataSource={categorriesData}
           pagination={{
             pageSize: categories && categories.limit,
@@ -164,7 +102,7 @@ const ListCategory = () => {
           }}
           scroll={{ y: '50vh', x: 650 }}
           bordered
-          rowSelection={rowSelection}
+          rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
         />
       </div>
     </>

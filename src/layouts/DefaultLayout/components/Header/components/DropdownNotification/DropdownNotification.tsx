@@ -77,7 +77,7 @@ const DropdownNotification = () => {
 
         <ul className='flex flex-col h-auto overflow-y-auto hidden-scroll-bar'>
           {notification.length > 0 ? (
-            notification?.map((item, index) => (
+            notification?.reverse()?.map((item, index) => (
               <li key={index}>
                 <Link
                   onClick={() => {

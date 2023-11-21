@@ -1,11 +1,11 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
+import { IRoleUser, ITopping } from '~/types'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setToppingsList } from '~/store/slices'
 
-import { ITopping } from '~/types'
 import { Tabs } from 'antd'
 import { ToppingAdd } from './components'
 import { items } from './data'
-import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import { useEffect } from 'react'
 
@@ -17,6 +17,8 @@ const ToppingFeature = ({ data }: ToppingFeatureProps) => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
 
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
   /* lưu data lên redux toolkit để quản lý */
   useEffect(() => {
     dispatch(setToppingsList(data))
@@ -26,9 +28,11 @@ const ToppingFeature = ({ data }: ToppingFeatureProps) => {
   return (
     <div>
       <Breadcrumb pageName='Toppings'>
-        <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
-          Thêm
-        </Button>
+        {user && user.role === IRoleUser.ADMIN && (
+          <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
+            Thêm
+          </Button>
+        )}
       </Breadcrumb>
 
       {/* ==================== body table ==================== */}
