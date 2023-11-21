@@ -31,7 +31,7 @@ const ListVoucher = () => {
   }
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
@@ -54,7 +54,7 @@ const ListVoucher = () => {
 
   return (
     <div>
-      {user && user.role === IRoleUser.ADMIN && (
+      {user && user.role === IRoleUser.ADMIN && hasSelected && (
         <Space>
           <Popconfirm
             title='Bạn thực sự muốn xóa những mã này?'
@@ -67,7 +67,7 @@ const ListVoucher = () => {
               type='primary'
               danger
               className='text-sm font-semibold capitalize'
-              disabled={!hasSelected}
+
               // loading={loading}
             >
               Xóa tất cả

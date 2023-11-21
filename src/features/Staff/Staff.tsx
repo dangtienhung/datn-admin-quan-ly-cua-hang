@@ -1,10 +1,8 @@
-import { Tabs } from 'antd'
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import { setOpenDrawer } from '~/store/slices'
-import { items } from './data'
-import { FormStaff } from './components'
+import { useAppDispatch } from '~/store/store'
+import { FormStaff, ListStaffs } from './components'
 
 const StaffFeature = () => {
   const dispatch = useAppDispatch()
@@ -17,7 +15,8 @@ const StaffFeature = () => {
         </Button>
       </Breadcrumb>
 
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
+      <ListStaffs />
       <FormStaff open={openDrawer} />
     </div>
   )

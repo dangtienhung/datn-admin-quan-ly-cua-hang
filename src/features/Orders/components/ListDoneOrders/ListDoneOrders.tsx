@@ -17,6 +17,7 @@ import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
+import { formatCurrency } from '~/utils'
 
 type DataIndex = keyof IOrderDataType
 
@@ -111,10 +112,10 @@ const ListDoneOrders = () => {
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString().substring(text.length - 8) : ''}
         />
       ) : (
-        text
+        text.substring(text.length - 8)
       )
   })
   /*End Search */
@@ -127,15 +128,16 @@ const ListDoneOrders = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Mã đơn hàng',
+      title: 'ID',
       dataIndex: 'orderCode',
-      width: 250,
+      width: 110,
       ...getColumnSearchProps('orderCode')
     },
     {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
+      width: 240,
       rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
@@ -143,18 +145,48 @@ const ListDoneOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Khách hàng',
-      width: 110,
-      render: (data) => (data && data?.user_order ? 'Cửa hàng' : 'Vãng lai')
+      title: 'Sản phẩm',
+      dataIndex: 'products',
+      key: 'products',
+
+      render: (item: any) =>
+        item &&
+        item.map((product: any) => {
+          return (
+            <div className='gap-x-3 flex items-center justify-start line-clamp-1'>
+              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+              <div className='flex flex-col gap-0.5 justify-center items-start'>
+                <p className='hover:underline capitalize truncate cursor-pointer line-clamp-2'>{product.name}</p>
+              </div>
+            </div>
+          )
+        })
+    },
+    {
+      title: 'Tổng Tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      width: 100,
+      render: (totalPrice: number) => {
+        // console.log(totalPrice, 'paymentMethodIds')
+        return (
+          <span
+            className={`capitalize font-semibold  
+          rounded inline-block text-lg text-center py-1`}
+          >
+            {formatCurrency(+totalPrice)}
+          </span>
+        )
+      }
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      width: 110,
+      width: 120,
       key: 'status',
-      render: (status: string) => (
-        <span className={`text-white m-auto capitalize font-semibold bg-meta-3 rounded inline-block px-2 py-1`}>
-          {status}
+      render: () => (
+        <span className={`text-white m-auto capitalize font-semibold bg-meta-3 rounded inline-block p-1`}>
+          Hoàn thành
         </span>
       )
     },
@@ -162,6 +194,7 @@ const ListDoneOrders = () => {
       title: 'Thời gian đặt hàng',
       dataIndex: 'timeOrder',
       key: 'timeOrder',
+      width: 190,
       sorter: (a, b) => a.timeOrder.localeCompare(b.timeOrder),
       sortDirections: ['descend', 'ascend'],
       render: (time: string) => <span className='capitalize'>{formatDate(time)}</span>
