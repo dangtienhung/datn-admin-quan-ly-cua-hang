@@ -117,7 +117,8 @@ export const useRenderCategoryBlog = () => {
       title: 'Tên danh mục',
       dataIndex: 'name',
       key: 'name',
-      render: (name: string) => <p className='uppercase'>{name}</p>
+      render: (name: string) => <p className='uppercase'>{name}</p>,
+      ...getColumnSearchProps('name')
     }
   ]
 
