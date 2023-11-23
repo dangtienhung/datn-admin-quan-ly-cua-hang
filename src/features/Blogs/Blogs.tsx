@@ -20,7 +20,7 @@ const BlogFeature = ({ data }: BlogFeatureProps) => {
 
   return (
     <div>
-      <Breadcrumb pageName='Blogs'>
+      <Breadcrumb pageName='Bài viết'>
         {user && user.role === IRoleUser.ADMIN && (
           <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
             Thêm
