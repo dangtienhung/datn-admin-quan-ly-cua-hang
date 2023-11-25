@@ -1,6 +1,10 @@
-import { memo } from 'react'
+import { IAnalytic } from '~/types'
 
-const CardFour = () => {
+interface CardFourProps {
+  data: IAnalytic[]
+}
+
+const CardFour = ({ data }: CardFourProps) => {
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
@@ -29,8 +33,8 @@ const CardFour = () => {
 
       <div className='flex items-end justify-between mt-4'>
         <div>
-          <h4 className='text-title-md dark:text-white font-bold text-black'>3.456</h4>
-          <span className='text-sm font-medium'>Total Users</span>
+          <h4 className='text-title-md dark:text-white font-bold text-black'>{data[0].value}</h4>
+          <span className='text-sm font-medium'>Tổng khách hàng</span>
         </div>
 
         <span className='text-meta-5 flex items-center gap-1 text-sm font-medium'>

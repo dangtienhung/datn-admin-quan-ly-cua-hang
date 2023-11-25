@@ -1,37 +1,37 @@
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 import {
   VoucherApi,
+  analyticApi,
   blogApi,
-  productApi,
-  toppingApi,
-  sizeApi,
-  sliderApi,
-  userApi,
-  orderApi,
   categoryApi,
   categoryBlogApi,
-  notificationApi
+  notificationApi,
+  orderApi,
+  productApi,
+  sizeApi,
+  sliderApi,
+  toppingApi,
+  userApi
 } from './services'
 import {
+  authReducer,
   blogReducer,
+  categoryBlogReducer,
   categoryReducer,
   drawerReducers,
   modalReducer,
   sizeReducers,
   themeReducer,
   toppingReducers,
-  voucherReducer,
   userReducer,
-  authReducer,
-  categoryBlogReducer
-  // voucherReducer,
+  voucherReducer
 } from './slices'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { AuthApi } from './services/Auth'
-import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { orderReducer } from './slices/Orders/order.slice'
 import { productReducers } from './slices/Products/product.slice'
+import storage from 'redux-persist/lib/storage'
 import { useDispatch } from 'react-redux'
 
 const persistConfig = {
@@ -59,7 +59,8 @@ const middlewares = [
   AuthApi.middleware,
   sliderApi.middleware,
   categoryBlogApi.middleware,
-  notificationApi.middleware
+  notificationApi.middleware,
+  analyticApi.middleware
 ]
 
 export const store = configureStore({
@@ -77,6 +78,7 @@ export const store = configureStore({
     [sliderApi.reducerPath]: sliderApi.reducer,
     [categoryBlogApi.reducerPath]: categoryBlogApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [analyticApi.reducerPath]: analyticApi.reducer,
 
     /* redux toolkit */
     persistedReducer,

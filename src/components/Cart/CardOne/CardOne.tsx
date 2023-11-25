@@ -1,4 +1,10 @@
-const CardOne = () => {
+import { MonthlyRevenue } from '~/types'
+
+interface CardOneProps {
+  data: MonthlyRevenue
+}
+
+const CardOne = ({ data }: CardOneProps) => {
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
@@ -23,8 +29,10 @@ const CardOne = () => {
 
       <div className='flex items-end justify-between mt-4'>
         <div>
-          <h4 className='text-title-md dark:text-white font-bold text-black'>$3.456K</h4>
-          <span className='text-sm font-medium'>Total views</span>
+          <h4 className='text-title-md dark:text-white font-bold text-black'>
+            {data['doanh thu khách vãn lai '].toLocaleString()} vnđ
+          </h4>
+          <span className='text-sm font-medium'>Doanh thu khách vãng lai</span>
         </div>
 
         <span className='text-meta-3 flex items-center gap-1 text-sm font-medium'>
