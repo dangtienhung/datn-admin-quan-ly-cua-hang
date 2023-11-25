@@ -17,6 +17,7 @@ import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
+import { formatCurrency } from '~/utils'
 
 type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
@@ -46,7 +47,6 @@ const ListCancelOrders = () => {
 
   useEffect(() => {
     ClientSocket.getCancelOrder(setCancelOrder, options)
-    console.log(options)
   }, [orderDate, memoOptions, options])
 
   /*Search */
@@ -110,13 +110,13 @@ const ListCancelOrders = () => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0, margin: '0 auto', textAlign: 'center' }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString().substring(text.length - 8) : ''}
         />
       ) : (
-        text
+        text.substring(text.length - 8)
       )
   })
   /*End Search */
@@ -130,9 +130,9 @@ const ListCancelOrders = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Mã đơn hàng',
+      title: 'ID',
       dataIndex: 'orderCode',
-      width: 250,
+      width: 100,
       ...getColumnSearchProps('orderCode')
     },
     {
@@ -147,17 +147,47 @@ const ListCancelOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Khách hàng',
-      width: 110,
-      render: (data) => (data && data?.user_order ? 'Cửa hàng' : 'Vãng lai')
+      title: 'Sản phẩm',
+      dataIndex: 'products',
+      key: 'products',
+
+      render: (item: any) =>
+        item &&
+        item.map((product: any) => {
+          return (
+            <div className='gap-x-3 flex items-center justify-start overflow-hidden line-clamp-1'>
+              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+              <div className='flex flex-col gap-0.5 justify-center items-start'>
+                <p className='hover:underline capitalize truncate cursor-pointer line-clamp-2'>{product.name}</p>
+              </div>
+            </div>
+          )
+        })
+    },
+    {
+      title: 'Tổng Tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      width: 100,
+      render: (totalPrice: number) => {
+        // console.log(totalPrice, 'paymentMethodIds')
+        return (
+          <span
+            className={`capitalize font-semibold  
+          rounded inline-block text-lg text-center py-1`}
+          >
+            {formatCurrency(+totalPrice)}
+          </span>
+        )
+      }
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 110,
-      render: (status: string) => (
-        <span className={`text-white capitalize font-semibold bg-meta-1 rounded inline-block px-2 py-1`}>{status}</span>
+      render: () => (
+        <span className={`text-white capitalize font-semibold bg-meta-1 rounded inline-block px-2 py-1`}>Đã hủy</span>
       )
     },
     {

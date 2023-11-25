@@ -16,7 +16,7 @@ const ToppingList = () => {
   const dispatch = useAppDispatch()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const { toppingsList } = useAppSelector((state: RootState) => state.toppings)
-  console.log('🚀 ~ file: ListTopping.tsx:20 ~ ToppingList ~ toppingsList:', toppingsList)
+
   const [deleteTopping] = useDeleteToppingMutation()
 
   /* topping delete */

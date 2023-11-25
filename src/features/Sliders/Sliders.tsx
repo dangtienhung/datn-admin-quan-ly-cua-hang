@@ -1,12 +1,10 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
 import { RootState, useAppDispatch } from '~/store/store'
 
-import { FormSliders } from './components'
-import { IRoleUser } from '~/types'
-import { Tabs } from 'antd'
-import { items } from './data'
-import { setOpenDrawer } from '~/store/slices'
 import { useAppSelector } from '~/store/hooks'
+import { setOpenDrawer } from '~/store/slices'
+import { IRoleUser } from '~/types'
+import { FormSliders, ListSliders } from './components'
 
 const SlidersFeature = () => {
   const dispatch = useAppDispatch()
@@ -24,7 +22,8 @@ const SlidersFeature = () => {
       </Breadcrumb>
 
       {/* ==================== body table ==================== */}
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
+      <ListSliders />
       <FormSliders open={openDrawer} />
     </div>
   )

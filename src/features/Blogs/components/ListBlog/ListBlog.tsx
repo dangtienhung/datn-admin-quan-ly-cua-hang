@@ -38,7 +38,6 @@ const ListBlog = () => {
   }))
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -46,7 +45,7 @@ const ListBlog = () => {
     selectedRowKeys,
     onChange: onSelectChange
   }
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
 
   const blogsColumns = useRenderBlog(BlogData?.docs || [])
 
@@ -54,7 +53,7 @@ const ListBlog = () => {
   if (isError) return <NotFound />
   return (
     <div>
-      {user && user.role === IRoleUser.ADMIN && (
+      {user && user.role === IRoleUser.ADMIN && hasSelected && (
         <Space>
           <Popconfirm
             title='Bạn thực sự muốn xóa những danh mục này?'

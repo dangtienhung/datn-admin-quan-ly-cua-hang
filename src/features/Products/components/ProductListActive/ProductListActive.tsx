@@ -33,7 +33,6 @@ export const ProductListActive = () => {
   }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -41,26 +40,27 @@ export const ProductListActive = () => {
     selectedRowKeys,
     onChange: onSelectChange
   }
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
 
   const columnsData = useRender(data?.docs || [])
 
   return (
     <div>
       <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
-          <ButtonAntd
-            size='large'
-            danger
-            type='primary'
-            className='text-sm font-semibold capitalize'
-            onClick={start}
-            disabled={!hasSelected}
-            loading={loading}
-          >
-            Xóa tất cả
-          </ButtonAntd>
-        </Tooltip>
+        {hasSelected && (
+          <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+            <ButtonAntd
+              size='large'
+              danger
+              type='primary'
+              className='text-sm font-semibold capitalize'
+              onClick={start}
+              loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Tooltip>
+        )}
         {/* <ButtonAntd
           icon={<HiDocumentDownload />}
           size='large'

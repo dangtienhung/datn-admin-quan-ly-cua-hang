@@ -1,13 +1,11 @@
-import { Button as ButtonAntd, Table, Tooltip, message } from 'antd'
+import { Button as ButtonAntd, Table, Tooltip } from 'antd'
 
-import { HiDocumentDownload } from 'react-icons/hi'
-import { IRoleUser } from '~/types'
-import { RootState } from '~/store/store'
-import { exportDataToExcel } from '~/utils'
+import { useState } from 'react'
 import { useAppSelector } from '~/store/hooks'
 import { useGetAllProductActiveFalseQuery } from '~/store/services'
+import { RootState } from '~/store/store'
+import { IRoleUser } from '~/types'
 import { useRender } from '../../hooks'
-import { useState } from 'react'
 
 export const ProductListInActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -37,7 +35,6 @@ export const ProductListInActive = () => {
   }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -52,33 +49,21 @@ export const ProductListInActive = () => {
   return (
     <div>
       <div style={{ marginBottom: 16 }} className='flex items-center gap-3'>
-        <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
-          <ButtonAntd
-            size='large'
-            danger
-            type='primary'
-            className='text-sm font-semibold capitalize'
-            onClick={start}
-            disabled={!hasSelected}
-            loading={loading}
-          >
-            Xóa tất cả
-          </ButtonAntd>
-        </Tooltip>
-        <ButtonAntd
-          icon={<HiDocumentDownload />}
-          size='large'
-          className='bg-[#209E62] text-white hover:!text-white text-sm font-semibold capitalize flex items-center'
-          onClick={() => {
-            if (data?.docs?.length === 0) {
-              message.warning('Không có sản phẩm nào để xuất')
-              return
-            }
-            exportDataToExcel(data?.docs, 'products-in-active')
-          }}
-        >
-          Xuất excel
-        </ButtonAntd>
+        {hasSelected && (
+          <Tooltip title={hasSelected ? `Đang chọn ${selectedRowKeys?.length} sản phẩm` : ''}>
+            <ButtonAntd
+              size='large'
+              danger
+              type='primary'
+              className='text-sm font-semibold capitalize'
+              onClick={start}
+              disabled={!hasSelected}
+              loading={loading}
+            >
+              Xóa tất cả
+            </ButtonAntd>
+          </Tooltip>
+        )}
       </div>
       <Table
         rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}

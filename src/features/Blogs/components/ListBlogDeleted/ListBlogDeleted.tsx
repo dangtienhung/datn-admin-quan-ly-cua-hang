@@ -37,10 +37,8 @@ const ListBlogDeleted = () => {
     ...blog,
     key: blog._id
   }))
-  // console.log(blogs)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -48,7 +46,7 @@ const ListBlogDeleted = () => {
     selectedRowKeys,
     onChange: onSelectChange
   }
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = selectedRowKeys.length > 1
 
   const blogsColumns = useRenderBlog(BlogDataDeleted?.docs || [], true)
 
@@ -57,7 +55,7 @@ const ListBlogDeleted = () => {
 
   return (
     <div>
-      {user && user.role === IRoleUser.ADMIN && (
+      {user && user.role === IRoleUser.ADMIN && hasSelected && (
         <Space>
           <Popconfirm
             title='Bạn thực sự muốn xóa những danh mục này?'

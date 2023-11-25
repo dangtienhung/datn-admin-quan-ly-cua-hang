@@ -23,16 +23,17 @@ const DropdownNotification = () => {
       })
   }
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return
-      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) return
-      setDropdownOpen(false)
+    const handleDropdown = (e: MouseEvent) => {
+      e.target == trigger.current || trigger.current.contains(e.target)
+        ? dropdownOpen
+          ? setDropdownOpen(true)
+          : setDropdownOpen(false)
+        : setDropdownOpen(false)
     }
-    document.addEventListener('click', clickHandler)
-    return () => document.removeEventListener('click', clickHandler)
-  }, [])
+    document.addEventListener('click', handleDropdown)
+    return () => document.removeEventListener('click', handleDropdown)
+  }, [dropdownOpen])
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!dropdownOpen || keyCode !== 27) return
@@ -84,6 +85,7 @@ const DropdownNotification = () => {
                     handleUpdateNotification(item._id)
                     setDropdownOpen(false)
                   }}
+                  key={item._id + 9}
                   className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
                   to={`/manager/orders`}
                 >
@@ -103,46 +105,6 @@ const DropdownNotification = () => {
               description={<span>Hiện tại không có thông báo nào!</span>}
             />
           )}
-
-          {/* <li>
-            <Link
-              className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
-              to='#'
-            >
-              <p className='text-sm'>
-                <span className='dark:text-white text-black'>It is a long established fact</span> that a reader will be
-                distracted by the readable.
-              </p>
-
-              <p className='text-xs'>24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
-              to='#'
-            >
-              <p className='text-sm'>
-                <span className='dark:text-white text-black'>There are many variations</span> of passages of Lorem Ipsum
-                available, but the majority have suffered
-              </p>
-
-              <p className='text-xs'>04 Jan, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4'
-              to='#'
-            >
-              <p className='text-sm'>
-                <span className='dark:text-white text-black'>There are many variations</span> of passages of Lorem Ipsum
-                available, but the majority have suffered
-              </p>
-
-              <p className='text-xs'>01 Dec, 2024</p>
-            </Link>
-          </li> */}
         </ul>
       </div>
     </li>

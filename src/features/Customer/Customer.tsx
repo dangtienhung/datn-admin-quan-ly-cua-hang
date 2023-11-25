@@ -1,9 +1,8 @@
-import { Tabs } from 'antd'
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { items } from './data'
-import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import { setOpenDrawer } from '~/store/slices'
+import { useAppDispatch } from '~/store/store'
+import { ListCustomers } from './components'
 import { FormCustomer } from './components/FormCustomer'
 
 const CustomerFeature = () => {
@@ -18,7 +17,8 @@ const CustomerFeature = () => {
         </Button>
       </Breadcrumb>
 
-      <Tabs defaultActiveKey='1' items={items} className='text-white' />
+      {/* <Tabs defaultActiveKey='1' items={items} className='text-white' /> */}
+      <ListCustomers />
       <FormCustomer open={openDrawer} />
     </div>
   )

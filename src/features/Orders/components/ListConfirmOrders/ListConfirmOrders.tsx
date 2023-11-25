@@ -21,6 +21,7 @@ import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
 import { RootState } from '~/store/store'
+import { formatCurrency } from '~/utils'
 
 type DataIndex = keyof IOrderDataType
 
@@ -115,10 +116,10 @@ const ListConfirmOrders = () => {
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString().substring(text.length - 8) : ''}
         />
       ) : (
-        text
+        text.substring(text.length - 8)
       )
   })
   /*End Search */
@@ -176,10 +177,10 @@ const ListConfirmOrders = () => {
       sorter: (a, b) => a.index - b.index
     },
     {
-      title: 'Mã đơn hàng',
+      title: 'ID',
       dataIndex: 'orderCode',
       key: 'orderCode',
-      width: 245,
+      width: 110,
       ...getColumnSearchProps('orderCode')
     },
     {
@@ -194,17 +195,42 @@ const ListConfirmOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Khách hàng',
-      width: 110,
-      render: (data) => (data && data?.user_order ? 'Cửa hàng' : 'Vãng lai')
+      title: 'Sản phẩm',
+      dataIndex: 'products',
+      key: 'products',
+
+      render: (item: any) =>
+        item &&
+        item.map((product: any) => (
+          <div className='gap-x-3 flex items-center  line-clamp-1 justify-start'>
+            <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+            <div className='flex flex-col gap-0.5 justify-center items-start'>
+              <p className='hover:underline capitalize line-clamp-2 truncate cursor-pointer'>{product.name}</p>
+            </div>
+          </div>
+        ))
+    },
+    {
+      title: 'Tổng Tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      width: 100,
+      render: (totalPrice: number) => (
+        <span
+          className={`capitalize font-semibold  
+          rounded inline-block text-lg text-center py-1`}
+        >
+          {formatCurrency(+totalPrice)}
+        </span>
+      )
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 120,
-      render: (status: string) => (
-        <span className={`text-white capitalize font-semibold bg-meta-5 rounded inline-block px-2 py-1`}>{status}</span>
+      render: () => (
+        <span className={`text-white capitalize font-semibold bg-meta-5 rounded inline-block px-2 py-1`}>Xác nhận</span>
       )
     },
     {

@@ -18,3 +18,8 @@ export const formatPriceCompact = (price: number) => {
 export const formatNumberDigits = (number: number) => {
   return Number(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 10 }).format(number))
 }
+
+export const formattedAmount = (amount: number) => {
+  const formatter = '$' + (amount / 1000).toFixed(3) + 'K'
+  return formatter
+}

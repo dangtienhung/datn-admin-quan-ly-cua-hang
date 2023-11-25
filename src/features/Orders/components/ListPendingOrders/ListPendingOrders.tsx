@@ -1,25 +1,26 @@
-import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import { Button } from '~/components'
-import { ColumnsType } from 'antd/es/table'
-import { NotFound } from '~/pages'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
-import { formatDate } from '~/utils/formatDate'
-import { EyeFilled, CloseCircleFilled, CheckOutlined, SearchOutlined } from '@ant-design/icons'
-import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer } from '~/store/slices'
-import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
-import { messageAlert } from '~/utils/messageAlert'
-import { setOpenModal } from '~/store/slices/Modal'
+import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
+import { Button as ButtonAnt, Input, Popconfirm, Space, Table, Tooltip } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { IOrderDataType } from '~/types'
 import { ColumnType } from 'antd/lib/table'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useAppSelector } from '~/store/hooks'
+import { Button } from '~/components'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
 import { ClientSocket } from '~/socket'
+import { useAppSelector } from '~/store/hooks'
+import { useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
+import { setOpenDrawer } from '~/store/slices'
+import { setOpenModal } from '~/store/slices/Modal'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IOrderDataType } from '~/types'
+import { formatCurrency } from '~/utils'
+import { formatDate } from '~/utils/formatDate'
+import { messageAlert } from '~/utils/messageAlert'
+import UserInfoRow from '../UserInfoRow/UserInfoRow'
 
 type DataIndex = keyof IOrderDataType
 const ListPendingOrders = () => {
@@ -113,10 +114,10 @@ const ListPendingOrders = () => {
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString().substring(text.length - 8) : ''}
         />
       ) : (
-        text
+        text.substring(text.length - 8)
       )
   })
   /*End Search */
@@ -173,18 +174,18 @@ const ListPendingOrders = () => {
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.index - b.index
     },
-    {
-      title: 'Mã đơn hàng',
-      dataIndex: 'orderCode',
-      key: 'orderCode',
-      width: 240,
-      ...getColumnSearchProps('orderCode')
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'orderCode',
+    //   key: 'orderCode',
+    //   width: 100,
+    //   ...getColumnSearchProps('orderCode')
+    // },
     {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
-      width: 250,
+      width: 200,
       rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
@@ -193,42 +194,66 @@ const ListPendingOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Khách hàng',
-      width: 110,
-      render: (_: any, order) => {
-        // console.log(order, ':::')
-        return order && order?.user_order ? 'Cửa hàng' : 'Vãng lai'
-      }
+      title: 'Sản phẩm',
+      dataIndex: 'products',
+      key: 'products',
+
+      render: (item: any) =>
+        item &&
+        item.map((product: any) => {
+          return (
+            <div className='gap-x-3 flex items-center justify-start line-clamp-1'>
+              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+              <div className='flex flex-col gap-0.5 justify-center items-start'>
+                <p className='line-clamp-2 hover:underline capitalize truncate cursor-pointer'>{product.name}</p>
+              </div>
+            </div>
+          )
+        })
+    },
+    {
+      title: 'Tổng Tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      width: 100,
+      render: (totalPrice: number) => (
+        <span
+          className={`capitalize font-semibold  
+          rounded inline-block text-lg text-center py-1`}
+        >
+          {formatCurrency(+totalPrice)}
+        </span>
+      )
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: 100,
-      render: (status: string) => (
+      width: 130,
+      render: (status: string, data: any) => (
         <span
           className={`text-white capitalize font-semibold bg-meta-6
           rounded inline-block px-2 py-1`}
         >
-          {status}
+          {data.payment !== 'cod' && status == 'pending' ? 'Thanh toán' : 'Duyệt đơn'}
         </span>
       )
     },
+
     {
-      title: 'Thời gian đặt hàng',
+      title: 'Thời gian',
       dataIndex: 'timeOrder',
       key: 'timeOrder',
-
+      width: 175,
       sorter: (a, b) => a.timeOrder.localeCompare(b.timeOrder),
       sortDirections: ['descend', 'ascend'],
       render: (time: string) => <span className='capitalize'>{formatDate(time)}</span>
     },
 
     {
-      // title: <span className='block text-center'>Action</span>,
       key: 'action',
-      // fixed: 'right',
-      // width: 300,
+
+      width: 150,
       render: (_: any, order) => (
         <div className='flex items-center justify-center'>
           <Space>

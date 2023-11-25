@@ -32,7 +32,7 @@ const ListCategoryBlog = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -52,7 +52,7 @@ const ListCategoryBlog = () => {
 
   return (
     <>
-      {user && user.role === IRoleUser.ADMIN && hasSelected && (
+      {user && user.role === IRoleUser.ADMIN && (
         <Space>
           <Popconfirm
             title='Bạn thực sự muốn xóa những danh mục này?'
@@ -60,7 +60,13 @@ const ListCategoryBlog = () => {
             onConfirm={handleDeleteMany}
             onCancel={() => setSelectedRowKeys([])}
           >
-            <ButtonAntd size='large' type='primary' danger className='text-sm font-semibold capitalize'>
+            <ButtonAntd
+              disabled={!hasSelected}
+              size='large'
+              type='primary'
+              danger
+              className='text-sm font-semibold capitalize'
+            >
               Xóa tất cả
             </ButtonAntd>
           </Popconfirm>

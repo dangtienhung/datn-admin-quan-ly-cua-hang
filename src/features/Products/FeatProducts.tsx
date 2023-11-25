@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { FormProduct, PreviewProduct } from './components'
+import { FormProduct, PreviewProduct, ProductListActive } from './components'
 import { IProduct, IRoleUser } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
 
@@ -22,19 +22,26 @@ const FeatureProducts = ({ data }: FeatureProductsProps) => {
     dispatch(setProductsList(data))
   }, [dispatch, data])
 
+  const isAdmin = user && user.role === IRoleUser.ADMIN
+
   return (
     <div>
       <Breadcrumb pageName='Sản phẩm'>
-        {user && user.role === IRoleUser.ADMIN && (
+        {isAdmin && (
           <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
             Thêm
           </Button>
         )}
       </Breadcrumb>
 
-      <Tabs defaultActiveKey='1' items={items} />
-
-      <FormProduct />
+      {isAdmin ? (
+        <>
+          <Tabs defaultActiveKey='1' items={items} />
+          <FormProduct />
+        </>
+      ) : (
+        <ProductListActive />
+      )}
 
       {/* preview product */}
       <PreviewProduct />

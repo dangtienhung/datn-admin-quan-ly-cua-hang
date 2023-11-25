@@ -1,13 +1,14 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { IBlogs, IRoleUser } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
+import { IBlogs, IRoleUser } from '~/types'
 
-import FormBlog from './components/FormBlog/FormBlog'
-import { PreviewBlog } from './components/PreviewBlog'
 import { Tabs } from 'antd'
-import { items } from './data'
-import { setOpenDrawer } from '~/store/slices'
 import { useAppSelector } from '~/store/hooks'
+import { setOpenDrawer } from '~/store/slices'
+import FormBlog from './components/FormBlog/FormBlog'
+import ListBlogActive from './components/ListBlogActive'
+import { PreviewBlog } from './components/PreviewBlog'
+import { items } from './data'
 
 interface BlogFeatureProps {
   data: IBlogs[]
@@ -18,19 +19,26 @@ const BlogFeature = ({ data }: BlogFeatureProps) => {
   const { openDrawer } = useAppSelector((state) => state.drawer)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
+  const isAdmin = user && user.role === IRoleUser.ADMIN
   return (
     <div>
-      <Breadcrumb pageName='Blogs'>
-        {user && user.role === IRoleUser.ADMIN && (
+      <Breadcrumb pageName='Bài viết'>
+        {isAdmin && (
           <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
             Thêm
           </Button>
         )}
       </Breadcrumb>
 
-      <Tabs defaultActiveKey='1' items={items} />
+      {isAdmin ? (
+        <>
+          <Tabs defaultActiveKey='1' items={items} />
 
-      <FormBlog open={openDrawer} />
+          <FormBlog open={openDrawer} />
+        </>
+      ) : (
+        <ListBlogActive />
+      )}
       <PreviewBlog />
     </div>
   )

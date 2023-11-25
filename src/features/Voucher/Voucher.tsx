@@ -12,7 +12,6 @@ interface VoucherFeatureProps {
   data: IVoucher[]
 }
 const VoucherFeature = ({ data }: VoucherFeatureProps) => {
-  console.log(data)
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
 
