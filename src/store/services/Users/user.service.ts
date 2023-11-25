@@ -25,7 +25,7 @@ export const userApi = createApi({
       invalidatesTags: ['User']
     }),
 
-    updateUser: builder.mutation<void, any>({
+    updateUser: builder.mutation<any, any>({
       query: (user) => ({
         url: `/users/${user._id}`,
         method: 'PATCH',
@@ -34,7 +34,8 @@ export const userApi = createApi({
           gender: user.gender,
           role: user.role,
           avatar: user.avatar
-        }
+        },
+        credentials: 'include'
       }),
       invalidatesTags: ['User']
     }),

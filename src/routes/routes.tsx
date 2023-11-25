@@ -17,12 +17,14 @@ import BlogPage from '~/pages/BlogPage'
 import SignIn from '~/pages/SignIn'
 import { GuardAccount } from '.'
 import CategoryBlogPage from '~/pages/CategoryBlogPage'
+import Profile from '~/pages/Profile'
 
 const routers = createBrowserRouter([
   {
     path: '/',
     element: <SignIn />
   },
+
   {
     path: '/dashboard',
     children: [
@@ -48,7 +50,11 @@ const routers = createBrowserRouter([
           { path: 'orders', element: <OrderPage /> },
           { path: 'category-blog', element: <CategoryBlogPage /> },
           { path: 'blogs', element: <BlogPage /> },
-          { path: 'sliders', element: <SliderPage /> }
+          { path: 'sliders', element: <SliderPage /> },
+          {
+            path: 'profile',
+            element: <Profile />
+          }
         ]
       }
     ]
