@@ -1,4 +1,4 @@
-import { ProductList, ProductListActive, ProductListDelete, ProductListInActive } from '../components'
+import { ProductListActive, ProductListDelete, ProductListInActive } from '../components'
 
 import type { TabsProps } from 'antd'
 import { v4 as uuidv4 } from 'uuid'

@@ -1,15 +1,19 @@
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
-import { Button as ButtonAnt, Popconfirm, Space, Tag, Tooltip, message } from 'antd'
+import { Button as ButtonAnt, Input, InputRef, Popconfirm, Space, Tag, Tooltip, message } from 'antd'
 import { IBlogs, ICategoryBlogRefBlog, IRoleUser } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlog, setBlogId, setOpenDrawer } from '~/store/slices'
 import { useDeleteBlogMutation, useUpdateIsDeletedBlogMutation } from '~/store/services'
 
-import { RedoOutlined } from '@ant-design/icons'
+import { RedoOutlined, SearchOutlined } from '@ant-design/icons'
 import clsxm from '~/utils/clsxm'
 import parse from 'html-react-parser'
 import { pause } from '~/utils/pause'
 import { useAppSelector } from '~/store/hooks'
+import { useRef, useState } from 'react'
+import { FilterConfirmProps } from 'antd/es/table/interface'
+import { ColumnType } from 'antd/lib/table'
+import Highlighter from 'react-highlight-words'
 
 export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
   const dispatch = useAppDispatch()
@@ -29,6 +33,79 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
       message.error('Xoá thất bại!')
     }
   }
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+  const searchInput = useRef<InputRef>(null)
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: IBlogs) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(`${dataIndex}`)
+  }
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters()
+    setSearchText('')
+  }
+
+  const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm danh mục`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <ButtonAnt
+            type='primary'
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+          >
+            Search
+          </ButtonAnt>
+          <ButtonAnt
+            onClick={() => {
+              clearFilters && handleReset(clearFilters)
+            }}
+          >
+            Reset
+          </ButtonAnt>
+          <ButtonAnt
+            onClick={() => {
+              close()
+            }}
+          >
+            close
+          </ButtonAnt>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100)
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      )
+  })
 
   // staff
   const columnsStaff = [
@@ -71,7 +148,8 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
             </div>
           </div>
         </div>
-      )
+      ),
+      ...getColumnSearchProps('name')
     },
     {
       title: 'Danh mục bài viết',
@@ -141,7 +219,8 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
             </div>
           </div>
         </div>
-      )
+      ),
+      ...getColumnSearchProps('name')
     },
     {
       title: 'Danh mục bài viết',

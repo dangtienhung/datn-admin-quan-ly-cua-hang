@@ -35,7 +35,6 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   }, [voucherData])
   const onFinish = async (values: IVoucher) => {
     if (voucherData._id) {
-      console.log(values, ':::')
       updateVoucher({ _id: voucherData._id, ...values, isActive: checkedVoucher })
         .unwrap()
         .then(() => {
@@ -43,7 +42,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
           onClose()
         })
         .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-      console.log('update', { ...values, _id: voucherData._id })
+      // console.log('update', { ...values, _id: voucherData._id })
       return
     }
 
@@ -54,14 +53,13 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
         onClose()
       })
       .catch(() => messageAlert('Thêm voucher thất bại!', 'error'))
-    console.log(values)
   }
   const onClose = () => {
     dispatch(setOpenDrawer(false))
     dispatch(setVoucher({ _id: '', code: '', title: '', discount: 0, sale: 0 }))
     form.resetFields()
   }
-  console.log(checkedVoucher)
+  // console.log(checkedVoucher)
   return (
     <Drawer
       title={voucherData._id ? 'Cập nhật voucher' : 'Thêm voucher mới'}

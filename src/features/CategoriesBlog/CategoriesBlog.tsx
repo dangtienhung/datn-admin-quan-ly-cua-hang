@@ -14,7 +14,7 @@ const CategoriesBlog = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   return (
     <div>
-      <Breadcrumb pageName='Danh mục blog'>
+      <Breadcrumb pageName='Danh mục bài viết'>
         {user.role === IRoleUser.ADMIN && (
           <Button icon={<PlusIcon />} onClick={() => dispatch(setOpenDrawer(true))}>
             Thêm

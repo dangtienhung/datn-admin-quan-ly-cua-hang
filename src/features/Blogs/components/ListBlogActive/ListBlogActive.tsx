@@ -37,10 +37,8 @@ const ListBlogActive = () => {
     ...blog,
     key: blog._id
   }))
-  // console.log(blogs)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    // console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
 

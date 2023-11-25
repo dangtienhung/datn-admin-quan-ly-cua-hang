@@ -23,7 +23,6 @@ export const PreviewBlog = () => {
 
   if (!blogId) return null
   if (!blogDetail || Array.isArray(blogDetail)) return null
-  console.log('🚀 ~ file: PreviewBlog.tsx:26 ~ PreviewBlog ~ blogDetail:', blogDetail)
 
   return (
     <Drawer

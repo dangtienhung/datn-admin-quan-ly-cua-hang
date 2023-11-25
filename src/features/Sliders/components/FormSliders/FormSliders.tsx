@@ -22,7 +22,6 @@ export const FormSliders = ({ open }: FormSlidersProps) => {
 
   const onFinish = () => {
     const formData = new FormData()
-    console.log(fileList)
 
     fileList.forEach((file: any) => {
       formData.append('images', file.originFileObj)
@@ -30,7 +29,6 @@ export const FormSliders = ({ open }: FormSlidersProps) => {
     uploadSlider(formData)
       .unwrap()
       .then(({ urls }) => {
-        console.log(urls)
         const sliders = urls.map((url) => {
           return {
             url: url.url,

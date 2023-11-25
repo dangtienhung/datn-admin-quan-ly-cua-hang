@@ -47,7 +47,6 @@ const ListCancelOrders = () => {
 
   useEffect(() => {
     ClientSocket.getCancelOrder(setCancelOrder, options)
-    console.log(options)
   }, [orderDate, memoOptions, options])
 
   /*Search */

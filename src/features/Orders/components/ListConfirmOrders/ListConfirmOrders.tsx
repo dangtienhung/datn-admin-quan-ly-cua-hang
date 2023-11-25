@@ -201,33 +201,28 @@ const ListConfirmOrders = () => {
 
       render: (item: any) =>
         item &&
-        item.map((product: any) => {
-          return (
-            <div className='gap-x-3 flex items-center  line-clamp-1 justify-start'>
-              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
-              <div className='flex flex-col gap-0.5 justify-center items-start'>
-                <p className='hover:underline capitalize line-clamp-2 truncate cursor-pointer'>{product.name}</p>
-              </div>
+        item.map((product: any) => (
+          <div className='gap-x-3 flex items-center  line-clamp-1 justify-start'>
+            <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+            <div className='flex flex-col gap-0.5 justify-center items-start'>
+              <p className='hover:underline capitalize line-clamp-2 truncate cursor-pointer'>{product.name}</p>
             </div>
-          )
-        })
+          </div>
+        ))
     },
     {
       title: 'Tổng Tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       width: 100,
-      render: (totalPrice: number) => {
-        // console.log(totalPrice, 'paymentMethodIds')
-        return (
-          <span
-            className={`capitalize font-semibold  
+      render: (totalPrice: number) => (
+        <span
+          className={`capitalize font-semibold  
           rounded inline-block text-lg text-center py-1`}
-          >
-            {formatCurrency(+totalPrice)}
-          </span>
-        )
-      }
+        >
+          {formatCurrency(+totalPrice)}
+        </span>
+      )
     },
     {
       title: 'Trạng thái',
