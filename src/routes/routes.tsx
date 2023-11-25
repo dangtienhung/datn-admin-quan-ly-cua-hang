@@ -15,6 +15,7 @@ import {
 
 import BlogPage from '~/pages/BlogPage'
 import CategoryBlogPage from '~/pages/CategoryBlogPage'
+import Profile from '~/pages/Profile'
 import DefaultLayout from '~/layouts/DefaultLayout'
 import { GuardAccount } from '.'
 import SignIn from '~/pages/SignIn'
@@ -25,6 +26,7 @@ const routers = createBrowserRouter([
     path: '/',
     element: <SignIn />
   },
+
   {
     path: '/dashboard',
     children: [
@@ -51,6 +53,10 @@ const routers = createBrowserRouter([
           { path: 'category-blog', element: <CategoryBlogPage /> },
           { path: 'blogs', element: <BlogPage /> },
           { path: 'sliders', element: <SliderPage /> }
+          // {
+          //   path: 'profile',
+          //   element: <Profile />
+          // }
         ]
       }
     ]

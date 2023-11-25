@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { AuthApi } from '~/store/services/Auth'
+import { userApi } from '~/store/services/Users'
 import { ResIUser } from '~/types'
 
 const initialState: ResIUser = {
@@ -20,6 +21,9 @@ export const authSlice = createSlice({
       builder.addMatcher(AuthApi.endpoints.logOut.matchFulfilled, (state) => {
         state.user = initialState.user
       })
+    builder.addMatcher(userApi.endpoints.updateUser.matchFulfilled, (state, { payload }) => {
+      state.user = payload.user
+    })
   }
 })
 

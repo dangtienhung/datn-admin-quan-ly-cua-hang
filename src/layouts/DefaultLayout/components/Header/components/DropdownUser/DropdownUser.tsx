@@ -54,7 +54,7 @@ const DropdownUser = () => {
       <Link ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='flex items-center gap-4' to='#'>
         <span className='lg:block hidden text-right'>
           <span className='dark:text-white block text-sm font-medium text-black'>{user?.username}</span>
-          <span className='block text-xs'>{user?.role}</span>
+          <span className='block text-xs capitalize'>{user?.role === 'staff' ? 'Nhân viên' : user?.role}</span>
         </span>
 
         <span className='w-12 h-12 rounded-full'>
@@ -77,6 +77,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to='/profile'
+              onClick={() => setDropdownOpen(false)}
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
             >
               <ProfileIcon />
