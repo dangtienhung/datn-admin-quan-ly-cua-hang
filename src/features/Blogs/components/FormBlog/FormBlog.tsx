@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '~/components'
-import { IBlogs, ICategoryBlog } from '~/types'
+import { ICategoryBlog } from '~/types'
 import { LoadingOutlined } from '@ant-design/icons'
 import { RcFile } from 'antd/es/upload'
 import ReactQuill from 'react-quill'
@@ -69,11 +69,7 @@ const FormBlog = ({ open }: BlogFormProps) => {
         .catch(() => {
           messageAlert('Cập nhật thất bại', 'error')
         })
-      // console.log({
-      //   name: values.name,
-      //   description: values.description,
-      //   images: blogData.images[0]
-      // })
+
       return
     }
     const formData = new FormData()
@@ -99,11 +95,6 @@ const FormBlog = ({ open }: BlogFormProps) => {
             .catch(() => {
               messageAlert('Cập nhật bài viết thất bại', 'error')
             })
-          // console.log({
-          //   name: values.name,
-          //   description: values.description,
-          //   images: urls[0]
-          // })
         } else {
           addBlog({
             name: values.name,
@@ -121,12 +112,6 @@ const FormBlog = ({ open }: BlogFormProps) => {
               messageAlert(`Thêm bài viết thất bại! ${error.data.message}`, 'error')
               onClose()
             })
-          // console.log({
-          //   name: values.name,
-          //   description: values.description,
-          //   category: values.category,
-          //   is_active: values.is_active
-          // })
         }
       })
   }

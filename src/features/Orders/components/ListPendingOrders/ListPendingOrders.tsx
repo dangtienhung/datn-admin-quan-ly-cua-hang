@@ -216,35 +216,28 @@ const ListPendingOrders = () => {
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       width: 100,
-      render: (totalPrice: number) => {
-        // console.log(totalPrice, 'paymentMethodIds')
-        return (
-          <span
-            className={`capitalize font-semibold  
+      render: (totalPrice: number) => (
+        <span
+          className={`capitalize font-semibold  
           rounded inline-block text-lg text-center py-1`}
-          >
-            {formatCurrency(+totalPrice)}
-          </span>
-        )
-      }
+        >
+          {formatCurrency(+totalPrice)}
+        </span>
+      )
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 130,
-      render: (status: string, data: any) => {
-        console.log(status, 'statuss', data)
-
-        return (
-          <span
-            className={`text-white capitalize font-semibold bg-meta-6
+      render: (status: string, data: any) => (
+        <span
+          className={`text-white capitalize font-semibold bg-meta-6
           rounded inline-block px-2 py-1`}
-          >
-            {data.payment !== 'cod' && status == 'pending' ? 'Thanh toán' : 'Duyệt đơn'}
-          </span>
-        )
-      }
+        >
+          {data.payment !== 'cod' && status == 'pending' ? 'Thanh toán' : 'Duyệt đơn'}
+        </span>
+      )
     },
 
     {

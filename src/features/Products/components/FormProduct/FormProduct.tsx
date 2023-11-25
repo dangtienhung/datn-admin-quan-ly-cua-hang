@@ -53,7 +53,7 @@ const FormProduct = () => {
   }, [dataCategories, dataToppings, dataSizeDefault])
 
   const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`)
+    // console.log(`selected ${value}`)
   }
 
   const handleOnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +98,6 @@ const FormProduct = () => {
         form.resetFields()
         setImages([])
       } catch (error) {
-        console.log('🚀 ~ file: FormProduct.tsx:100 ~ handleSubmitForm ~ error:', error)
         message.error('Có lỗi xảy ra, vui lòng thử lại sau!')
       }
       return

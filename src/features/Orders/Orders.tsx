@@ -15,8 +15,6 @@ const Orders = () => {
   const { openDrawer } = useAppSelector((state) => state.drawer)
   const dispatch = useAppDispatch()
   const onDateChange: RangePickerProps['onChange'] = (_, dateString) => {
-    console.log(dateString)
-
     dispatch(setOrderDate({ startDate: dateString[0], endDate: dateString[1] }))
   }
   const { RangePicker } = DatePicker

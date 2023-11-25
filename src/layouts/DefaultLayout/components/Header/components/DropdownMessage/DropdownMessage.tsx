@@ -12,14 +12,16 @@ const DropdownMessage = () => {
 
   // close on click outside
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return
-      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) return
-      setDropdownOpen(false)
+    const handleDropdown = (e: MouseEvent) => {
+      if (e.target == trigger.current || trigger.current.contains(e.target)) {
+        dropdownOpen ? setDropdownOpen(true) : setDropdownOpen(false)
+      } else {
+        setDropdownOpen(false)
+      }
     }
-    document.addEventListener('click', clickHandler)
-    return () => document.removeEventListener('click', clickHandler)
-  }, [])
+    document.addEventListener('click', handleDropdown)
+    return () => document.removeEventListener('click', handleDropdown)
+  }, [dropdownOpen])
 
   // close if the esc key is pressed
   useEffect(() => {
