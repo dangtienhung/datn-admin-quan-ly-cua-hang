@@ -2,7 +2,6 @@ import { DarkModeSwitcher, DropdownMessage, DropdownNotification, DropdownUser }
 
 import { Link } from 'react-router-dom'
 // import Logo from '../../../../assets/images/logo/logo.svg'
-import SearchIcon from '~/components/Icons/SearchIcon/SearchIcon'
 
 const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOpen: (arg0: boolean) => void }) => {
   return (
