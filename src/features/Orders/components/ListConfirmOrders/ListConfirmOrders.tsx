@@ -22,6 +22,7 @@ import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
 import { RootState } from '~/store/store'
 import { formatCurrency } from '~/utils'
+import TableChildrend from '~/features/Products/utils/tableChildrend'
 
 type DataIndex = keyof IOrderDataType
 
@@ -169,13 +170,13 @@ const ListConfirmOrders = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
   const columns: ColumnsType<any> = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      width: 50,
-      defaultSortOrder: 'ascend',
-      sorter: (a, b) => a.index - b.index
-    },
+    // {
+    //   title: '#',
+    //   dataIndex: 'index',
+    //   width: 50,
+    //   defaultSortOrder: 'ascend',
+    //   sorter: (a, b) => a.index - b.index
+    // },
     {
       title: 'ID',
       dataIndex: 'orderCode',
@@ -195,26 +196,26 @@ const ListConfirmOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Sản phẩm',
+      title: 'Ảnh SP',
       dataIndex: 'products',
       key: 'products',
-
-      render: (item: any) =>
-        item &&
-        item.map((product: any) => (
-          <div className='gap-x-3 flex items-center  line-clamp-1 justify-start'>
-            <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
-            <div className='flex flex-col gap-0.5 justify-center items-start'>
-              <p className='hover:underline capitalize line-clamp-2 truncate cursor-pointer'>{product.name}</p>
-            </div>
-          </div>
-        ))
+      width: 105,
+      render: (item: any) => (
+        <img src={item[0].image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+      )
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: 90,
+      render: (quantity: number) => <p className='text-center'>{quantity}</p>
     },
     {
       title: 'Tổng Tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      width: 100,
+      width: 115,
       render: (totalPrice: number) => (
         <span
           className={`capitalize font-semibold  
@@ -286,6 +287,7 @@ const ListConfirmOrders = () => {
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address
     },
+    quantity: item.items.length,
     payment: item.paymentMethodId,
     user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
@@ -321,6 +323,9 @@ const ListConfirmOrders = () => {
         <Table
           columns={columns}
           dataSource={ordersData}
+          expandable={{
+            expandedRowRender: TableChildrend
+          }}
           pagination={{
             pageSize: confirmedOrder && confirmedOrder.limit,
             showSizeChanger: true,

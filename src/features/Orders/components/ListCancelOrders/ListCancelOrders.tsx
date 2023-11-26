@@ -18,6 +18,7 @@ import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { ClientSocket } from '~/socket'
 import { formatCurrency } from '~/utils'
+import TableChildrend from '~/features/Products/utils/tableChildrend'
 
 type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
@@ -147,39 +148,34 @@ const ListCancelOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Sản phẩm',
+      title: 'Ảnh SP',
       dataIndex: 'products',
       key: 'products',
-
-      render: (item: any) =>
-        item &&
-        item.map((product: any) => {
-          return (
-            <div className='gap-x-3 flex items-center justify-start overflow-hidden line-clamp-1'>
-              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
-              <div className='flex flex-col gap-0.5 justify-center items-start'>
-                <p className='hover:underline capitalize truncate cursor-pointer line-clamp-2'>{product.name}</p>
-              </div>
-            </div>
-          )
-        })
+      width: 100,
+      render: (item: any) => (
+        <img src={item[0].image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+      )
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: 91,
+      render: (quantity: number) => <p className='text-center'>{quantity}</p>
     },
     {
       title: 'Tổng Tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      width: 100,
-      render: (totalPrice: number) => {
-        // console.log(totalPrice, 'paymentMethodIds')
-        return (
-          <span
-            className={`capitalize font-semibold  
+      width: 110,
+      render: (totalPrice: number) => (
+        <span
+          className={`capitalize font-semibold  
           rounded inline-block text-lg text-center py-1`}
-          >
-            {formatCurrency(+totalPrice)}
-          </span>
-        )
-      }
+        >
+          {formatCurrency(+totalPrice)}
+        </span>
+      )
     },
     {
       title: 'Trạng thái',
@@ -238,6 +234,7 @@ const ListCancelOrders = () => {
     priceShip: item.priceShipping,
     products: item.items,
     totalPrice: item.total,
+    quantity: item.items.length,
     status: item.status,
     timeOrder: item.createdAt,
     key: item._id,
@@ -252,6 +249,9 @@ const ListCancelOrders = () => {
       <Table
         columns={columns}
         dataSource={ordersData}
+        expandable={{
+          expandedRowRender: TableChildrend
+        }}
         pagination={{
           pageSize: cancelOrder && cancelOrder.limit,
           showSizeChanger: true,

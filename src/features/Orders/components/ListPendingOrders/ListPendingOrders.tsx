@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { Button } from '~/components'
 import Loading from '~/components/Loading/Loading'
+import TableChildrend from '~/features/Products/utils/tableChildrend'
 import { NotFound } from '~/pages'
 import { ClientSocket } from '~/socket'
 import { useAppSelector } from '~/store/hooks'
@@ -166,26 +167,27 @@ const ListPendingOrders = () => {
   const hasSelected = selectedRowKeys.length > 2
 
   const { isLoading, isError } = useGetAllOrderPendingQuery(options)
+
   const columns: ColumnsType<any> = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      width: 50,
-      defaultSortOrder: 'ascend',
-      sorter: (a, b) => a.index - b.index
-    },
     // {
-    //   title: 'ID',
-    //   dataIndex: 'orderCode',
-    //   key: 'orderCode',
-    //   width: 100,
-    //   ...getColumnSearchProps('orderCode')
+    //   title: '#',
+    //   dataIndex: 'index',
+    //   width: 40,
+    //   defaultSortOrder: 'ascend',
+    //   sorter: (a, b) => a.index - b.index
     // },
+    {
+      title: 'ID',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      width: 100,
+      ...getColumnSearchProps('orderCode')
+    },
     {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
-      width: 200,
+      width: 195,
       rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
@@ -194,28 +196,26 @@ const ListPendingOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Sản phẩm',
+      title: 'Ảnh SP',
       dataIndex: 'products',
       key: 'products',
-
-      render: (item: any) =>
-        item &&
-        item.map((product: any) => {
-          return (
-            <div className='gap-x-3 flex items-center justify-start line-clamp-1'>
-              <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
-              <div className='flex flex-col gap-0.5 justify-center items-start'>
-                <p className='line-clamp-2 hover:underline capitalize truncate cursor-pointer'>{product.name}</p>
-              </div>
-            </div>
-          )
-        })
+      width: 100,
+      render: (item: any) => (
+        <img src={item[0].image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+      )
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: 91,
+      render: (quantity: number) => <p className='text-center'>{quantity}</p>
     },
     {
       title: 'Tổng Tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      width: 100,
+      width: 110,
       render: (totalPrice: number) => (
         <span
           className={`capitalize font-semibold  
@@ -311,6 +311,7 @@ const ListPendingOrders = () => {
     user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
     priceShip: item.priceShipping,
+    quantity: item.items.length,
     products: item.items,
     totalPrice: item.total,
     status: item.status,
@@ -338,6 +339,9 @@ const ListPendingOrders = () => {
       <div className='dark:bg-graydark w-full overflow-x-auto'>
         <Table
           columns={columns}
+          expandable={{
+            expandedRowRender: TableChildrend
+          }}
           dataSource={ordersData}
           pagination={{
             pageSize: pendingOrder && pendingOrder.limit,
