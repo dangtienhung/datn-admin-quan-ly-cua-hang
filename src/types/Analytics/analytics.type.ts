@@ -12,6 +12,7 @@ export interface IAnalytics {
   categorys: IAnalytic[]
   blogs: IAnalytic[]
   categoryBlogs: IAnalytic[]
+  moneyOrderStatus: IAnalytic[]
 }
 
 // Định nghĩa kiểu cho mỗi mục trong "số đơn" của "doanh thu tháng này"
@@ -77,3 +78,6 @@ export interface DataAnalytics {
   }
   'user mua 2 đơn trở lên': UserWithMultipleOrders
 }
+
+// order status
+export type orderStatus = 'pending' | 'confirmed' | 'delivered' | 'done' | 'canceled'
