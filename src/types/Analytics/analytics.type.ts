@@ -26,6 +26,17 @@ export interface MonthlyRevenue {
   'tổng doanh thu': number
   'số đơn': {
     'tháng 11': OrderInfo
+    'tháng 1': OrderInfo
+    'tháng 2': OrderInfo
+    'tháng 3': OrderInfo
+    'tháng 4': OrderInfo
+    'tháng 5': OrderInfo
+    'tháng 6': OrderInfo
+    'tháng 7': OrderInfo
+    'tháng 8': OrderInfo
+    'tháng 9': OrderInfo
+    'tháng 10': OrderInfo
+    'tháng 12': OrderInfo
   }
   // 'số đơn đã hoàn thành': {
   //   'tháng 11': OrderInfo
