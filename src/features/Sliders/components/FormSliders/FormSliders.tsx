@@ -36,7 +36,7 @@ export const FormSliders = ({ open }: FormSlidersProps) => {
           }
         })
         sliders.forEach((item) => {
-          addSlider(item as ISLider)
+          addSlider({ ...item, is_active: true } as ISLider)
             .unwrap()
             .then(() => {
               messageAlert('Thêm thành công', 'success')
