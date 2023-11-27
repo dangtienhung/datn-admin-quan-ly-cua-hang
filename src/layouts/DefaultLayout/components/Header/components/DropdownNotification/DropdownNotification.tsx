@@ -1,19 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
+import { Badge, Empty } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import { useGetAllOrderPendingQuery, useUpdateNotificationMutation } from '~/store/services'
 
 import { BellIcon } from '~/components'
-import { Link } from 'react-router-dom'
 import { ClientSocket } from '~/socket'
+import { IOrder } from '~/types'
+import { Link } from 'react-router-dom'
+import { RootState } from '~/store/store'
 import { formatDate } from '~/utils/formatDate'
-import { useUpdateNotificationMutation } from '~/store/services'
-import { Empty } from 'antd'
+import { useAppSelector } from '~/store/hooks'
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [notification, setNotification] = useState<any[]>([])
+
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
+  const [options, setoptions] = useState({
+    page: 1,
+    limit: 10,
+    startDate: '',
+    endDate: '',
+    room: user?._id
+  })
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
   const [updateNotification] = useUpdateNotificationMutation()
+  const { data: dataOrderPendings } = useGetAllOrderPendingQuery(options)
 
   const handleUpdateNotification = (id: string) => {
     updateNotification(id)
@@ -49,20 +64,22 @@ const DropdownNotification = () => {
 
   return (
     <li className='relative'>
-      <Link
-        ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        to='#'
-        className='relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white'
-      >
-        {notification.length > 0 && (
-          <span className='absolute -top-[5px] right-0 z-1 h-3 w-3 rounded-full bg-meta-1'>
-            <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
-          </span>
-        )}
+      <Badge count={dataOrderPendings?.docs?.length || 0}>
+        <Link
+          ref={trigger}
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          to='#'
+          className='relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white'
+        >
+          {/* {notification.length > 0 && (
+            <span className='absolute -top-[5px] right-0 z-1 h-3 w-3 rounded-full bg-meta-1'>
+              <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
+            </span>
+          )} */}
 
-        <BellIcon />
-      </Link>
+          <BellIcon />
+        </Link>
+      </Badge>
 
       <div
         ref={dropdown}
@@ -77,8 +94,8 @@ const DropdownNotification = () => {
         </div>
 
         <ul className='flex flex-col h-auto overflow-y-auto hidden-scroll-bar'>
-          {notification.length > 0 ? (
-            notification?.reverse()?.map((item, index) => (
+          {dataOrderPendings && dataOrderPendings?.docs?.length > 0 ? (
+            dataOrderPendings?.docs?.map((item: IOrder, index: number) => (
               <li key={index}>
                 <Link
                   onClick={() => {
@@ -90,9 +107,10 @@ const DropdownNotification = () => {
                   to={`/manager/orders`}
                 >
                   <p className='text-sm'>
-                    <span className='dark:text-white text-black'>{item.content}</span>
+                    <span className='dark:text-white text-black'>
+                      Đơn hàng "{item._id}" vừa được tạo bởi khách hàng "{item?.user?.username}" và đang chờ xác nhận.
+                    </span>
                   </p>
-
                   <p className='text-xs'>{formatDate(item.createdAt)}</p>
                 </Link>
               </li>

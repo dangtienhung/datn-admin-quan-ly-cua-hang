@@ -1,7 +1,7 @@
 import { IUser } from '..'
 
 export interface IOrder {
-  _id?: string
+  _id: string
   inforOrderShipping: IInforOrderShipping
   user: IUser
   items: any[]

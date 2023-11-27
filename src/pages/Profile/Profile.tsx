@@ -1,14 +1,17 @@
-import { useForm } from 'react-hook-form'
-import { useAppSelector } from '~/store/hooks'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { ProfileType, ProfileSchema } from './validate'
-import { useState } from 'react'
-import getBase64 from '~/utils/getBase64'
-import { Image } from 'antd'
-import { useUpLoadAvartaUserMutation, useUpdateUserMutation } from '~/store/services'
-import { messageAlert } from '~/utils/messageAlert'
-import { LoadingOutlined } from '@ant-design/icons'
 import './style/style.css'
+
+import { ProfileSchema, ProfileType } from './validate'
+import { useUpLoadAvartaUserMutation, useUpdateUserMutation } from '~/store/services'
+
+import { Image } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import getBase64 from '~/utils/getBase64'
+import { messageAlert } from '~/utils/messageAlert'
+import { useAppSelector } from '~/store/hooks'
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
+
 const Profile = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
   const [upLoadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
@@ -69,7 +72,7 @@ const Profile = () => {
     }))
   }
   return (
-    <div className='mx-auto max-w-270 profile-container'>
+    <div className='mx-auto w-full profile-container'>
       {/* <Breadcrumb pageName='Settings' /> */}
       <form onSubmit={handleSubmit(onHandleSubmit)}>
         <div className='grid grid-cols-5 gap-8'>

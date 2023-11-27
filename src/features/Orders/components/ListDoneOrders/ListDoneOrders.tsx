@@ -1,23 +1,24 @@
-import Loading from '~/components/Loading/Loading'
-import { Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import { ColumnsType } from 'antd/es/table'
-import { NotFound } from '~/pages'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
-import { formatDate } from '~/utils/formatDate'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
-import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { RootState, useAppDispatch } from '~/store/store'
+import type { InputRef } from 'antd'
+import { Button as ButtonAnt, Input, Space, Table, Tooltip } from 'antd'
+import { ColumnsType } from 'antd/es/table'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { ColumnType } from 'antd/lib/table'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import Highlighter from 'react-highlight-words'
+import Loading from '~/components/Loading/Loading'
+import TableChildrend from '~/features/Products/utils/tableChildrend'
+import { NotFound } from '~/pages'
+import { ClientSocket } from '~/socket'
+import { useAppSelector } from '~/store/hooks'
+import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
-import type { InputRef } from 'antd'
-import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { RootState, useAppDispatch } from '~/store/store'
 import { IOrderDataType } from '~/types'
-import { ColumnType } from 'antd/lib/table'
-import Highlighter from 'react-highlight-words'
-import { useAppSelector } from '~/store/hooks'
-import { ClientSocket } from '~/socket'
 import { formatCurrency } from '~/utils'
+import { formatDate } from '~/utils/formatDate'
+import UserInfoRow from '../UserInfoRow/UserInfoRow'
 
 type DataIndex = keyof IOrderDataType
 
@@ -137,7 +138,7 @@ const ListDoneOrders = () => {
       title: 'Thông tin người đặt',
       dataIndex: 'user',
       key: 'user',
-      width: 240,
+      width: 220,
       rowScope: 'row',
       sorter: (a, b) => {
         return a.user.username.localeCompare(b.user.username)
@@ -145,26 +146,26 @@ const ListDoneOrders = () => {
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
-      title: 'Sản phẩm',
+      title: 'Ảnh SP',
       dataIndex: 'products',
       key: 'products',
-
-      render: (item: any) =>
-        item &&
-        item.map((product: any) => (
-          <div className='gap-x-3 flex items-center justify-start line-clamp-1'>
-            <img src={product.image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
-            <div className='flex flex-col gap-0.5 justify-center items-start'>
-              <p className='hover:underline capitalize truncate cursor-pointer line-clamp-2'>{product.name}</p>
-            </div>
-          </div>
-        ))
+      width: 105,
+      render: (item: any) => (
+        <img src={item[0].image} className='object-cover w-20 h-20 rounded-lg cursor-pointer mb-1' alt='' />
+      )
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: 105,
+      render: (quantity: number) => <p className='text-center'>{quantity}</p>
     },
     {
       title: 'Tổng Tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      width: 100,
+      width: 120,
       render: (totalPrice: number) => (
         <span
           className={`capitalize font-semibold  
@@ -232,6 +233,7 @@ const ListDoneOrders = () => {
     note: item.inforOrderShipping.noteShipping,
     priceShip: item.priceShipping,
     products: item.items,
+    quantity: item.items.length,
     totalPrice: item.total,
     status: item.status,
     timeOrder: item.createdAt,
@@ -239,6 +241,7 @@ const ListDoneOrders = () => {
     index: index + 1,
     orderCode: item._id.toUpperCase()
   }))
+
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
 
@@ -247,6 +250,9 @@ const ListDoneOrders = () => {
       <Table
         columns={columns}
         dataSource={ordersData}
+        expandable={{
+          expandedRowRender: TableChildrend
+        }}
         pagination={{
           pageSize: doneOrder && doneOrder.limit,
           showSizeChanger: true,

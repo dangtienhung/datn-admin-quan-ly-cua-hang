@@ -1,6 +1,7 @@
 import { DarkModeSwitcher, DropdownMessage, DropdownNotification, DropdownUser } from './components'
 
 import { Link } from 'react-router-dom'
+
 // import Logo from '../../../../assets/images/logo/logo.svg'
 
 const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOpen: (arg0: boolean) => void }) => {
@@ -81,7 +82,7 @@ const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOp
             <DropdownNotification />
 
             {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
+            {/* <DropdownMessage /> */}
           </ul>
 
           {/* <!-- User Area --> */}

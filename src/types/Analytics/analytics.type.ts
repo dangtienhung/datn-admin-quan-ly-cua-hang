@@ -12,6 +12,7 @@ export interface IAnalytics {
   categorys: IAnalytic[]
   blogs: IAnalytic[]
   categoryBlogs: IAnalytic[]
+  moneyOrderStatus: IAnalytic[]
 }
 
 // Định nghĩa kiểu cho mỗi mục trong "số đơn" của "doanh thu tháng này"
@@ -26,6 +27,17 @@ export interface MonthlyRevenue {
   'tổng doanh thu': number
   'số đơn': {
     'tháng 11': OrderInfo
+    'tháng 1': OrderInfo
+    'tháng 2': OrderInfo
+    'tháng 3': OrderInfo
+    'tháng 4': OrderInfo
+    'tháng 5': OrderInfo
+    'tháng 6': OrderInfo
+    'tháng 7': OrderInfo
+    'tháng 8': OrderInfo
+    'tháng 9': OrderInfo
+    'tháng 10': OrderInfo
+    'tháng 12': OrderInfo
   }
   // 'số đơn đã hoàn thành': {
   //   'tháng 11': OrderInfo
@@ -66,3 +78,6 @@ export interface DataAnalytics {
   }
   'user mua 2 đơn trở lên': UserWithMultipleOrders
 }
+
+// order status
+export type orderStatus = 'pending' | 'confirmed' | 'delivered' | 'done' | 'canceled'

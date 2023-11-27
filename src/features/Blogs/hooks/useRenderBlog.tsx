@@ -24,7 +24,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
 
   const [deleteBlog] = useDeleteBlogMutation()
 
-  const handleDelete = async (id: string) => {
+  const handleDeleteReal = async (id: string) => {
     try {
       await deleteBlog(id).then(() => {
         message.success('Xóa thành công!')
@@ -33,6 +33,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
       message.error('Xoá thất bại!')
     }
   }
+
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
@@ -113,6 +114,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
       title: 'Tên bài viết',
       dataIndex: 'name',
       key: 'name',
+      ...getColumnSearchProps('name'),
       render: (name: string, blog: IBlogs) => (
         <div className='grid grid-cols-[1fr,3fr] gap-5'>
           <div
@@ -148,8 +150,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
             </div>
           </div>
         </div>
-      ),
-      ...getColumnSearchProps('name')
+      )
     },
     {
       title: 'Danh mục bài viết',
@@ -179,11 +180,21 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
       message.error('Khôi phục thất bại')
     }
   }
+  const handleDelete = async (_id: string) => {
+    try {
+      await updateDeletedBlog({ _id, status: true }).then(() => {
+        message.success('Xóa thành công!')
+      })
+    } catch (error) {
+      message.error('Xoá thất bại!')
+    }
+  }
   const columnsAdmin = [
     {
       title: 'Tên bài viết',
       dataIndex: 'name',
       key: 'name',
+      ...getColumnSearchProps('name'),
       render: (name: string, blog: IBlogs) => (
         <div className='grid grid-cols-[1fr,3fr] gap-5'>
           <div
@@ -219,8 +230,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
             </div>
           </div>
         </div>
-      ),
-      ...getColumnSearchProps('name')
+      )
     },
     {
       title: 'Danh mục bài viết',
@@ -298,7 +308,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
                     title='Xóa vĩnh viễn bài viết?'
                     description='Bạn chắc chắn muốn xóa bài viết?'
                     okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
-                    onConfirm={() => handleDelete(blog._id!)}
+                    onConfirm={() => handleDeleteReal(blog._id!)}
                   >
                     <ButtonAnt
                       size='large'
