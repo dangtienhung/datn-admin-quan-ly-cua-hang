@@ -5,7 +5,6 @@ import BlogFeature from '~/features/Blogs/Blogs'
 
 const BlogPage = () => {
   const { isError: errorBlog, isFetching: fetchingBlog, data: blogData } = useGetAllBlogsQuery(0)
-  // console.log(blogData)
 
   if (errorBlog || !blogData) {
     return <NotFound />

@@ -116,7 +116,6 @@ export const productApi = createApi({
     /* edit product */
     editProduct: builder.mutation<{ message: string; data: IProduct }, { id: string; product: IProduct }>({
       query: ({ id, product }) => {
-        console.log('🚀 ~ file: product.service.ts:119 ~ product:', product)
         return {
           url: `/product/${id}`,
           method: 'PUT',

@@ -61,7 +61,7 @@ export const ListSliders = () => {
     })
     setSelectedRowKeys([])
   }
-  // console.log(idSlider)
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys)
   }

@@ -42,7 +42,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
           onClose()
         })
         .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-      // console.log('update', { ...values, _id: voucherData._id })
+
       return
     }
 
@@ -59,7 +59,7 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
     dispatch(setVoucher({ _id: '', code: '', title: '', discount: 0, sale: 0 }))
     form.resetFields()
   }
-  // console.log(checkedVoucher)
+
   return (
     <Drawer
       title={voucherData._id ? 'Cập nhật voucher' : 'Thêm voucher mới'}

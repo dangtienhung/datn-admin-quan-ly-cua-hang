@@ -5,7 +5,6 @@ import Loading from '~/components/Loading/Loading'
 
 const VoucherPage = () => {
   const { isError: errorVoucher, isFetching: fetchingVoucher, data: voucherData } = useGetAllVouchersQuery(0)
-  // console.log(voucherData)
 
   if (errorVoucher || !voucherData) {
     return <NotFound />

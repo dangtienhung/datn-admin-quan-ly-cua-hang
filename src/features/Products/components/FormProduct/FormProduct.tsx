@@ -52,10 +52,6 @@ const FormProduct = () => {
     }
   }, [dataCategories, dataToppings, dataSizeDefault])
 
-  const handleChange = (value: string[]) => {
-    // console.log(`selected ${value}`)
-  }
-
   const handleOnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const urls = await handleUploadImage(e, setIsLoading)
     setIsUpload(true)
@@ -212,7 +208,7 @@ const FormProduct = () => {
               label='Lựa chọn topping'
               rules={[{ required: true, message: 'Topping là bắt buộc' }]}
             >
-              <Select size='large' mode='multiple' allowClear placeholder='Lựa chọn topping' onChange={handleChange}>
+              <Select size='large' mode='multiple' allowClear placeholder='Lựa chọn topping'>
                 {toppings.map((topping) => (
                   <Select.Option value={topping._id} key={topping._id}>
                     <span className='capitalize'>{topping.name}</span>

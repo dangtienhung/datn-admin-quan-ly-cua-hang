@@ -16,7 +16,6 @@ const FormCategoryBlog = ({ open }: FormCategoryBlogProps) => {
   const [addCategoryBlog, { isLoading: isAdding }] = useAddCategoryBlogMutation()
   const [updateCategoryBlog, { isLoading: isUpdating }] = useUpdateCategoryBlogMutation()
   const { cateBlogData } = useAppSelector((state: RootState) => state.categoryBlog)
-  console.log(cateBlogData)
 
   cateBlogData._id &&
     form.setFieldsValue({

@@ -13,11 +13,3 @@ export const exportDataToExcel = (csvData: any, fileName: any) => {
   })
   FileSaver.saveAs(data, fileName + fileExtension)
 }
-
-// export const exportDataToExcel = (data: any, title: string) => {
-//   console.log('🚀 ~ file: exportDataToExcel.ts:17 ~ exportDataToExcel ~ data:', data)
-//   const ws = XLSX.utils.aoa_to_sheet(data)
-//   const wb = XLSX.utils.book_new()
-//   XLSX.utils.book_append_sheet(wb, ws)
-//   XLSX.writeFile(wb, `${title}.xlsx`)
-// }

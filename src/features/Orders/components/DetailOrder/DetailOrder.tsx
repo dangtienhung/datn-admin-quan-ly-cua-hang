@@ -21,7 +21,6 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
   const { orderData } = useAppSelector((state) => state.orders)
   const [confirmOrder, { isLoading: isConfirming }] = useConfirmOrderMutation()
   const [doneOrder, { isLoading: isDoning }] = useDoneOrderMutation()
-  console.log(orderData, 'orderData')
 
   const onClose = () => {
     dispatch(setOpenDrawer(false))
