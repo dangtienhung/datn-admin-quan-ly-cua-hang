@@ -64,7 +64,7 @@ const DropdownNotification = () => {
 
   return (
     <li className='relative'>
-      <Badge count={dataOrderPendings?.docs?.length || 0}>
+      <Badge count={notification.length || 0}>
         <Link
           ref={trigger}
           onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -94,8 +94,8 @@ const DropdownNotification = () => {
         </div>
 
         <ul className='flex flex-col h-auto overflow-y-auto hidden-scroll-bar'>
-          {dataOrderPendings && dataOrderPendings?.docs?.length > 0 ? (
-            dataOrderPendings?.docs?.map((item: IOrder, index: number) => (
+          {notification && notification?.length > 0 ? (
+            notification?.map((item: any, index: number) => (
               <li key={index}>
                 <Link
                   onClick={() => {
@@ -108,7 +108,8 @@ const DropdownNotification = () => {
                 >
                   <p className='text-sm'>
                     <span className='dark:text-white text-black'>
-                      Đơn hàng "{item._id}" vừa được tạo bởi khách hàng "{item?.user?.username}" và đang chờ xác nhận.
+                      {/* Đơn hàng "{item._id}" vừa được tạo bởi khách hàng "{item?.user?.username}" và đang chờ xác nhận. */}
+                      {item?.content}
                     </span>
                   </p>
                   <p className='text-xs'>{formatDate(item.createdAt)}</p>
