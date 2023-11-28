@@ -282,15 +282,30 @@ const ListPendingOrders = () => {
             </Tooltip>
 
             <Tooltip title='Hủy đơn hàng'>
-              <ButtonAnt
-                size='large'
-                className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
-                icon={<CloseCircleFilled />}
-                onClick={() => {
-                  dispatch(setOpenModal(true))
-                  dispatch(setIdOrderCancel(order.key))
-                }}
-              />
+              {order && !order.user_order ? (
+                <Popconfirm
+                  title='Bạn muốn hủy đơn hàng này chứ ?'
+                  onConfirm={() => dispatch(setIdOrderCancel(order.key))}
+                  okText='Đồng ý'
+                  cancelText='Hủy'
+                >
+                  <ButtonAnt
+                    size='large'
+                    className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                    icon={<CloseCircleFilled />}
+                  />
+                </Popconfirm>
+              ) : (
+                <ButtonAnt
+                  size='large'
+                  className='bg-meta-1 hover:!text-white flex items-center justify-center text-white'
+                  icon={<CloseCircleFilled />}
+                  onClick={() => {
+                    dispatch(setOpenModal(true))
+                    dispatch(setIdOrderCancel(order.key))
+                  }}
+                />
+              )}
             </Tooltip>
           </Space>
         </div>
