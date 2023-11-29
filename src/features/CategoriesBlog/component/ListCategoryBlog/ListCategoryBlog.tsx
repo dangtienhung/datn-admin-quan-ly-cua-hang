@@ -60,6 +60,7 @@ const ListCategoryBlog = () => {
             onCancel={() => setSelectedRowKeys([])}
           >
             <ButtonAntd
+              hidden={!hasSelected}
               disabled={!hasSelected}
               size='large'
               type='primary'

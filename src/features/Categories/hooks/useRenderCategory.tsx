@@ -34,6 +34,20 @@ export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) 
       dataIndex: 'name',
       key: 'name',
       render: (name: string) => <span className='capitalize'>{name}</span>
+    },
+    {
+      title: 'Ảnh',
+      key: 'action',
+      render: (_: string, category: any) => {
+        const image = category?.products[0]?.images[0]?.url
+          ? category?.products[0]?.images[0]?.url
+          : 'https://giadinh.mediacdn.vn/2019/8/21/tra-sua-15663800539331483130636.jpg'
+        return (
+          <div className='w-26 h-26 rounded-lg cursor-pointer mb-1 overflow-hidden flex justify-center items-center'>
+            <img className='object-cover w-full' src={image} />
+          </div>
+        )
+      }
     }
   ]
 
@@ -63,18 +77,7 @@ export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) 
   }
 
   const columnsAdmin: ColumnsType<ICategory> = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      width: 50
-    },
-    {
-      title: 'Tên danh mục',
-      dataIndex: 'name',
-      key: 'name',
-      render: (name: string) => <span className='capitalize'>{name}</span>
-    },
+    ...columnsStaff,
     {
       // title: <span className='block text-center'>Action</span>,
       key: 'action',

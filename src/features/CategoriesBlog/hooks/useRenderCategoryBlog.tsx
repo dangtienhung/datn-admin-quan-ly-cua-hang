@@ -119,25 +119,26 @@ export const useRenderCategoryBlog = () => {
       key: 'name',
       render: (name: string) => <p className='uppercase'>{name}</p>,
       ...getColumnSearchProps('name')
+    },
+    {
+      title: 'Ảnh',
+      key: 'action',
+      render: (_: string, category: any) => {
+        const image = category?.blogs[0]?.images[0]?.url
+          ? category?.blogs[0]?.images[0]?.url
+          : 'https://fullleafteacompany.com/cdn/shop/articles/20230828231803-blog-20covers-20-20-961133.jpg?v=1693342091'
+        return (
+          <div className='w-26 h-26 rounded-lg cursor-pointer mb-1 overflow-hidden flex justify-center items-center'>
+            <img className='object-cover w-full' src={image} />
+          </div>
+        )
+      }
     }
   ]
 
   /* admin */
   const columnsAdmin = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      width: 50
-    },
-    {
-      title: 'Tên danh mục',
-      dataIndex: 'name',
-      key: 'name',
-      render: (name: string) => <p className='uppercase'>{name}</p>,
-      ...getColumnSearchProps('name')
-    },
-
+    ...columnsStaff,
     {
       key: 'action',
       width: 200,
