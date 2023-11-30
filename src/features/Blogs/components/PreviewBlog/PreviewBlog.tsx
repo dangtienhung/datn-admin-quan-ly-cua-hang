@@ -30,7 +30,8 @@ export const PreviewBlog = () => {
       placement='right'
       width={720}
       onClose={() => {
-        dispatch(setOpenDrawer(false)), dispatch(setBlogId(null))
+        dispatch(setOpenDrawer(false))
+        dispatch(setBlogId(null))
       }}
       open={openDrawer && blogId ? true : false}
     >

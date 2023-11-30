@@ -1,4 +1,4 @@
-import { DarkModeSwitcher, DropdownMessage, DropdownNotification, DropdownUser } from './components'
+import { DarkModeSwitcher, DropdownNotification, DropdownUser } from './components'
 
 import { Link } from 'react-router-dom'
 

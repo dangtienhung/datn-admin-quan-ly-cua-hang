@@ -192,8 +192,8 @@ const FormBlog = ({ open }: BlogFormProps) => {
             rules={[{ required: true, message: 'Trạng thái bài viết là bắt buộc' }]}
           >
             <Select placeholder='Trạng thái bài viết' size='large'>
-              <Option value={true}>Public</Option>
-              <Option value={false}>Private</Option>
+              <Option value={true}>Công khai</Option>
+              <Option value={false}>Riêng tư</Option>
             </Select>
           </Form.Item>
         </div>

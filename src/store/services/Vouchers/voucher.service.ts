@@ -64,7 +64,7 @@ export const VoucherApi = createApi({
       },
       // Invalidates all queries that subscribe to this Post `id` only.
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
-      invalidatesTags: (_, error, { _id }) => [{ type: 'Vouchers', _id }]
+      invalidatesTags: (_, __, { _id }) => [{ type: 'Vouchers', _id }]
     })
   })
 })

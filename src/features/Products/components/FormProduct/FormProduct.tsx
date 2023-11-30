@@ -224,8 +224,8 @@ const FormProduct = () => {
               rules={[{ required: true, message: 'Trạng thái sản phẩm là bắt buộc' }]}
             >
               <Select placeholder='Chọn trạng thái sản phẩm' size='large'>
-                <Option value={false}>Private</Option>
-                <Option value={true}>Public</Option>
+                <Option value={false}>Riêng tư</Option>
+                <Option value={true}>Công khai</Option>
               </Select>
             </Form.Item>
           </Col>

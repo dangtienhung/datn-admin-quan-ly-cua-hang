@@ -25,7 +25,7 @@ export const productApi = createApi({
     /* get one */
     getOneProduct: builder.query<{ message: string; data: IProduct }, { id: string }>({
       query: ({ id }) => `post/${id}`,
-      providesTags: (result, error, _id) => [{ type: 'Product', _id }]
+      providesTags: (_, __, _id) => [{ type: 'Product', _id }]
     }),
 
     /* lấy ra tất cả sản phẩm đã bị xóa mềm */

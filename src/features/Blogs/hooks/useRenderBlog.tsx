@@ -143,7 +143,8 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
             <div
               className='hover:underline flex-1 text-base capitalize cursor-pointer'
               onClick={() => {
-                dispatch(setOpenDrawer(true)), dispatch(setBlogId(blog._id))
+                dispatch(setOpenDrawer(true))
+                dispatch(setBlogId(blog._id))
               }}
             >
               {name}
@@ -190,63 +191,7 @@ export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
     }
   }
   const columnsAdmin = [
-    {
-      title: 'Tên bài viết',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name'),
-      render: (name: string, blog: IBlogs) => (
-        <div className='grid grid-cols-[1fr,3fr] gap-5'>
-          <div
-            className='w-25 h-25 rounded-xl object-cover cursor-pointer'
-            onClick={() => {
-              dispatch(setOpenDrawer(!openDrawer)), dispatch(setBlogId(blog._id))
-            }}
-          >
-            <img
-              className='w-25 h-25 rounded-xl object-cover cursor-pointer'
-              src={blog.images[0].url}
-              alt={blog.name}
-            />
-          </div>
-          <div className='flex flex-col gap-0.5 justify-center items-start'>
-            <div>
-              <Tag color={blog.is_active ? 'success' : 'red'}>
-                {blog.is_active ? 'Đang hoạt động' : 'Không hoạt động'}
-              </Tag>
-              {blog.is_deleted && (
-                <Tag color={clsxm({ success: !blog.is_deleted }, { red: blog.is_deleted })}>
-                  {blog.is_deleted ? 'Đã xóa' : undefined}
-                </Tag>
-              )}
-            </div>
-            <div
-              className='hover:underline flex-1 text-base capitalize cursor-pointer'
-              onClick={() => {
-                dispatch(setOpenDrawer(true)), dispatch(setBlogId(blog._id))
-              }}
-            >
-              {name}
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: 'Danh mục bài viết',
-      dataIndex: 'category',
-      key: 'category',
-      width: 150,
-      render: (category: ICategoryBlogRefBlog) => (
-        <div className='line-clamp-3 text-base'>{category?.name || 'Không có dữ liệu'}</div>
-      )
-    },
-    {
-      title: 'Mô tả bài viết',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text: string) => <div className='line-clamp-3 text-base'>{parse(text)}</div>
-    },
+    ...columnsStaff,
     {
       // title: <span className='block text-center'>Action</span>,
       key: 'action',

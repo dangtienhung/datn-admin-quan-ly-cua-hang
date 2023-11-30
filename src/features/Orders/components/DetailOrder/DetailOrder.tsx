@@ -144,6 +144,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       </Row>
     )
   }
+
   return (
     <Drawer
       title={<h1 className='text-2xl'>Chi tiết đơn hàng</h1>}
@@ -218,7 +219,9 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
             </div>
             <div>
               <span>Thanh toán: </span>
-              <span className='uppercase font-semibold text-black dark:text-white'>{orderData?.payment}</span>
+              <span className='uppercase font-semibold text-black dark:text-white'>
+                {orderData?.payment == 'cod' ? 'Tiền mặt' : orderData.payment}
+              </span>
             </div>
           </div>
         </Col>
@@ -246,7 +249,13 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
                     : 'bg-meta-5'
                 } rounded inline-block px-2 py-1`}
               >
-                {orderData.status}
+                {orderData.status === 'canceled'
+                  ? 'Đã hủy'
+                  : orderData.status === 'pending'
+                  ? 'Chờ xác nhận'
+                  : orderData.status === 'done'
+                  ? 'Hoàn thành'
+                  : 'Xác nhận'}
               </span>
             </div>
             {orderData?.reasonCancelOrder && (

@@ -111,7 +111,7 @@ interface ChartOneState {
 }
 
 const DoughnutChart: React.FC = () => {
-  const [state, setState] = useState<ChartOneState>({
+  const [state, _] = useState<ChartOneState>({
     series: [
       {
         name: 'Product One',

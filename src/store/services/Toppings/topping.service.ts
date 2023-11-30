@@ -56,13 +56,13 @@ export const toppingApi = createApi({
       },
       // Invalidates all queries that subscribe to this Post `id` only.
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
-      invalidatesTags: (_, error, { _id }) => [{ type: 'Topping', _id }]
+      invalidatesTags: (_, __, { _id }) => [{ type: 'Topping', _id }]
     }),
 
     /* get topping by id */
     getToppingDetail: builder.query<ITopping, string>({
       query: (id: string) => `/topping/${id}`,
-      providesTags: (_, error, id) => [{ type: 'Topping', _id: id }]
+      providesTags: (_, __, id) => [{ type: 'Topping', _id: id }]
     })
   })
 })

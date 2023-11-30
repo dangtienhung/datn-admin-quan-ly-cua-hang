@@ -20,7 +20,7 @@ const Orders = () => {
   const { RangePicker } = DatePicker
   return (
     <div>
-      <Breadcrumb pageName='Orders'>
+      <Breadcrumb pageName='Đơn hàng'>
         <RangePicker size='large' onChange={onDateChange} />
       </Breadcrumb>
       <Tabs defaultActiveKey='1' items={items} className='text-white' />

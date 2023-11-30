@@ -8,7 +8,7 @@ interface ChartFourState {
 }
 
 const VerticalBarChart: React.FC = () => {
-  const [state, setState] = useState<ChartFourState>({
+  const [state, _] = useState<ChartFourState>({
     series: [
       {
         data: [
