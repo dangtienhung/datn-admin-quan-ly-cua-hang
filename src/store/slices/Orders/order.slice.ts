@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { IVoucher } from '~/types'
 
 interface IOrderDetail {
   orderData: {
@@ -14,6 +15,10 @@ interface IOrderDetail {
       phone: number | string
       avatar: string
       address: string
+    }
+    moneyPromotion: {
+      price: number
+      voucherId: IVoucher
     }
     reasonCancelOrder?: string
     user_order?: string
@@ -39,6 +44,16 @@ const initialState: IOrderDetail = {
       phone: '',
       username: '',
       address: ''
+    },
+    moneyPromotion: {
+      price: 0,
+      voucherId: {
+        code: '',
+        title: '',
+        discount: 0,
+        sale: 0,
+        desc: ''
+      }
     },
     reasonCancelOrder: '',
     user_order: ''

@@ -78,12 +78,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
       key: 'productName',
       render: (name: string) => <span className='font-semibold text-base'>{name ? name : '???'}</span>
     },
-    {
-      title: 'Giá',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price: number) => <span className='font-semibold text-base'>{formatCurrency(price)}</span>
-    },
+
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
@@ -107,6 +102,12 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
             <br />
           </span>
         ))
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price: number) => <span className='font-semibold text-base'>{formatCurrency(price)}</span>
     }
   ]
   const orderProducts = orderData?.products?.map((item: any, index: number) => ({
@@ -133,7 +134,9 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
           <span className='text-base'>Voucher:</span>
         </Col>
         <Col span={12}>
-          <span className='text-right text-base block font-semibold'>-{formatCurrency(0)}</span>
+          <span className='text-right text-base block font-semibold'>
+            -{formatCurrency(orderData.moneyPromotion.price || 0)}
+          </span>
         </Col>
         <Col span={12}>
           <span className='text-base'>Tổng tiền: </span>

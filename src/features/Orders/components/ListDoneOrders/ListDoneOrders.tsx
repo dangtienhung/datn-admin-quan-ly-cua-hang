@@ -231,6 +231,7 @@ const ListDoneOrders = () => {
     payment: item.paymentMethodId,
     user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
+    moneyPromotion: item.moneyPromotion,
     priceShip: item.priceShipping,
     products: item.items,
     quantity: item.items.length,

@@ -330,6 +330,7 @@ const ListPendingOrders = () => {
     products: item.items,
     totalPrice: item.total,
     status: item.status,
+    moneyPromotion: item.moneyPromotion,
     timeOrder: item.createdAt,
     key: item._id,
     index: index + 1,

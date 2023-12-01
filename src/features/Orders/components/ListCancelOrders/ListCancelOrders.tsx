@@ -228,6 +228,7 @@ const ListCancelOrders = () => {
       avatar: item.user?.avatar,
       address: item.inforOrderShipping?.address
     },
+    moneyPromotion: item.moneyPromotion,
     payment: item.paymentMethodId,
     user_order: item?.user?._id,
     note: item.inforOrderShipping.noteShipping,
