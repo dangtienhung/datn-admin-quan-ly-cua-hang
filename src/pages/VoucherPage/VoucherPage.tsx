@@ -14,7 +14,8 @@ const VoucherPage = () => {
   }
   return (
     <>
-      <VoucherFeature data={voucherData.data.docs} />
+      {/* <VoucherFeature data={voucherData.data.docs} /> */}
+      <VoucherFeature />
     </>
   )
 }

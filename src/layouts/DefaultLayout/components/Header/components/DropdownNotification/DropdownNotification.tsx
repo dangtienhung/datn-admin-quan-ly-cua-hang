@@ -2,33 +2,30 @@
 
 import { Badge, Empty } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { useGetAllOrderPendingQuery, useUpdateNotificationMutation } from '~/store/services'
+import { useUpdateNotificationMutation } from '~/store/services'
 
+import { Link } from 'react-router-dom'
 import { BellIcon } from '~/components'
 import { ClientSocket } from '~/socket'
-import { IOrder } from '~/types'
-import { Link } from 'react-router-dom'
-import { RootState } from '~/store/store'
 import { formatDate } from '~/utils/formatDate'
-import { useAppSelector } from '~/store/hooks'
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [notification, setNotification] = useState<any[]>([])
 
-  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  // const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
-  const [options, setoptions] = useState({
-    page: 1,
-    limit: 10,
-    startDate: '',
-    endDate: '',
-    room: user?._id
-  })
+  // const [options, _] = useState({
+  //   page: 1,
+  //   limit: 10,
+  //   startDate: '',
+  //   endDate: '',
+  //   room: user?._id
+  // })
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
   const [updateNotification] = useUpdateNotificationMutation()
-  const { data: dataOrderPendings } = useGetAllOrderPendingQuery(options)
+  // const { data: dataOrderPendings } = useGetAllOrderPendingQuery(options)
 
   const handleUpdateNotification = (id: string) => {
     updateNotification(id)

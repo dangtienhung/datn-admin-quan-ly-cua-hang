@@ -56,7 +56,7 @@ const ListCategoryDeleted = () => {
     index: index + 1
   }))
 
-  const columnsData = useRenderCategory(categories?.docs || [], true)
+  const columnsData = useRenderCategory(true)
 
   return (
     <>

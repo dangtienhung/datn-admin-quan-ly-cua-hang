@@ -66,7 +66,7 @@ export const itemsStaff: MenuProps['items'] = [
     // getItem(<NavLink to={`/manager/sizes`}>Sizes</NavLink>, 'sizes', <AiOutlineFontSize />),
     getItem(<NavLink to={`/manager/vouchers`}>Vouchers</NavLink>, 'vouchers', <IoTicket />),
     getItem(<NavLink to={`/manager/category-blog`}>Danh mục bài viết</NavLink>, 'category-blog', <BiCategoryAlt />),
-    getItem(<NavLink to={`/manager/blogs`}>Blogs</NavLink>, 'blogs', <FaRegNewspaper />),
+    getItem(<NavLink to={`/manager/blogs`}>Bài viết</NavLink>, 'blogs', <FaRegNewspaper />),
     getItem(<NavLink to={`/manager/sliders`}>Sliders</NavLink>, 'sliders', <FaImages />)
   ])
 

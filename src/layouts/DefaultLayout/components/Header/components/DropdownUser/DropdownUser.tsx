@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ArrowDown, ContactIcon, ProfileIcon, SettingIcon } from '~/components'
+import { ArrowDown, ProfileIcon } from '~/components'
 import { useEffect, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'

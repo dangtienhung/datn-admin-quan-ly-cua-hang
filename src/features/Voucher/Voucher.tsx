@@ -1,17 +1,19 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
-import { IRoleUser, IVoucher } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
+import { IRoleUser } from '~/types'
 
 import { Tabs } from 'antd'
+import { useAppSelector } from '~/store/hooks'
+import { setOpenDrawer } from '~/store/slices'
 import VoucherAdd from './component/FormVoucher/FormVoucher'
 import { items } from './data'
-import { setOpenDrawer } from '~/store/slices'
-import { useAppSelector } from '~/store/hooks'
 
-interface VoucherFeatureProps {
-  data: IVoucher[]
-}
-const VoucherFeature = ({ data }: VoucherFeatureProps) => {
+// interface VoucherFeatureProps {
+//   data: IVoucher[]
+// }
+
+// const VoucherFeature = ({ data }: VoucherFeatureProps) => {
+const VoucherFeature = () => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
 

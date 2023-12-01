@@ -45,7 +45,8 @@ const ListCategory = () => {
     index: index + 1
   }))
 
-  const columnsData = useRenderCategory(categories?.docs || [])
+  const columnsData = useRenderCategory()
+  // const columnsData = useRenderCategory(categories?.docs || [])
 
   return (
     <>

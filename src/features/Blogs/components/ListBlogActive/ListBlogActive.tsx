@@ -3,15 +3,15 @@ import 'react-quill/dist/quill.snow.css'
 import { Popconfirm, Space, Table } from 'antd'
 import { useGetAllBlogsActiveQuery, useUpdateIsDeletedBlogMutation } from '~/store/services'
 
+import { useState } from 'react'
 import { Button } from '~/components'
-import { IRoleUser } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { RootState } from '~/store/store'
-import { messageAlert } from '~/utils/messageAlert'
 import { useAppSelector } from '~/store/hooks'
+import { RootState } from '~/store/store'
+import { IRoleUser } from '~/types'
+import { messageAlert } from '~/utils/messageAlert'
 import { useRenderBlog } from '../../hooks'
-import { useState } from 'react'
 
 const ListBlogActive = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -48,7 +48,8 @@ const ListBlogActive = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
 
-  const blogsColumns = useRenderBlog(BlogDatactive?.docs || [])
+  const blogsColumns = useRenderBlog()
+  // const blogsColumns = useRenderBlog(BlogDatactive?.docs || [])
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

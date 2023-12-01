@@ -1,6 +1,6 @@
 import { Breadcrumb, Button, PlusIcon } from '~/components'
 import { RootState, useAppDispatch } from '~/store/store'
-import { IBlogs, IRoleUser } from '~/types'
+import { IRoleUser } from '~/types'
 
 import { Tabs } from 'antd'
 import { useAppSelector } from '~/store/hooks'
@@ -10,11 +10,12 @@ import ListBlogActive from './components/ListBlogActive'
 import { PreviewBlog } from './components/PreviewBlog'
 import { items } from './data'
 
-interface BlogFeatureProps {
-  data: IBlogs[]
-}
+// interface BlogFeatureProps {
+//   data: IBlogs[]
+// }
 
-const BlogFeature = ({ data }: BlogFeatureProps) => {
+const BlogFeature = () => {
+  // const BlogFeature = ({ data }: BlogFeatureProps) => {
   const dispatch = useAppDispatch()
   const { openDrawer } = useAppSelector((state) => state.drawer)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)

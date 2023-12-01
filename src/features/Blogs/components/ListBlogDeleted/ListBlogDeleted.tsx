@@ -48,7 +48,8 @@ const ListBlogDeleted = () => {
   }
   const hasSelected = selectedRowKeys.length > 1
 
-  const blogsColumns = useRenderBlog(BlogDataDeleted?.docs || [], true)
+  const blogsColumns = useRenderBlog(true)
+  // const blogsColumns = useRenderBlog(BlogDataDeleted?.docs || [], true)
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

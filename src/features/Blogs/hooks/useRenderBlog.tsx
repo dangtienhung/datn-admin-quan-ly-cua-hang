@@ -15,7 +15,8 @@ import { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
 import Highlighter from 'react-highlight-words'
 
-export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
+// export const useRenderBlog = (blogs: IBlogs[], isDeleted?: boolean) => {
+export const useRenderBlog = (isDeleted?: boolean) => {
   const dispatch = useAppDispatch()
   const [updateDeletedBlog] = useUpdateIsDeletedBlogMutation()
 
