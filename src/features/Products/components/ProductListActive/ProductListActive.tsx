@@ -86,6 +86,7 @@ export const ProductListActive = () => {
           defaultPageSize: 5,
           showSizeChanger: true
         }}
+        bordered={true}
       />
     </div>
   )

@@ -175,14 +175,14 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      width: 350,
+      width: 270,
       ...getColumnSearchProps('name' as unknown as IProduct)
     },
     {
       title: 'Size  ',
       dataIndex: 'sizes',
       key: 'sizes',
-      width: 200,
+      width: 180,
       render: (sizes: ISizeRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
@@ -201,6 +201,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
       title: 'Topping ',
       dataIndex: 'toppings',
       key: 'toppings',
+      width: 190,
       render: (toppings: IToppingRefProduct[]) => (
         <>
           <div className='flex flex-col gap-1'>
@@ -220,6 +221,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
       title: 'Danh mục  ',
       dataIndex: 'category',
       key: 'category',
+      width: 120,
       render: (category: ICategoryRefProduct) => <p className='capitalize'>{category?.name || 'Không có thông tin'}</p>,
       filters: productsList.map((product: IProduct) => ({ text: product.category.name, value: product.category.name })),
       // filteredValue: filteredInfo. || null,
@@ -264,67 +266,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   }
 
   const columnsAdmin: any = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      width: 50
-    },
-    {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name',
-      key: 'name',
-      width: 350,
-      ...getColumnSearchProps('name' as unknown as IProduct)
-    },
-    {
-      title: 'Size  ',
-      dataIndex: 'sizes',
-      key: 'sizes',
-      width: 200,
-      render: (sizes: ISizeRefProduct[]) => (
-        <>
-          <div className='flex flex-col gap-1'>
-            {sizes?.slice(0, 2).map((size: ISizeRefProduct) => (
-              <div key={size._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{size.name}</p>
-                <p className='w-full pl-3'>{formatCurrency(size.price)}</p>
-              </div>
-            ))}
-          </div>
-          <p className=''>{sizes?.length > 2 && '....'}</p>
-        </>
-      )
-    },
-    {
-      title: 'Topping ',
-      dataIndex: 'toppings',
-      key: 'toppings',
-      render: (toppings: IToppingRefProduct[]) => (
-        <>
-          <div className='flex flex-col gap-1'>
-            {/* chỉ map 2 topping ra ngoài màn hình thôi */}
-            {toppings.slice(0, 2).map((topping: IToppingRefProduct) => (
-              <div key={topping._id} className='relative grid grid-cols-2'>
-                <p className='border-r-graydark w-full pr-3 uppercase border-r border-opacity-50'>{topping.name}</p>
-                <p className='w-full pl-3'>{formatCurrency(topping.price)}</p>
-              </div>
-            ))}
-          </div>
-          <p className=''>{toppings?.length > 2 && '....'}</p>
-        </>
-      )
-    },
-    {
-      title: 'Danh mục  ',
-      dataIndex: 'category',
-      key: 'category',
-      render: (category: ICategoryRefProduct) => <p className='capitalize'>{category?.name || 'Không có thông tin'}</p>,
-      filters: productsList.map((product: IProduct) => ({ text: product.category.name, value: product.category.name })),
-      // filteredValue: filteredInfo. || null,
-      onFilter: (value: string, record: IProduct) => record.category.name.includes(value),
-      ellipsis: true
-    },
+    ...columnsStaff,
     {
       // title: 'Action',
       dataIndex: 'action',
