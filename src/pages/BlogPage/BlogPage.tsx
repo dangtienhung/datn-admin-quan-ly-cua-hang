@@ -14,7 +14,8 @@ const BlogPage = () => {
   }
   return (
     <>
-      <BlogFeature data={blogData.docs} />
+      {/* <BlogFeature data={blogData.docs} /> */}
+      <BlogFeature />
     </>
   )
 }

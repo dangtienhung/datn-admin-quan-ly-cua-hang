@@ -206,7 +206,13 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         <Col span={6}>
           <div className='flex flex-col gap-y-5'>
             <div className='flex gap-x-5'>
-              <img className='w-[100px] h-[100px]' src={orderData?.user?.avatar} alt='' />
+              <img
+                className='w-[100px] h-[100px]'
+                src={
+                  orderData?.user?.avatar || 'https://i.pinimg.com/1200x/fc/04/73/fc047347b17f7df7ff288d78c8c281cf.jpg'
+                }
+                alt=''
+              />
               <span className='font-semibold text-lg dark:text-white'>{orderData.user.username}</span>
             </div>
             <div>

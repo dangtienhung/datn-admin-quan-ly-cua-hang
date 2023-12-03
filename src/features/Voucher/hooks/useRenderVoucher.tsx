@@ -13,7 +13,8 @@ import { formatCurrency } from '~/utils'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteVoucherMutation } from '~/store/services'
 
-export const useRenderVoucher = (vouchers: IVoucher[]) => {
+// export const useRenderVoucher = (vouchers: IVoucher[]) => {
+export const useRenderVoucher = () => {
   const dispatch = useAppDispatch()
 
   const [searchText, setSearchText] = useState('')

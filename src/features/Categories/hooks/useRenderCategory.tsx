@@ -12,7 +12,8 @@ import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 import { useAppSelector } from '~/store/hooks'
 
-export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) => {
+// export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) => {
+export const useRenderCategory = (isDeleted?: boolean) => {
   const [deleteFakeCategory] = useDeleteFakeMutation()
   const [restoreCategory] = useRestoreCategoryMutation()
   const [deleteRealCategory] = useDeleteRealMutation()

@@ -46,7 +46,8 @@ const ListVoucher = () => {
     index: index + 1
   }))
 
-  const voucherDataColumns = useRenderVoucher(voucherData?.data?.docs || [])
+  // const voucherDataColumns = useRenderVoucher(voucherData?.data?.docs || [])
+  const voucherDataColumns = useRenderVoucher()
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />

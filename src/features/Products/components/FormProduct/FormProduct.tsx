@@ -101,7 +101,7 @@ const FormProduct = () => {
 
     try {
       const response = await createProduct({ ...values, images }).unwrap()
-      if (response.message === 'success') {
+      if (response.message === 'success' || response.message === 'succes') {
         message.success('Thêm sản phẩm thành công!')
       }
       dispatch(setOpenDrawer(false))
