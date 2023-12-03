@@ -81,3 +81,28 @@ export interface DataAnalytics {
 
 // order status
 export type orderStatus = 'pending' | 'confirmed' | 'delivered' | 'done' | 'canceled'
+export type orderRevenue = 'weeks' | 'months' | 'years'
+
+export interface IAnalticRevenueWeek {
+  week: number
+  totalRevenue: number
+}
+
+export interface IAnalticRevenueMonth {
+  month: number
+  totalRevenue: number
+}
+
+export interface IAnalticRevenueStatus {
+  name: orderStatus
+  analytics: IAnalticRevenueWeek[] | IAnalticRevenueMonth[]
+}
+
+export interface IAnalyticMonths {
+  orders: [
+    {
+      name: orderRevenue
+      analytics: IAnalticRevenueStatus[]
+    }
+  ]
+}

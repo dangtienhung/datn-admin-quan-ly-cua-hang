@@ -1,6 +1,11 @@
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Drawer, Modal } from 'antd'
+import React, { PureComponent } from 'react'
+
 import { IAnalytics } from '~/types'
-import { Modal } from 'antd'
+import { Loader } from '~/common'
 import { renderOrderStatus } from '~/features'
+import { useGetAnalystMonthQuery } from '~/store/services'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -10,6 +15,22 @@ interface CardThreeProps {
 
 const CardThree = ({ data }: CardThreeProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { data: dataAnalytics3, isError: errorAnalytics3 } = useGetAnalystMonthQuery()
+  console.log('🚀 ~ file: CardThree.tsx:17 ~ CardThree ~ dataAnalytics3:', dataAnalytics3)
+
+  const dataAhihi = [
+    {
+      name: dataAnalytics3?.orders[0].name,
+      'tuần 1': dataAnalytics3?.orders[0].analytics[0].analytics[0].totalRevenue,
+      'tuần 2': dataAnalytics3?.orders[0].analytics[0].analytics[1].totalRevenue,
+      'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
+      'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
+    }
+  ]
+
+  if (errorAnalytics3) return <div>error</div>
+
   return (
     <>
       <div
@@ -61,16 +82,14 @@ const CardThree = ({ data }: CardThreeProps) => {
         </div>
       </div>
 
-      <Modal
+      <Drawer
         title='Thống kê đơn hàng'
         open={isModalOpen}
-        onOk={() => setIsModalOpen(!isModalOpen)}
-        onCancel={() => setIsModalOpen(!isModalOpen)}
-        width={1000}
-        footer={null}
-        className='top-5 w-full max-w-[1000px]'
+        placement='right'
+        width={1200}
+        onClose={() => setIsModalOpen(!isModalOpen)}
       >
-        <div className='grid grid-cols-4 gap-5 w-full mt-6'>
+        <div className='grid grid-cols-4 gap-5 w-full'>
           {data &&
             data.countOrderStatus.map((orderStatus, index) => (
               <div
@@ -114,7 +133,36 @@ const CardThree = ({ data }: CardThreeProps) => {
               </div>
             ))}
         </div>
-      </Modal>
+
+        <div className='w-full mt-6 h-full rounded-sm border border-stroke bg-white pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5'>
+          <h3 className='text-xl font-semibold text-black dark:text-white mb-4'>Doanh thu hàng tháng</h3>
+          <ResponsiveContainer width='100%' height='100%' className={'!h-full min-h-[400px]'}>
+            <LineChart
+              width={400}
+              layout='vertical'
+              height={200}
+              data={dataAhihi}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
+              <YAxis yAxisId='left' />
+              <YAxis yAxisId='right' orientation='right' />
+              <Tooltip />
+              <Legend />
+              <Line yAxisId='left' type='monotone' dataKey='tuần 1' stroke='#8884d8' activeDot={{ r: 8 }} />
+              <Line yAxisId='right' type='monotone' dataKey='tuần 2' stroke='#82ca9d' />
+              <Line yAxisId='right' type='monotone' dataKey='tuần 3' stroke='#ff0' />
+              <Line yAxisId='right' type='monotone' dataKey='tuần 4' stroke='#f00' />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </Drawer>
     </>
   )
 }

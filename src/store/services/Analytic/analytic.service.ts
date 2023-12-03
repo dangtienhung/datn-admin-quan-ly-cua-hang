@@ -1,4 +1,4 @@
-import { DataAnalytics, IAnalytics } from '~/types'
+import { DataAnalytics, IAnalyticMonths, IAnalytics } from '~/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const analyticApi = createApi({
@@ -15,8 +15,12 @@ export const analyticApi = createApi({
     getAnalyst: builder.query<DataAnalytics, void>({
       query: () => '/analyst',
       providesTags: ['Analytics']
+    }),
+    getAnalystMonth: builder.query<IAnalyticMonths, void>({
+      query: () => '/analytics-month',
+      providesTags: ['Analytics']
     })
   })
 })
 
-export const { useGetAnalyticsQuery, useGetAnalystQuery } = analyticApi
+export const { useGetAnalyticsQuery, useGetAnalystQuery, useGetAnalystMonthQuery } = analyticApi

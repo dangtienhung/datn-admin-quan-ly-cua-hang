@@ -36,7 +36,7 @@ const CardTwo = ({ data }: CardTwoProps) => {
           <h4 className='text-title-md font-bold text-black dark:text-white'>
             {data['tổng doanh thu'].toLocaleString()} vnđ
           </h4>
-          <span className='text-sm font-medium'>Tổng doanh thu</span>
+          <span className='text-sm font-medium'>Tổng doanh thu dự kiến</span>
         </div>
 
         <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
