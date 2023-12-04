@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-12-04T14:35:08.936Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="DK8MGkUzbPrcz-R930bV" version="22.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-12-04T14:36:55.199Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="IUE9X4zEqayiGR-OxZ5h" version="22.1.5" type="github">
   <diagram name="Trang-1" id="GwRJlXM6HGWNC9VsOeqe">
-    <mxGraphModel dx="1311" dy="659" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+    <mxGraphModel dx="2785" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1054,7 +1054,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="UgteTOp4-WPAxm0xh2BK-51" value="Payment" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=default;fontSize=16;" vertex="1" parent="1">
-          <mxGeometry x="2175" y="1770" width="255.0000000000009" height="420" as="geometry" />
+          <mxGeometry x="2090" y="1710" width="255.0000000000009" height="420" as="geometry" />
         </mxCell>
         <mxCell id="UgteTOp4-WPAxm0xh2BK-52" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" vertex="1" parent="UgteTOp4-WPAxm0xh2BK-51">
           <mxGeometry y="30" width="255.0000000000009" height="30" as="geometry" />
