@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
-import { Button as ButtonAnt, Input, Popconfirm, Space, Table, Tooltip } from 'antd'
+import { Button as ButtonAnt, Input, Popconfirm, Space, Table, Tooltip, message } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { ColumnType } from 'antd/lib/table'
@@ -12,7 +12,7 @@ import TableChildrend from '~/features/Products/utils/tableChildrend'
 import { NotFound } from '~/pages'
 import { ClientSocket } from '~/socket'
 import { useAppSelector } from '~/store/hooks'
-import { useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
+import { useCancelOrderMutation, useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
 import { setOpenDrawer } from '~/store/slices'
 import { setOpenModal } from '~/store/slices/Modal'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
@@ -46,6 +46,7 @@ const ListPendingOrders = () => {
       endDate: orderDate.endDate
     }))
   }, [orderDate])
+  const [cancelOrder] = useCancelOrderMutation()
 
   useEffect(() => {
     ClientSocket.getPendingOrder(setPendingOrder, options)
@@ -263,7 +264,6 @@ const ListPendingOrders = () => {
                 className='bg-meta-6 hover:!text-white flex items-center justify-center text-white'
                 icon={<EyeFilled />}
                 onClick={() => {
-                  // dispatch(setCategory({ _id: category._id, name: category.name }))
                   dispatch(setOpenDrawer(true))
                   dispatch(setOrderData({ ...order }))
                 }}
@@ -285,7 +285,17 @@ const ListPendingOrders = () => {
               {order && !order.user_order ? (
                 <Popconfirm
                   title='Bạn muốn hủy đơn hàng này chứ ?'
-                  onConfirm={() => dispatch(setIdOrderCancel(order.key))}
+                  onConfirm={() => {
+                    cancelOrder({ id: order.key, reasonCancelOrder: 'hủy' })
+                      .unwrap()
+                      .then(() => {
+                        message.success(`Hủy đơn hàng thành công`)
+                      })
+                      .catch(() => {
+                        messageAlert('Hủy đơn hàng thất bại.Hãy thử lại! ', 'error', 5)
+                      })
+                    ClientSocket.cancelOrder(order.key)
+                  }}
                   okText='Đồng ý'
                   cancelText='Hủy'
                 >
