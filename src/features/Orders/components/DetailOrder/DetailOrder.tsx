@@ -135,7 +135,7 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         </Col>
         <Col span={12}>
           <span className='text-right text-base block font-semibold'>
-            -{formatCurrency(orderData.moneyPromotion.price || 0)}
+            -{(orderData?.moneyPromotion?.price && formatCurrency(orderData.moneyPromotion.price)) || 0}
           </span>
         </Col>
         <Col span={12}>
