@@ -1,8 +1,9 @@
+import { Drawer, message } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setBlogId, setOpenDrawer } from '~/store/slices'
 import { useEffect, useState } from 'react'
 
-import { Drawer } from 'antd'
+import { getDetailBlog } from '../../api'
 import parse from 'html-react-parser'
 import { useAppSelector } from '~/store/hooks'
 import { useGetBlogQuery } from '~/store/services'
@@ -12,17 +13,24 @@ export const PreviewBlog = () => {
   const [idBlog, setIdBlog] = useState<string>('' as string)
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
   const { blogId } = useAppSelector((state: RootState) => state.blogs)
-
-  const { data: blogDetail } = useGetBlogQuery(idBlog)
+  const [blogDetail, setBlogDetail] = useState<any>(null)
 
   useEffect(() => {
-    if (blogId) {
-      setIdBlog(blogId)
+    const fetchBlogData = async () => {
+      try {
+        if (!blogId) return
+        const response = await getDetailBlog(blogId as string)
+        if (response) {
+          setBlogDetail(response)
+        }
+      } catch (error) {
+        message.error('Lỗi khi lấy dữ liệu bài viết')
+      }
     }
+    fetchBlogData()
   }, [blogId])
 
   if (!blogId) return null
-  if (!blogDetail || Array.isArray(blogDetail)) return null
 
   return (
     <Drawer

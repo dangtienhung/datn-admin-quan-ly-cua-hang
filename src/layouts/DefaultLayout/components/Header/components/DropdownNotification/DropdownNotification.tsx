@@ -2,12 +2,12 @@
 
 import { Badge, Empty } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { useUpdateNotificationMutation } from '~/store/services'
 
-import { Link } from 'react-router-dom'
 import { BellIcon } from '~/components'
 import { ClientSocket } from '~/socket'
+import { Link } from 'react-router-dom'
 import { formatDate } from '~/utils/formatDate'
+import { useUpdateNotificationMutation } from '~/store/services'
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -68,12 +68,6 @@ const DropdownNotification = () => {
           to='#'
           className='relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white'
         >
-          {/* {notification.length > 0 && (
-            <span className='absolute -top-[5px] right-0 z-1 h-3 w-3 rounded-full bg-meta-1'>
-              <span className='-z-1 animate-ping bg-meta-1 absolute inline-flex w-full h-full rounded-full opacity-75'></span>
-            </span>
-          )} */}
-
           <BellIcon />
         </Link>
       </Badge>

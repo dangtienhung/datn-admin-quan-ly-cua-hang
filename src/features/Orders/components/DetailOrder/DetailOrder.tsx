@@ -1,17 +1,18 @@
 import { Col, Drawer, Row, Space, Table } from 'antd'
-import { ColumnsType } from 'antd/es/table'
-import { Button } from '~/components'
-import Loading from '~/components/Loading/Loading'
-import { ClientSocket } from '~/socket'
-import { useAppSelector } from '~/store/hooks'
-import { useConfirmOrderMutation, useDoneOrderMutation } from '~/store/services/Orders'
-import { setOpenDrawer } from '~/store/slices'
-import { setOpenModal } from '~/store/slices/Modal'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders'
-import { useAppDispatch } from '~/store/store'
+import { useConfirmOrderMutation, useDoneOrderMutation } from '~/store/services/Orders'
+
+import { Button } from '~/components'
+import { ClientSocket } from '~/socket'
+import { ColumnsType } from 'antd/es/table'
 import { ITopping } from '~/types'
+import Loading from '~/components/Loading/Loading'
 import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
+import { setOpenDrawer } from '~/store/slices'
+import { setOpenModal } from '~/store/slices/Modal'
+import { useAppDispatch } from '~/store/store'
+import { useAppSelector } from '~/store/hooks'
 
 type DetailOrderProps = {
   open: boolean
@@ -135,7 +136,11 @@ const DetailOrder = ({ open }: DetailOrderProps) => {
         </Col>
         <Col span={12}>
           <span className='text-right text-base block font-semibold'>
-            -{formatCurrency(orderData.moneyPromotion.price || 0)}
+            -
+            {(orderData?.moneyPromotion &&
+              orderData?.moneyPromotion?.price &&
+              formatCurrency(orderData.moneyPromotion.price)) ||
+              0}
           </span>
         </Col>
         <Col span={12}>
