@@ -19,6 +19,7 @@ import DefaultLayout from '~/layouts/DefaultLayout'
 import { GuardAccount } from '.'
 import SignIn from '~/pages/SignIn'
 import { createBrowserRouter } from 'react-router-dom'
+import ChangePassword from '~/pages/ChangePass'
 
 const routers = createBrowserRouter([
   {
@@ -71,6 +72,15 @@ const routers = createBrowserRouter([
       {
         element: <GuardAccount JSX={DefaultLayout} />,
         children: [{ index: true, element: <ProfilePage /> }]
+      }
+    ]
+  },
+  {
+    path: '/change-pass',
+    children: [
+      {
+        element: <GuardAccount JSX={DefaultLayout} />,
+        children: [{ index: true, element: <ChangePassword /> }]
       }
     ]
   },

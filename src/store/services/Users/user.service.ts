@@ -1,9 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { RootState } from '~/store/store'
 import { IResImage, IUserDocs } from '~/types'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API,
+    credentials: 'include',
+    prepareHeaders: (headers, { getState }) => {
+      const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
+
+      if (accessToken) {
+        headers.set('authorization', `Bearer ${accessToken}`)
+      }
+      return headers
+    }
+  }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
     getAllUser: builder.query<IUserDocs, void>({
@@ -54,11 +66,21 @@ export const userApi = createApi({
         method: 'POST',
         body: file
       })
+    }),
+
+    // update password
+    updatePassword: builder.mutation<{ message: string }, { password: string; passwordNew: string }>({
+      query: (data) => ({
+        url: '/user/updatePassword',
+        method: 'PATCH',
+        body: data
+      })
     })
   })
 })
 
 export const {
+  useUpdatePasswordMutation,
   useGetAllUserQuery,
   useAddUserMutation,
   useGetAllUserByRoleQuery,

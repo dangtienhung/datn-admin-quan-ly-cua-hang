@@ -84,15 +84,20 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          {/* <li>
+          <li>
             <Link
-              to='#'
+              to='/change-pass'
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
             >
-              <ContactIcon />
-              My Contacts
+              <div className='w-5.5'>
+                <img
+                  width={30}
+                  src='https://icons.veryicon.com/png/o/miscellaneous/face-monochrome-icon/password-76.png'
+                />
+              </div>
+              Đổi mật khẩu
             </Link>
-          </li> */}
+          </li>
           {/* <li>
             <Link
               to='/settings'
