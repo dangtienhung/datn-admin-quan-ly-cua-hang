@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ArrowDown, ProfileIcon } from '~/components'
+import { MdLockOutline } from 'react-icons/md'
 import { useEffect, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
@@ -90,10 +91,11 @@ const DropdownUser = () => {
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base'
             >
               <div className='w-5.5'>
-                <img
+                {/* <img
                   width={30}
                   src='https://icons.veryicon.com/png/o/miscellaneous/face-monochrome-icon/password-76.png'
-                />
+                /> */}
+                <MdLockOutline className='text-[23px]' />
               </div>
               Đổi mật khẩu
             </Link>

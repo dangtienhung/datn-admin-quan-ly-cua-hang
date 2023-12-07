@@ -97,7 +97,7 @@ export const useRenderTopping = (toppings: ITopping[]) => {
             <Tooltip title='Xoá topping này'>
               <Popconfirm
                 title='Bạn có muốn xóa topping này?'
-                description='Are you sure to delete this task?'
+                description='Bạn chắc chắn muốn xóa topping này?'
                 onConfirm={() => handleDelete(topping._id)}
                 onCancel={cancelDelete}
                 okButtonProps={{ style: { backgroundColor: '#3C50E0', color: '#fff' } }}
