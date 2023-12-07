@@ -27,7 +27,7 @@ const CardOne = ({ data }: CardOneProps) => {
         </svg>
       </div>
 
-      <div className='flex items-end justify-between mt-4'>
+      <div className=' items-end justify-between mt-4'>
         <div>
           <h4 className='text-title-md dark:text-white font-bold text-black'>
             {data['doanh thu khách vãn lai '].toLocaleString()} vnđ
@@ -35,7 +35,7 @@ const CardOne = ({ data }: CardOneProps) => {
           <span className='text-sm font-medium'>Doanh thu khách vãng lai</span>
         </div>
 
-        <span className='text-meta-3 flex items-center gap-1 text-sm font-medium'>
+        <span className='text-meta-3 grid grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium'>
           0.43%
           <svg
             className='fill-meta-3'

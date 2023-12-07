@@ -130,7 +130,7 @@ export const ToppingAdd = ({ open }: ToppingAddProps) => {
 
         <Form.Item>
           <Button styleClass='!w-full mt-5 py-2' type='submit'>
-            Thêm topping
+            {toppingId ? 'Cập nhật topping' : 'Thêm topping'}
           </Button>
         </Form.Item>
       </Form>

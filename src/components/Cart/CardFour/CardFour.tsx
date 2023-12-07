@@ -31,13 +31,13 @@ const CardFour = ({ data }: CardFourProps) => {
         </svg>
       </div>
 
-      <div className='flex items-end justify-between mt-4'>
+      <div className=' mt-4'>
         <div>
           <h4 className='text-title-md dark:text-white font-bold text-black'>{data[0].value}</h4>
           <span className='text-sm font-medium'>Tổng khách hàng</span>
         </div>
 
-        <span className='text-meta-5 flex items-center gap-1 text-sm font-medium'>
+        <span className='text-meta-5 grid grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium'>
           0.95%
           <svg
             className='fill-meta-5'

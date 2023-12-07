@@ -31,7 +31,7 @@ const CardTwo = ({ data }: CardTwoProps) => {
         </svg>
       </div>
 
-      <div className='mt-4 flex items-end justify-between'>
+      <div className='mt-4'>
         <div>
           <h4 className='text-title-md font-bold text-black dark:text-white'>
             {data['tổng doanh thu'].toLocaleString()} vnđ
@@ -39,7 +39,7 @@ const CardTwo = ({ data }: CardTwoProps) => {
           <span className='text-sm font-medium'>Tổng doanh thu dự kiến</span>
         </div>
 
-        <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
+        <span className='grid grid-cols-[9fr,1fr] mt-2 items-center gap-1 text-sm font-medium text-meta-3 text-right'>
           4.35%
           <svg
             className='fill-meta-3'

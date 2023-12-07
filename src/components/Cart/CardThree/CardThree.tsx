@@ -429,13 +429,13 @@ const CardThree = ({ data }: CardThreeProps) => {
           </svg>
         </div>
 
-        <div className='mt-4 flex items-end justify-between'>
+        <div className='mt-4'>
           <div>
             <h4 className='text-title-md font-bold text-black dark:text-white'>{data.countOrderStatus[0].value}</h4>
             <span className='text-sm font-medium'>Đơn hàng chờ xác nhận</span>
           </div>
 
-          <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
+          <span className='grid grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium text-meta-3'>
             2.59%
             <svg
               className='fill-meta-3'
