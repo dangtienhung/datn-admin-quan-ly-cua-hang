@@ -46,8 +46,8 @@ export const userApi = createApi({
           gender: user.gender,
           role: user.role,
           avatar: user.avatar
-        },
-        credentials: 'include'
+        }
+        // credentials: 'include'
       }),
       invalidatesTags: ['User']
     }),

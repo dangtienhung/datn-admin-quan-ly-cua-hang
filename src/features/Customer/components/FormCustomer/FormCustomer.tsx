@@ -1,23 +1,22 @@
 import { Drawer, Form, Image, Input, Select } from 'antd'
-import { useAppDispatch } from '~/store/store'
+import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer } from '~/store/slices'
 import { Button } from '~/components'
 import { useAddUserMutation, useUpLoadAvartaUserMutation, useUpdateUserMutation } from '~/store/services/Users'
 import toast from 'react-hot-toast'
 import UploadFile from '~/components/UploadFile'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { messageAlert } from '~/utils/messageAlert'
 import { RcFile } from 'antd/lib/upload'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useAppSelector } from '~/store/hooks'
-import { setUser } from '~/store/slices/User/user.slice'
 
 type FormCustomerProps = {
   open: boolean
 }
 
 export const FormCustomer = ({ open }: FormCustomerProps) => {
-  const { userData } = useAppSelector((state) => state.user)
+  const { userData } = useAppSelector((state: RootState) => state.user)
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
@@ -25,11 +24,13 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
   const [uploadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
 
-  userData._id &&
-    form.setFieldsValue({
-      username: userData.username,
-      gender: userData.gender
-    })
+  useEffect(() => {
+    userData._id &&
+      form.setFieldsValue({
+        username: userData.username,
+        gender: userData.gender
+      })
+  }, [userData])
 
   const onFinish = async (values: any) => {
     if (fileList.length <= 0 && !userData._id) {
@@ -108,7 +109,7 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
   }
   const onClose = () => {
     setFileList([])
-    userData._id && dispatch(setUser({ _id: '', username: '', gender: '', avatar: '' }))
+    // userData._id && dispatch(setUser({ _id: '', username: '', gender: '', avatar: '' }))
     form.resetFields()
     dispatch(setOpenDrawer(false))
   }
