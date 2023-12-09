@@ -1,15 +1,16 @@
-import { Button as ButtonAntd, Popconfirm, Space, Table, Tooltip, message } from 'antd'
-import { useState } from 'react'
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { Button as ButtonAntd, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
+import { setOpenDrawer, setSize } from '~/store/slices'
+import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
+
+import { ISize } from '~/types'
 import Loading from '~/components/Loading/Loading'
 import { NotFound } from '~/pages'
-import { useDeleteSizeMutation, useGetAllSizesQuery } from '~/store/services'
-import { setOpenDrawer, setSize } from '~/store/slices'
-import { useAppDispatch } from '~/store/store'
-import { ISize } from '~/types'
 import { formatCurrency } from '~/utils'
 import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
+import { useAppDispatch } from '~/store/store'
+import { useState } from 'react'
 
 export const ListSizes = () => {
   const dispatch = useAppDispatch()
@@ -53,7 +54,7 @@ export const ListSizes = () => {
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
-  const columns = [
+  const columns: any = [
     {
       title: '#',
       dataIndex: 'index',
@@ -63,7 +64,25 @@ export const ListSizes = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: (name: string) => <span className='uppercase'>{name}</span>
+      render: (name: string, record: any) => (
+        <div className='flex items-center gap-2'>
+          <span className='uppercase'>{name}</span>
+          {record.is_default && <Tag color='success'>{record.is_default && 'Mặc định'}</Tag>}
+        </div>
+      ),
+      filters: [
+        {
+          text: 'Size mặc định',
+          value: 'true'
+        },
+        {
+          text: 'Size thường',
+          value: 'false'
+        }
+      ],
+      onFilter: (value: string, record: any) => {
+        return record.is_default === (value === 'true')
+      }
     },
     {
       title: 'Price',

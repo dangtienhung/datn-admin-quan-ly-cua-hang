@@ -42,7 +42,7 @@ export const sizeApi = createApi({
       query: (size: ISize) => ({
         url: `/size/${size._id}`,
         method: 'PUT',
-        body: { name: size.name, price: size.price }
+        body: { name: size.name, price: size.price, is_default: size.is_default }
       }),
       invalidatesTags: ['Sizes']
     }),

@@ -7,6 +7,7 @@ interface SizeState {
     _id: string
     name: string
     price: number
+    is_default: boolean
   }
 }
 
@@ -14,7 +15,8 @@ const initialState: SizeState = {
   sizeData: {
     _id: '',
     name: '',
-    price: 0
+    price: 0,
+    is_default: false
   }
 }
 

@@ -1,12 +1,13 @@
-import { Drawer, Form, Input, InputNumber } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import { Drawer, Form, Input, InputNumber, Radio, Select } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setSize } from '~/store/slices'
-import { useAppSelector } from '~/store/hooks'
+import { useAddSizeMutation, useUpdateSizeMutation } from '~/store/services'
+
 import { Button } from '~/components'
 import { ISize } from '~/types'
-import { useAddSizeMutation, useUpdateSizeMutation } from '~/store/services'
+import { LoadingOutlined } from '@ant-design/icons'
 import { messageAlert } from '~/utils/messageAlert'
+import { useAppSelector } from '~/store/hooks'
 
 type FormFormSIzeSIzeProps = {
   open: boolean
@@ -22,7 +23,8 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
   sizeData._id &&
     form.setFieldsValue({
       name: sizeData.name,
-      price: sizeData.price
+      price: sizeData.price,
+      is_default: sizeData.is_default
     })
   const onFinish = (values: ISize) => {
     if (sizeData._id) {
@@ -43,7 +45,7 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
         dispatch(setOpenDrawer(false))
         form.resetFields()
       })
-      .catch(() => messageAlert('Thêm size thất bại', 'error'))
+    //   .catch(() => messageAlert('Thêm size thất bại', 'error'))
   }
   const onClose = () => {
     dispatch(setOpenDrawer(false))
@@ -105,6 +107,17 @@ export const FormSIze = ({ open }: FormFormSIzeSIzeProps) => {
             placeholder='Giá size'
             className='w-full'
           />
+        </Form.Item>
+
+        <Form.Item
+          name='is_default'
+          className='collection-create-form_last-form-item'
+          rules={[{ required: true, message: 'Không được bỏ trống giá size!' }]}
+        >
+          <Radio.Group>
+            <Radio value={true}>Đặt làm size mặc định</Radio>
+            <Radio value={false}>Không đặt làm size mặc định</Radio>
+          </Radio.Group>
         </Form.Item>
 
         <Form.Item>

@@ -1,14 +1,15 @@
 import { Drawer, Form, Image, Input, Select } from 'antd'
 import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer } from '~/store/slices'
-import { Button } from '~/components'
 import { useAddUserMutation, useUpLoadAvartaUserMutation, useUpdateUserMutation } from '~/store/services/Users'
-import toast from 'react-hot-toast'
-import UploadFile from '~/components/UploadFile'
 import { useEffect, useState } from 'react'
-import { messageAlert } from '~/utils/messageAlert'
-import { RcFile } from 'antd/lib/upload'
+
+import { Button } from '~/components'
 import { LoadingOutlined } from '@ant-design/icons'
+import { RcFile } from 'antd/lib/upload'
+import UploadFile from '~/components/UploadFile'
+import { messageAlert } from '~/utils/messageAlert'
+import { setOpenDrawer } from '~/store/slices'
+import toast from 'react-hot-toast'
 import { useAppSelector } from '~/store/hooks'
 
 type FormCustomerProps = {
@@ -30,7 +31,7 @@ export const FormCustomer = ({ open }: FormCustomerProps) => {
         username: userData.username,
         gender: userData.gender
       })
-  }, [userData])
+  }, [userData, form])
 
   const onFinish = async (values: any) => {
     if (fileList.length <= 0 && !userData._id) {
