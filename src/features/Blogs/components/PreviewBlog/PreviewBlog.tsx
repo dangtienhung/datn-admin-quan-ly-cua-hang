@@ -1,16 +1,15 @@
 import { Drawer, message } from 'antd'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setBlogId, setOpenDrawer } from '~/store/slices'
 import { useEffect, useState } from 'react'
+import { setBlogId, setOpenDrawer } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
 
-import { getDetailBlog } from '../../api'
 import parse from 'html-react-parser'
 import { useAppSelector } from '~/store/hooks'
-import { useGetBlogQuery } from '~/store/services'
+import { getDetailBlog } from '../../api'
 
 export const PreviewBlog = () => {
   const dispatch = useAppDispatch()
-  const [idBlog, setIdBlog] = useState<string>('' as string)
+
   const { openDrawer } = useAppSelector((state: RootState) => state.drawer)
   const { blogId } = useAppSelector((state: RootState) => state.blogs)
   const [blogDetail, setBlogDetail] = useState<any>(null)

@@ -30,7 +30,7 @@ const CardOne = ({ data }: CardOneProps) => {
       <div className=' items-end justify-between mt-4'>
         <div>
           <h4 className='text-title-md dark:text-white font-bold text-black'>
-            {data['doanh thu khách vãn lai '].toLocaleString()} vnđ
+            {data['doanh thu khách vãn lai '].toLocaleString()} VND
           </h4>
           <span className='text-sm font-medium'>Doanh thu khách vãng lai</span>
         </div>

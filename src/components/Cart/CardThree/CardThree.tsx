@@ -11,7 +11,7 @@ import {
   Tooltip as TooltipAntd
 } from 'antd'
 import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
-import { IAnalticRevenueMonth, IAnalticRevenueWeek, IAnalytics, IOrderDataType } from '~/types'
+import { IAnalticRevenueMonth, IAnalytics, IOrderDataType } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders'
 import { setOpenDrawer, setOpenModal } from '~/store/slices'
@@ -495,7 +495,7 @@ const CardThree = ({ data }: CardThreeProps) => {
                 <div className='mt-4 flex items-end justify-between'>
                   <div className=''>
                     <h4 className='text-title-md font-bold text-black dark:text-white'>
-                      {data.moneyOrderStatus[index].value.toLocaleString()} vnđ
+                      {data.moneyOrderStatus[index].value.toLocaleString()} VND
                     </h4>
                     <span className='text-base font-medium'>
                       {orderStatus.value} đơn {renderOrderStatus(orderStatus.name).toLowerCase()}

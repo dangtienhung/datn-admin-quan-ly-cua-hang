@@ -1,13 +1,13 @@
-import { Drawer, Form, Input, InputNumber, Radio, Select } from 'antd'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer, setSize } from '~/store/slices'
+import { Drawer, Form, Input, InputNumber, Radio } from 'antd'
 import { useAddSizeMutation, useUpdateSizeMutation } from '~/store/services'
+import { setOpenDrawer, setSize } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
 
-import { Button } from '~/components'
-import { ISize } from '~/types'
 import { LoadingOutlined } from '@ant-design/icons'
-import { messageAlert } from '~/utils/messageAlert'
+import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
+import { ISize } from '~/types'
+import { messageAlert } from '~/utils/messageAlert'
 
 type FormFormSIzeSIzeProps = {
   open: boolean

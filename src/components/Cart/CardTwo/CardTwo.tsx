@@ -34,7 +34,7 @@ const CardTwo = ({ data }: CardTwoProps) => {
       <div className='mt-4'>
         <div>
           <h4 className='text-title-md font-bold text-black dark:text-white'>
-            {data['tổng doanh thu'].toLocaleString()} vnđ
+            {data['tổng doanh thu'].toLocaleString()} VND
           </h4>
           <span className='text-sm font-medium'>Tổng doanh thu dự kiến</span>
         </div>
