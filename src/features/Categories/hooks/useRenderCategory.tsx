@@ -12,8 +12,8 @@ import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 import { useAppSelector } from '~/store/hooks'
 
-// export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) => {
-export const useRenderCategory = (isDeleted?: boolean) => {
+// export const useRenderCategory = (isDeleted?: boolean) => {
+export const useRenderCategory = (categories: ICategory[], isDeleted?: boolean) => {
   const [deleteFakeCategory] = useDeleteFakeMutation()
   const [restoreCategory] = useRestoreCategoryMutation()
   const [deleteRealCategory] = useDeleteRealMutation()
@@ -34,7 +34,10 @@ export const useRenderCategory = (isDeleted?: boolean) => {
       title: 'Tên danh mục',
       dataIndex: 'name',
       key: 'name',
-      render: (name: string) => <span className='capitalize'>{name}</span>
+      filterSearch: true,
+      filters: categories?.map((item) => ({ text: item.name, value: item._id })),
+      onFilter: (value: any, record: ICategory) => record._id === value
+      // render: (name: string) => <span className='capitalize'>{name}</span>,
     },
     {
       title: 'Ảnh',

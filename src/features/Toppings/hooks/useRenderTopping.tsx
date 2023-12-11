@@ -75,7 +75,14 @@ export const useRenderTopping = (toppings: ITopping[]) => {
       onFilter: (value: any, record: ITopping) => record._id === value
       // render: (name: string) => <span className='capitalize'>{name}</span>
     },
-    { title: 'Giá topping', dataIndex: 'price', key: 'price', render: (price: number) => `${formatCurrency(price)}` },
+    {
+      title: 'Giá topping',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price: number) => `${formatCurrency(price)}`,
+      sorter: (a, b) => a.price - b.price
+    },
+
     {
       // title: <span className='block text-center'>Action</span>,
       key: 'action',
