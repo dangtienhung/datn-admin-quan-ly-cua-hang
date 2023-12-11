@@ -11,7 +11,7 @@ import { DeleteIcon } from '~/components'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
 import { ICategoryRefProduct } from '~/types/Category'
-import { SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined, SyncOutlined } from '@ant-design/icons'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
@@ -232,6 +232,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
 
   /* column admin */
   /* handle delete product */
+  /*Ẩn sản phẩm đi */
   const handleDeleteProduct = async (id: string) => {
     try {
       const response = await deleteFakeProduct({ id }).unwrap()
@@ -288,14 +289,15 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
                 />
               </Tooltip>
               <Popconfirm
-                title='Xóa sản phẩm?'
+                title='Thay đổi trạng thái sản phẩm?'
+                description='Sản phẩm sẽ được ẩn đi!'
                 onConfirm={() => handleDeleteProduct(product._id)}
                 okText='Có'
                 cancelText='Không'
               >
                 <ButtonAntd
                   size='large'
-                  icon={<DeleteIcon />}
+                  icon={<SyncOutlined />}
                   danger
                   className='hover:text-white flex items-center justify-center text-white'
                 />
