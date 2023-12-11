@@ -56,7 +56,7 @@ const ListCategoryDeleted = () => {
     index: index + 1
   }))
 
-  const columnsData = useRenderCategory(true)
+  const columnsData = useRenderCategory(categories?.docs || [])
 
   return (
     <>
@@ -105,7 +105,8 @@ const ListCategoryDeleted = () => {
             total: categories && categories?.totalDocs,
             onChange(page) {
               setCurrentPage(page)
-            }
+            },
+            showQuickJumper: true
           }}
           scroll={{ y: '50vh', x: 650 }}
           bordered

@@ -45,8 +45,8 @@ const ListCategory = () => {
     index: index + 1
   }))
 
-  const columnsData = useRenderCategory()
-  // const columnsData = useRenderCategory(categories?.docs || [])
+  // const columnsData = useRenderCategory()
+  const columnsData = useRenderCategory(categories?.docs || [])
 
   return (
     <>
@@ -90,7 +90,8 @@ const ListCategory = () => {
             total: categories && categories?.totalDocs,
             onChange(page) {
               setOptions((prev) => ({ ...prev, _page: page }))
-            }
+            },
+            showQuickJumper: true
           }}
           scroll={{ y: '50vh', x: 650 }}
           bordered
