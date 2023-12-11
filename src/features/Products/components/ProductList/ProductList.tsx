@@ -52,7 +52,7 @@ const ProductList = () => {
             disabled={!hasSelected}
             loading={loading}
           >
-            Xóa tất cả
+            Ẩn tất cả
           </ButtonAntd>
         </Tooltip>
         {/* <ButtonAntd

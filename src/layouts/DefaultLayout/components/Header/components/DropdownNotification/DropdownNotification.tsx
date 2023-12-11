@@ -41,6 +41,11 @@ const DropdownNotification = () => {
           ? setDropdownOpen(true)
           : setDropdownOpen(false)
         : setDropdownOpen(false)
+      if (notification.length > 0 && !dropdownOpen) {
+        notification.forEach((item: any) => {
+          handleUpdateNotification(item._id)
+        })
+      }
     }
     document.addEventListener('click', handleDropdown)
     return () => document.removeEventListener('click', handleDropdown)
