@@ -81,13 +81,13 @@ const ToppingList = () => {
       </Space>
       <Table
         className='dark:bg-graydark mt-3'
-        // columns={columns}
         columns={toppingData}
         dataSource={toppings}
         pagination={{
           pageSize: 5,
           showSizeChanger: false,
-          pageSizeOptions: ['5', '10', '15', '20']
+          pageSizeOptions: ['5', '10', '15', '20'],
+          showQuickJumper: true
         }}
         rowSelection={user.role === IRoleUser.ADMIN ? rowSelection : undefined}
         bordered

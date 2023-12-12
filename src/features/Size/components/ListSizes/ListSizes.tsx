@@ -11,6 +11,7 @@ import { messageAlert } from '~/utils/messageAlert'
 import { pause } from '~/utils/pause'
 import { useAppDispatch } from '~/store/store'
 import { useState } from 'react'
+import { ColumnsType } from 'antd/es/table'
 
 export const ListSizes = () => {
   const dispatch = useAppDispatch()
@@ -54,7 +55,7 @@ export const ListSizes = () => {
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
-  const columns: any = [
+  const columns: ColumnsType<ISize> = [
     {
       title: '#',
       dataIndex: 'index',
@@ -80,7 +81,7 @@ export const ListSizes = () => {
           value: 'false'
         }
       ],
-      onFilter: (value: string, record: any) => {
+      onFilter: (value: any, record: ISize) => {
         return record.is_default === (value === 'true')
       }
     },
@@ -88,7 +89,8 @@ export const ListSizes = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (price: number) => `${formatCurrency(price)}`
+      render: (price: number) => `${formatCurrency(price)}`,
+      sorter: (a, b) => a.price - b.price
     },
     {
       // title: <span className='block text-center'>Action</span>,
@@ -178,7 +180,8 @@ export const ListSizes = () => {
           total: sizeList?.totalDocs,
           onChange(page) {
             setCurrentPage(page)
-          }
+          },
+          showQuickJumper: true
         }}
         rowSelection={rowSelection}
         bordered

@@ -42,7 +42,12 @@
 } */
 
 /*overwrite css antd*/
-
+.ant-pagination-options-quick-jumper {
+  margin-right: 20px;
+}
+.ant-pagination-options {
+  margin-inline-end: 20px;
+}
 .ant-drawer-inline {
   position: fixed !important;
   z-index: 999 !important;
