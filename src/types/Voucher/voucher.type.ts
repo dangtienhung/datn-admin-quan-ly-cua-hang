@@ -19,8 +19,8 @@ export interface IVoucher {
   title: string
   discount: number
   sale: number
-  startDate?: string
-  endDate?: string
+  startDate: string
+  endDate: string
   isActive?: boolean
   createdAt?: string
   updatedAt?: string
