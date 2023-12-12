@@ -63,21 +63,21 @@ const CardThree = ({ data }: CardThreeProps) => {
     {
       name: dataAnalytics3?.orders[0].analytics[1].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[1].analytics[index].totalRevenue,
-      'tuần 2': dataAnalytics3?.orders[0].analytics[0].analytics[1].totalRevenue,
+      'tuần 2': dataAnalytics3?.orders[0].analytics[1].analytics[1].totalRevenue,
       'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
       'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
     },
     {
       name: dataAnalytics3?.orders[0].analytics[2].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[2].analytics[index].totalRevenue,
-      'tuần 2': dataAnalytics3?.orders[0].analytics[0].analytics[1].totalRevenue,
+      'tuần 2': dataAnalytics3?.orders[0].analytics[2].analytics[1].totalRevenue,
       'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
       'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
     },
     {
       name: dataAnalytics3?.orders[0].analytics[3].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[3].analytics[index].totalRevenue,
-      'tuần 2': dataAnalytics3?.orders[0].analytics[0].analytics[1].totalRevenue,
+      'tuần 2': dataAnalytics3?.orders[0].analytics[3].analytics[1].totalRevenue,
       'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
       'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
     }
