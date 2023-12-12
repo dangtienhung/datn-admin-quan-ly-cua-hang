@@ -22,18 +22,25 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   const [updateVoucher] = useUpdateVoucherMutation()
   const { voucherData } = useAppSelector((state: RootState) => state.vouchers)
   const [checkedVoucher, setCheckedVoucher] = useState<boolean>()
-  voucherData._id &&
-    form.setFieldsValue({
-      code: voucherData.code,
-      sale: voucherData.sale,
-      discount: voucherData.discount,
-      title: voucherData.title,
-      desc: voucherData.desc,
-      isActive: voucherData.isActive
-    })
+
+  useEffect(() => {
+    voucherData._id &&
+      form.setFieldsValue({
+        startDate: dayjs(voucherData.startDate),
+        endDate: dayjs(voucherData.endDate),
+        code: voucherData.code,
+        sale: voucherData.sale,
+        discount: voucherData.discount,
+        title: voucherData.title,
+        desc: voucherData.desc,
+        isActive: voucherData.isActive
+      })
+  }, [form, voucherData])
+
   useEffect(() => {
     voucherData && voucherData._id && setCheckedVoucher(voucherData.isActive)
   }, [voucherData])
+
   const onFinish = async (values: IVoucher) => {
     if (voucherData._id) {
       updateVoucher({ _id: voucherData._id, ...values, isActive: checkedVoucher })

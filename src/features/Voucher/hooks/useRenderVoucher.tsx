@@ -135,14 +135,11 @@ export const useRenderVoucher = () => {
       title: 'Thời gian',
       key: 'action',
       width: '15%',
-      render: (_: boolean, data: IVoucher) => {
-        console.log(data, 'data')
-        return (
-          <span>
-            {dayjs(data.startDate).format('DD-MM-YYYY')} <br /> {dayjs(data.endDate).format('DD-MM-YYYY')}
-          </span>
-        )
-      }
+      render: (_: boolean, data: IVoucher) => (
+        <span>
+          {dayjs(data.startDate).format('DD-MM-YYYY')} <br /> {dayjs(data.endDate).format('DD-MM-YYYY')}
+        </span>
+      )
     },
     {
       title: 'Giảm giá',

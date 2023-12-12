@@ -33,7 +33,6 @@ export const ClientSocket = {
   getPendingOrder: (setPendingOrder: React.Dispatch<React.SetStateAction<undefined>>, options: Options) => {
     socket.emit('client:requestPendingOrder', options)
     socket.on('server:loadPendingOrder', (data) => {
-      // console.log(data)
       setPendingOrder(data)
     })
     return () => {
