@@ -18,10 +18,10 @@ export const items: TabsProps['items'] = [
     key: uuidv4(),
     label: 'Các sản phẩm đã ẩn',
     children: <ProductListInActive />
+  },
+  {
+    key: uuidv4(),
+    label: 'Các sản phẩm đã xóa',
+    children: <ProductListDelete />
   }
-  // {
-  //   key: uuidv4(),
-  //   label: 'Các sản phẩm đã xóa',
-  //   children: <ProductListDelete />
-  // }
 ]

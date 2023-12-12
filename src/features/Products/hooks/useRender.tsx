@@ -11,7 +11,7 @@ import { DeleteIcon } from '~/components'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
 import { ICategoryRefProduct } from '~/types/Category'
-import { SearchOutlined, SyncOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import { TbBasketDiscount } from 'react-icons/tb'
 import clsxm from '~/utils/clsxm'
 import { formatCurrency } from '~/utils'
@@ -25,7 +25,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
 
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const [restoreProduct] = useRestoreProductMutation()
-  const [deleteProduct] = useDeleteProductMutation()
+  // const [deleteProduct] = useDeleteProductMutation()
 
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
@@ -255,16 +255,16 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
     }
   }
 
-  const handleDeleteProductReal = async (id: string) => {
-    try {
-      const response = await deleteProduct({ id })
-      if ((response as any).message === 'success') {
-        message.success('Xóa sản phẩm thành công!')
-      }
-    } catch (error) {
-      message.error('Khôi phục sản phẩm thất bại')
-    }
-  }
+  // const handleDeleteProductReal = async (id: string) => {
+  //   try {
+  //     const response = await deleteProduct({ id })
+  //     if ((response as any).message === 'success') {
+  //       message.success('Xóa sản phẩm thành công!')
+  //     }
+  //   } catch (error) {
+  //     message.error('Khôi phục sản phẩm thất bại')
+  //   }
+  // }
 
   const columnsAdmin: any = [
     ...columnsStaff,
@@ -289,15 +289,15 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
                 />
               </Tooltip>
               <Popconfirm
-                title='Thay đổi trạng thái sản phẩm?'
-                description='Sản phẩm sẽ được ẩn đi!'
+                title='Xóa sản phẩm?'
+                description='Sản phẩm sẽ chuyển vào trang đã xóa!'
                 onConfirm={() => handleDeleteProduct(product._id)}
                 okText='Có'
                 cancelText='Không'
               >
                 <ButtonAntd
                   size='large'
-                  icon={<SyncOutlined />}
+                  icon={<DeleteIcon />}
                   danger
                   className='hover:text-white flex items-center justify-center text-white'
                 />
@@ -306,7 +306,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
           )
         } else {
           return (
-            <Space>
+            <Space className='ml-[30%]'>
               <Tooltip title='Khôi phục sản phẩm'>
                 <Popconfirm
                   title='Bạn có muốn khôi phục sản phẩm này?'
@@ -321,7 +321,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
                   />
                 </Popconfirm>
               </Tooltip>
-              <Popconfirm
+              {/* <Popconfirm
                 title='Xóa sản phẩm?'
                 onConfirm={() => handleDeleteProductReal(product._id)}
                 okText='Đồng ý'
@@ -333,7 +333,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
                   danger
                   className='hover:text-white flex items-center justify-center text-white'
                 />
-              </Popconfirm>
+              </Popconfirm> */}
             </Space>
           )
         }
