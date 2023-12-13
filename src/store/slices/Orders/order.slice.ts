@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+
 import { IVoucher } from '~/types'
 
 interface IOrderDetail {
@@ -52,7 +53,9 @@ const initialState: IOrderDetail = {
         title: '',
         discount: 0,
         sale: 0,
-        desc: ''
+        desc: '',
+        startDate: '',
+        endDate: ''
       }
     },
     reasonCancelOrder: '',
