@@ -51,7 +51,9 @@ const FeatureDashboard = () => {
       title: 'Doanh thu',
       dataIndex: 'total',
       key: 'total',
-      render: (text: string) => <span className='text-gray-600'>{text}</span>
+      render: (_: string, record: any) => (
+        <span className='text-gray-600'>{(record.price * record.count).toLocaleString()} vnđ</span>
+      )
     }
   ]
 
@@ -68,13 +70,13 @@ const FeatureDashboard = () => {
 
       <BarChartSimple data={dataAnalytics} />
 
-      <div className='grid grid-cols-2 gap-6 mt-8'>
+      <div className='grid grid-cols-1 gap-6 mt-8'>
         {/* top 10 sản phẩm bán chạy nhất  */}
         <div className='w-full h-full rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5'>
           <h3 className='text-xl font-semibold text-black dark:text-white mb-4'>Top 10 sản phẩm bán chạy nhất</h3>
           <Table columns={columnsTopSale} dataSource={topSale} pagination={false} />
         </div>
-        <div className=''>oke la</div>
+        <div className='hidden'>oke la</div>
       </div>
 
       {/* <div className='mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>

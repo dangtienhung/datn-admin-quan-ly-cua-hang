@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 type UserInfoRowProps = {
   user: {
     username?: string
@@ -15,9 +17,12 @@ const UserInfoRow = ({ user }: UserInfoRowProps) => {
         alt=''
       />
       <div className='text-sm font-normal text-gray-500 dark:text-gray-400'>
-        <div className='text-base font-semibold text-gray-900 max-w-[120px] dark:text-white line-clamp-1'>
+        <Link
+          to={`/manager/orders`}
+          className='text-base font-semibold text-gray-900 max-w-[120px] dark:text-white line-clamp-1'
+        >
           {user?.username}
-        </div>
+        </Link>
         <div className='text-sm font-normal text-gray-500 dark:text-gray-400'>{user?.phone}</div>
       </div>
     </div>

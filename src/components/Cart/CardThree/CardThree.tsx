@@ -534,7 +534,7 @@ const CardThree = ({ data }: CardThreeProps) => {
               )}
             </BarChart>
           </ResponsiveContainer>
-          <div className='h-full overflow-y-scroll'>
+          <div className='h-full overflow-y-scroll overflow-x-scroll scrollbar-hide'>
             <Table
               columns={columns}
               expandable={{
@@ -551,6 +551,7 @@ const CardThree = ({ data }: CardThreeProps) => {
                 }
               }}
               scroll={{ y: '50vh', x: 1000 }}
+              // scroll={{ x: 1300 }}
               bordered
               rowSelection={rowSelection}
             />
