@@ -1,27 +1,28 @@
-import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
-import type { InputRef } from 'antd'
 import { Button as ButtonAnt, Input, Popconfirm, Space, Table, Tooltip, message } from 'antd'
+import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
+import { RootState, useAppDispatch } from '~/store/store'
+import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
+import { useCancelOrderMutation, useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { Button } from '~/components'
+import { ClientSocket } from '~/socket'
+import { ColumnType } from 'antd/lib/table'
 import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { ColumnType } from 'antd/lib/table'
-import { useEffect, useMemo, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { Button } from '~/components'
-import Loading from '~/components/Loading/Loading'
-import TableChildrend from '~/features/Products/utils/tableChildrend'
-import { NotFound } from '~/pages'
-import { ClientSocket } from '~/socket'
-import { useAppSelector } from '~/store/hooks'
-import { useCancelOrderMutation, useConfirmOrderMutation, useGetAllOrderPendingQuery } from '~/store/services/Orders'
-import { setOpenDrawer } from '~/store/slices'
-import { setOpenModal } from '~/store/slices/Modal'
-import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders/order.slice'
-import { RootState, useAppDispatch } from '~/store/store'
 import { IOrderDataType } from '~/types'
+import type { InputRef } from 'antd'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
+import TableChildrend from '~/features/Products/utils/TableChildrend'
+import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { formatCurrency } from '~/utils'
 import { formatDate } from '~/utils/formatDate'
 import { messageAlert } from '~/utils/messageAlert'
-import UserInfoRow from '../UserInfoRow/UserInfoRow'
+import { setOpenDrawer } from '~/store/slices'
+import { setOpenModal } from '~/store/slices/Modal'
+import { useAppSelector } from '~/store/hooks'
 
 type DataIndex = keyof IOrderDataType
 const ListPendingOrders = () => {
@@ -219,7 +220,7 @@ const ListPendingOrders = () => {
       width: 110,
       render: (totalPrice: number) => (
         <span
-          className={`capitalize font-semibold  
+          className={`capitalize font-semibold
           rounded inline-block text-lg text-center py-1`}
         >
           {formatCurrency(+totalPrice)}

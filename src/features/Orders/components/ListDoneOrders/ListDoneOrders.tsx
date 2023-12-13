@@ -1,24 +1,25 @@
-import { EyeFilled, SearchOutlined } from '@ant-design/icons'
-import type { InputRef } from 'antd'
 import { Button as ButtonAnt, Input, Space, Table, Tooltip } from 'antd'
+import { EyeFilled, SearchOutlined } from '@ant-design/icons'
+import { RootState, useAppDispatch } from '~/store/store'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { ClientSocket } from '~/socket'
+import { ColumnType } from 'antd/lib/table'
 import { ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { ColumnType } from 'antd/lib/table'
-import { useEffect, useMemo, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import Loading from '~/components/Loading/Loading'
-import TableChildrend from '~/features/Products/utils/tableChildrend'
-import { NotFound } from '~/pages'
-import { ClientSocket } from '~/socket'
-import { useAppSelector } from '~/store/hooks'
-import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
-import { setOpenDrawer } from '~/store/slices'
-import { setOrderData } from '~/store/slices/Orders/order.slice'
-import { RootState, useAppDispatch } from '~/store/store'
 import { IOrderDataType } from '~/types'
+import type { InputRef } from 'antd'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
+import TableChildrend from '~/features/Products/utils/TableChildrend'
+import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { formatCurrency } from '~/utils'
 import { formatDate } from '~/utils/formatDate'
-import UserInfoRow from '../UserInfoRow/UserInfoRow'
+import { setOpenDrawer } from '~/store/slices'
+import { setOrderData } from '~/store/slices/Orders/order.slice'
+import { useAppSelector } from '~/store/hooks'
+import { useGetAllOrderDoneQuery } from '~/store/services/Orders'
 
 type DataIndex = keyof IOrderDataType
 
@@ -168,7 +169,7 @@ const ListDoneOrders = () => {
       width: 120,
       render: (totalPrice: number) => (
         <span
-          className={`capitalize font-semibold  
+          className={`capitalize font-semibold
           rounded inline-block text-lg text-center py-1`}
         >
           {formatCurrency(+totalPrice)}

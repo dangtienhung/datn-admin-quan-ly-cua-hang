@@ -1,28 +1,29 @@
-import Loading from '~/components/Loading/Loading'
-import { Popconfirm, Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import { Button } from '~/components'
-import { ColumnsType } from 'antd/es/table'
-import { NotFound } from '~/pages'
-import { useState, useRef, useEffect, useMemo } from 'react'
-import { useDoneOrderMutation, useGetAllOrderConfirmQuery } from '~/store/services/Orders'
-import { formatDate } from '~/utils/formatDate'
+import { Button as ButtonAnt, Input, Popconfirm, Space, Table, Tooltip } from 'antd'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
+import { useDoneOrderMutation, useGetAllOrderConfirmQuery } from '~/store/services/Orders'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { Button } from '~/components'
+import { ClientSocket } from '~/socket'
+import { ColumnType } from 'antd/lib/table'
+import { ColumnsType } from 'antd/es/table'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import Highlighter from 'react-highlight-words'
+import { IOrderDataType } from '~/types'
+import type { InputRef } from 'antd'
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
+import { RootState } from '~/store/store'
+import TableChildrend from '~/features/Products/utils/TableChildrend'
 import UserInfoRow from '../UserInfoRow/UserInfoRow'
-import { useAppDispatch } from '~/store/store'
+import { formatCurrency } from '~/utils'
+import { formatDate } from '~/utils/formatDate'
+import { messageAlert } from '~/utils/messageAlert'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
-import { messageAlert } from '~/utils/messageAlert'
-import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5'
-import type { InputRef } from 'antd'
-import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { IOrderDataType } from '~/types'
-import { ColumnType } from 'antd/lib/table'
-import Highlighter from 'react-highlight-words'
+import { useAppDispatch } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
-import { ClientSocket } from '~/socket'
-import { RootState } from '~/store/store'
-import { formatCurrency } from '~/utils'
-import TableChildrend from '~/features/Products/utils/tableChildrend'
 
 type DataIndex = keyof IOrderDataType
 
@@ -218,7 +219,7 @@ const ListConfirmOrders = () => {
       width: 115,
       render: (totalPrice: number) => (
         <span
-          className={`capitalize font-semibold  
+          className={`capitalize font-semibold
           rounded inline-block text-lg text-center py-1`}
         >
           {formatCurrency(+totalPrice)}

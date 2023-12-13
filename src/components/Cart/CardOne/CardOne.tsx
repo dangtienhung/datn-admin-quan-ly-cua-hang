@@ -35,7 +35,7 @@ const CardOne = ({ data }: CardOneProps) => {
           <span className='text-sm font-medium'>Doanh thu khách vãng lai</span>
         </div>
 
-        <span className='text-meta-3 grid grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium'>
+        <span className='hidden text-meta-3 grid-cols-[9fr,1fr] text-right mt-2 items-center gap-1 text-sm font-medium'>
           0.43%
           <svg
             className='fill-meta-3'

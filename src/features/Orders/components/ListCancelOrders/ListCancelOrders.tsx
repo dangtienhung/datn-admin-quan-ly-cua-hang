@@ -1,24 +1,25 @@
-import Loading from '~/components/Loading/Loading'
-import { Space, Table, Button as ButtonAnt, Input, Tooltip } from 'antd'
-import { ColumnsType } from 'antd/es/table'
-import { NotFound } from '~/pages'
-import { useState, useRef, useEffect, useMemo } from 'react'
-import { useGetAllOrderCancelQuery } from '~/store/services/Orders'
-import { formatDate } from '~/utils/formatDate'
+import { Button as ButtonAnt, Input, Space, Table, Tooltip } from 'antd'
 import { EyeFilled, SearchOutlined } from '@ant-design/icons'
-import UserInfoRow from '../UserInfoRow/UserInfoRow'
 import { RootState, useAppDispatch } from '~/store/store'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { ClientSocket } from '~/socket'
+import { ColumnType } from 'antd/lib/table'
+import { ColumnsType } from 'antd/es/table'
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import Highlighter from 'react-highlight-words'
+import { IOrderDataType } from '~/types'
+import type { InputRef } from 'antd'
+import Loading from '~/components/Loading/Loading'
+import { NotFound } from '~/pages'
+import TableChildrend from '~/features/Products/utils/TableChildrend'
+import UserInfoRow from '../UserInfoRow/UserInfoRow'
+import { formatCurrency } from '~/utils'
+import { formatDate } from '~/utils/formatDate'
 import { setOpenDrawer } from '~/store/slices'
 import { setOrderData } from '~/store/slices/Orders/order.slice'
-import type { InputRef } from 'antd'
-import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { IOrderDataType } from '~/types'
-import { ColumnType } from 'antd/lib/table'
-import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
-import { ClientSocket } from '~/socket'
-import { formatCurrency } from '~/utils'
-import TableChildrend from '~/features/Products/utils/tableChildrend'
+import { useGetAllOrderCancelQuery } from '~/store/services/Orders'
 
 type DataIndex = keyof IOrderDataType
 const ListCancelOrders = () => {
@@ -170,7 +171,7 @@ const ListCancelOrders = () => {
       width: 110,
       render: (totalPrice: number) => (
         <span
-          className={`capitalize font-semibold  
+          className={`capitalize font-semibold
           rounded inline-block text-lg text-center py-1`}
         >
           {formatCurrency(+totalPrice)}
