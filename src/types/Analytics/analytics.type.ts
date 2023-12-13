@@ -77,6 +77,18 @@ export interface DataAnalytics {
     'danh sách ': BestSellingProductsList
   }
   'user mua 2 đơn trở lên': UserWithMultipleOrders
+  TopSell: TopSell
+}
+
+export interface IProductAnalytic {
+  count: number
+  _id: string
+  images: string[]
+}
+
+export interface TopSell {
+  'sản phẩm bán nhiều nhất': IProductAnalytic
+  List: { [key: string]: IProductAnalytic }
 }
 
 // order status

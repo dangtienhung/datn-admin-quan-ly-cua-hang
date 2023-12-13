@@ -39,8 +39,7 @@ const CardTwo = ({ data }: CardTwoProps) => {
           <span className='text-sm font-medium'>Tổng doanh thu dự kiến</span>
         </div>
 
-        <span className='grid grid-cols-[9fr,1fr] mt-2 items-center gap-1 text-sm font-medium text-meta-3 text-right'>
-          4.35%
+        <span className='hidden grid-cols-[9fr,1fr] mt-2 items-center gap-1 text-sm font-medium text-meta-3 text-right'>
           <svg
             className='fill-meta-3'
             width='10'
