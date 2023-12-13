@@ -1,6 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import { Checkbox, Drawer, Form, Input, InputNumber } from 'antd'
+import { Checkbox, Col, DatePicker, Drawer, Form, Input, InputNumber, Row } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { Button } from '~/components'
 import { useAppSelector } from '~/store/hooks'
@@ -21,18 +22,25 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
   const [updateVoucher] = useUpdateVoucherMutation()
   const { voucherData } = useAppSelector((state: RootState) => state.vouchers)
   const [checkedVoucher, setCheckedVoucher] = useState<boolean>()
-  voucherData._id &&
-    form.setFieldsValue({
-      code: voucherData.code,
-      sale: voucherData.sale,
-      discount: voucherData.discount,
-      title: voucherData.title,
-      desc: voucherData.desc,
-      isActive: voucherData.isActive
-    })
+
+  useEffect(() => {
+    voucherData._id &&
+      form.setFieldsValue({
+        startDate: dayjs(voucherData.startDate),
+        endDate: dayjs(voucherData.endDate),
+        code: voucherData.code,
+        sale: voucherData.sale,
+        discount: voucherData.discount,
+        title: voucherData.title,
+        desc: voucherData.desc,
+        isActive: voucherData.isActive
+      })
+  }, [form, voucherData])
+
   useEffect(() => {
     voucherData && voucherData._id && setCheckedVoucher(voucherData.isActive)
   }, [voucherData])
+
   const onFinish = async (values: IVoucher) => {
     if (voucherData._id) {
       updateVoucher({ _id: voucherData._id, ...values, isActive: checkedVoucher })
@@ -58,6 +66,17 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
     dispatch(setOpenDrawer(false))
     dispatch(setVoucher({ _id: '', code: '', title: '', discount: 0, sale: 0 }))
     form.resetFields()
+  }
+
+  const checkTime = (current: dayjs.ConfigType, startValue: dayjs.ConfigType) => {
+    const today = dayjs().startOf('day')
+
+    // Disable dates before the start date
+    if (startValue) {
+      return current && (current < today || current < dayjs(startValue).startOf('day'))
+    }
+
+    return current && current < today
   }
 
   return (
@@ -162,6 +181,51 @@ const VoucherAdd = ({ open }: VoucherAddProps) => {
             className='w-full'
           />
         </Form.Item>
+        <Row justify='space-between'>
+          <Col span={11}>
+            <Form.Item
+              className='dark:text-white'
+              label='Ngày Bắt đầu'
+              name='startDate'
+              rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+            >
+              <DatePicker
+                disabledDate={(current) => current && current < dayjs().startOf('day')}
+                size='large'
+                className='w-full'
+              />
+            </Form.Item>
+          </Col>
+          <Col span={11}>
+            <Form.Item
+              className='dark:text-white'
+              label='Ngày hết hạn'
+              name='endDate'
+              dependencies={['startDate']}
+              rules={[
+                { required: true, message: 'Không được bỏ trống!' },
+                ({ getFieldValue }: any) => ({
+                  validator(_, value) {
+                    const result = checkTime(getFieldValue('startDate'), value)
+
+                    if (result) {
+                      return Promise.resolve()
+                    } else {
+                      return Promise.reject(new Error('Ngày kết thúc phải lớn hơn ngày bắt đầu'))
+                    }
+                  }
+                })
+              ]}
+            >
+              <DatePicker
+                size='large'
+                className='w-full'
+                disabledDate={(current) => current && current < dayjs().startOf('day')}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
         {voucherData && voucherData._id && (
           <Form.Item className='dark:text-white' label='Trạng thái' name='isActive'>
             <Checkbox checked={checkedVoucher} onChange={() => setCheckedVoucher(!checkedVoucher)}>

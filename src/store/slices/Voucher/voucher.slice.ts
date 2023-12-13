@@ -8,6 +8,8 @@ interface IVoucherState {
     title: string
     discount: number
     sale: number
+    startDate: string
+    endDate: string
     desc: string
     isActive: boolean
   }
@@ -20,7 +22,9 @@ const initialState: IVoucherState = {
     discount: 0,
     sale: 0,
     desc: '',
-    isActive: true
+    isActive: true,
+    endDate: '',
+    startDate: ''
   }
 }
 export const voucherSlice = createSlice({

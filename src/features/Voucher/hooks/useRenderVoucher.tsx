@@ -1,17 +1,19 @@
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
 import { Button as ButtonAntd, Input, InputRef, Popconfirm, Space, Tooltip, message } from 'antd'
-import { IRoleUser, IVoucher } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer, setVoucher } from '~/store/slices'
 import { useRef, useState } from 'react'
+import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs'
+import { setOpenDrawer, setVoucher } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IRoleUser, IVoucher } from '~/types'
 
-import { ColumnType } from 'antd/lib/table'
-import { FilterConfirmProps } from 'antd/es/table/interface'
-import Highlighter from 'react-highlight-words'
 import { SearchOutlined } from '@ant-design/icons'
-import { formatCurrency } from '~/utils'
+import { FilterConfirmProps } from 'antd/es/table/interface'
+import { ColumnType } from 'antd/lib/table'
+import dayjs from 'dayjs'
+import Highlighter from 'react-highlight-words'
 import { useAppSelector } from '~/store/hooks'
 import { useDeleteVoucherMutation } from '~/store/services'
+import { formatCurrency } from '~/utils'
+import moment from 'moment'
 
 // export const useRenderVoucher = (vouchers: IVoucher[]) => {
 export const useRenderVoucher = () => {
@@ -130,11 +132,14 @@ export const useRenderVoucher = () => {
       render: (discount: number) => `${discount}`
     },
     {
-      title: 'Hoạt động',
-      dataIndex: 'isActive',
-      key: 'isActive',
+      title: 'Thời gian',
+      key: 'action',
       width: '15%',
-      render: (data: boolean) => (data ? 'Hoạt Động' : 'Ẩn')
+      render: (_: boolean, data: IVoucher) => (
+        <span>
+          {dayjs(data.startDate).format('DD-MM-YYYY')} <br /> {dayjs(data.endDate).format('DD-MM-YYYY')}
+        </span>
+      )
     },
     {
       title: 'Giảm giá',
@@ -153,55 +158,7 @@ export const useRenderVoucher = () => {
 
   /* admin */
   const columnsAdmin = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      width: 50
-    },
-    {
-      title: 'Tiêu đề',
-      dataIndex: 'title',
-      key: 'title',
-      width: '25%',
-      render: (name: string) => <p className='uppercase'>{name}</p>,
-      ...getColumnSearchProps('title')
-    },
-    {
-      title: 'Mã Code',
-      dataIndex: 'code',
-      key: 'code',
-      width: '25%',
-      render: (name: string) => <p className=''>{name}</p>,
-      ...getColumnSearchProps('code')
-    },
-    {
-      title: 'Số lượng mã',
-      dataIndex: 'discount',
-      key: 'discount',
-      width: '15%',
-      render: (discount: number) => `${discount}`
-    },
-    {
-      title: 'Hoạt động',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      width: '15%',
-      render: (data: boolean) => (data ? 'Hoạt Động' : 'Ẩn')
-    },
-    {
-      title: 'Giảm giá',
-      dataIndex: 'sale',
-      key: 'sale',
-      width: '15%',
-      ...getColumnSearchProps('sale'),
-      sorter: (x: { sale: number }, y: { sale: number }) => {
-        const saleX = x.sale || 0
-        const saleY = y.sale || 0
-        return saleX - saleY
-      },
-      render: (sale: number) => `${formatCurrency(sale)}`
-    },
+    ...columnsStaff,
 
     {
       // title: <span className='block text-center'>Action</span>,
