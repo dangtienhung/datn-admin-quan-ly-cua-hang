@@ -29,15 +29,30 @@ const FeatureDashboard = () => {
     })
     return newArray
   })
-  const topSale = dataSaleTop[0].sort((a, b) => b.count - a.count)
+  const topSale = dataSaleTop[0].sort((a, b) => b.count - a.count).slice(0, 10)
+  console.log(topSale)
 
   const columnsTopSale = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: string, __: any, index: number) => <span className='text-gray-600'>{index + 1}</span>
+    },
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'images',
+      key: 'images',
+      render: (_: string, record: any) => (
+        <img src={record.images[0]} alt='' className='w-20 h-20 object-cover rounded-sm' />
+      )
+    },
     {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string, record: any) => {
-        console.log('🚀 ~ file: Dashboard.tsx:39 ~ FeatureDashboard ~ record:', record)
+      render: (text: string) => {
+        // console.log('🚀 ~ file: Dashboard.tsx:39 ~ FeatureDashboard ~ record:', record)
         return <span className='text-gray-600'>{text}</span>
       }
     },
