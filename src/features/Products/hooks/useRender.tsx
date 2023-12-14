@@ -3,7 +3,12 @@ import { Button as ButtonAntd, Input, InputRef, Popconfirm, Space, Tag, Tooltip,
 import { IProduct, IRoleUser, ISizeRefProduct, IToppingRefProduct } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
-import { useDeleteFakeProductMutation, useDeleteProductMutation, useRestoreProductMutation } from '~/store/services'
+import {
+  useDeleteFakeProductMutation,
+  useDeleteProductMutation,
+  useEditProductMutation,
+  useRestoreProductMutation
+} from '~/store/services'
 import { useRef, useState } from 'react'
 
 import type { ColumnType } from 'antd/es/table'
@@ -26,6 +31,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const [restoreProduct] = useRestoreProductMutation()
   const [deleteProduct] = useDeleteProductMutation()
+  const [changeStatusProduct] = useEditProductMutation()
 
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
@@ -232,7 +238,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
 
   /* column admin */
   /* handle delete product */
-  /*Ẩn sản phẩm đi */
+  /*Xoa mem sản phẩm đi */
   const handleDeleteProduct = async (id: string) => {
     try {
       const response = await deleteFakeProduct({ id }).unwrap()
@@ -266,6 +272,26 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
     }
   }
 
+  const handleChangeStatusProduct = async (product: IProduct) => {
+    console.log(product)
+    const newProduct: any = {
+      name: product.name,
+      category: product.category._id,
+      is_active: product.is_active ? false : true,
+      images: product.images,
+      description: product.description,
+      sale: product.sale,
+      size: product.sizes.map((size) => ({ name: size.name, price: size.price })),
+      toppings: product.toppings.map((topping) => topping._id)
+    }
+    changeStatusProduct({ id: product._id, product: newProduct })
+      .unwrap()
+      .then(() => {
+        message.success('Thay đổi trạng thái thành công')
+      })
+      .catch(() => message.error('Thay đổi trạng thái thất bại'))
+  }
+
   const columnsAdmin: any = [
     ...columnsStaff,
     {
@@ -290,8 +316,8 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
               </Tooltip>
               <Popconfirm
                 title='Thay đổi trạng thái sản phẩm?'
-                description='Sản phẩm sẽ được ẩn đi!'
-                onConfirm={() => handleDeleteProduct(product._id)}
+                description={`Sản phẩm sẽ được ${product.is_active ? 'ẩn đi!' : 'hiển thị'}`}
+                onConfirm={() => handleChangeStatusProduct(product)}
                 okText='Có'
                 cancelText='Không'
               >
