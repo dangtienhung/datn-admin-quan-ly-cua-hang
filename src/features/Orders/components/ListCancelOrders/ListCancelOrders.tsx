@@ -76,7 +76,7 @@ const ListCancelOrders = () => {
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Tìm kiếm mã đơn hàng`}
+          placeholder={`Tìm kiếm`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
@@ -99,11 +99,23 @@ const ListCancelOrders = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
+    onFilter: (value, record) => {
+      const targetValue = record[dataIndex]
+      if (typeof targetValue === 'object') {
+        targetValue?.avatar === undefined && delete targetValue.avatar
+        return Object.values(targetValue).some((val: any) =>
+          val
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase())
+        )
+      } else {
+        return targetValue
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
+      }
+    },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100)
@@ -143,9 +155,10 @@ const ListCancelOrders = () => {
       key: 'user',
       width: 200,
       // rowScope: 'row',
-      sorter: (a, b) => {
-        return a.user.username.localeCompare(b.user.username)
-      },
+      // sorter: (a, b) => {
+      //   return a.user.username.localeCompare(b.user.username)
+      // },
+      ...getColumnSearchProps('user'),
       render: (user: any) => <UserInfoRow user={user} />
     },
     {
