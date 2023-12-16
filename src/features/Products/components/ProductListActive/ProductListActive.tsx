@@ -11,10 +11,13 @@ export const ProductListActive = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-
+  const [options, setOptions] = useState({
+    page: 1,
+    limit: 5
+  })
   const { data } = useGetAllProductActiveQuery({
-    _page: 1,
-    _limit: 10
+    _page: options.page,
+    _limit: options.limit
   })
 
   const products = data?.docs.map((product: any, index: number) => ({
@@ -83,8 +86,12 @@ export const ProductListActive = () => {
         scroll={{ x: 1300 }}
         pagination={{
           pageSizeOptions: ['5', '10', '15', '20', '25', '30', '40', '50'],
-          defaultPageSize: 5,
-          showSizeChanger: true
+          defaultPageSize: options.limit,
+          showSizeChanger: true,
+          total: data && data?.totalDocs,
+          onChange: (page, pageSize) => {
+            setOptions((prev) => ({ ...prev, page, limit: pageSize }))
+          }
         }}
         bordered={true}
       />
