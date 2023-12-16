@@ -1,4 +1,5 @@
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Button, CardTwo } from '~/components'
 import {
   Button as ButtonAnt,
   Drawer,
@@ -11,14 +12,14 @@ import {
   Tooltip as TooltipAntd
 } from 'antd'
 import { CheckOutlined, CloseCircleFilled, EyeFilled, SearchOutlined } from '@ant-design/icons'
-import { IAnalticRevenueMonth, IAnalytics, IOrderDataType } from '~/types'
+import { DataAnalytics, IAnalticRevenueMonth, IAnalytics, IOrderDataType } from '~/types'
 import { RootState, useAppDispatch } from '~/store/store'
 import { setIdOrderCancel, setOrderData } from '~/store/slices/Orders'
 import { setOpenDrawer, setOpenModal } from '~/store/slices'
 import { useConfirmOrderMutation, useGetAnalystMonthQuery } from '~/store/services'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { Button } from '~/components'
+import { CardOne } from '../CardOne'
 import { ClientSocket } from '~/socket'
 import { ColumnType } from 'antd/lib/table'
 import { ColumnsType } from 'antd/es/table'
@@ -36,15 +37,17 @@ import { v4 as uuid } from 'uuid'
 
 interface CardThreeProps {
   data: IAnalytics
+  data2: DataAnalytics
 }
 
 type DataIndex = keyof IOrderDataType
 
-const CardThree = ({ data }: CardThreeProps) => {
+const CardThree = ({ data, data2 }: CardThreeProps) => {
   const dispatch = useAppDispatch()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [index, setIndex] = useState(0)
+  const [index2, setIndex2] = useState(0)
   const [statusOrder, setStatusOrder] = useState('pending')
   const searchInput = useRef<InputRef>(null)
   const [searchText, setSearchText] = useState('')
@@ -65,27 +68,31 @@ const CardThree = ({ data }: CardThreeProps) => {
       name: dataAnalytics3?.orders[0].analytics[1].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[1].analytics[index].totalRevenue,
       'tuần 2': dataAnalytics3?.orders[0].analytics[1].analytics[1].totalRevenue,
-      'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
-      'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
+      'tuần 3': dataAnalytics3?.orders[0].analytics[1].analytics[2].totalRevenue,
+      'tuần 4': dataAnalytics3?.orders[0].analytics[1].analytics[3].totalRevenue
     },
     {
       name: dataAnalytics3?.orders[0].analytics[2].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[2].analytics[index].totalRevenue,
       'tuần 2': dataAnalytics3?.orders[0].analytics[2].analytics[1].totalRevenue,
-      'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
-      'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
+      'tuần 3': dataAnalytics3?.orders[0].analytics[2].analytics[2].totalRevenue,
+      'tuần 4': dataAnalytics3?.orders[0].analytics[2].analytics[3].totalRevenue
     },
     {
       name: dataAnalytics3?.orders[0].analytics[3].name,
       'tuần 1': dataAnalytics3?.orders[0].analytics[3].analytics[index].totalRevenue,
       'tuần 2': dataAnalytics3?.orders[0].analytics[3].analytics[1].totalRevenue,
-      'tuần 3': dataAnalytics3?.orders[0].analytics[0].analytics[2].totalRevenue,
-      'tuần 4': dataAnalytics3?.orders[0].analytics[0].analytics[3].totalRevenue
+      'tuần 3': dataAnalytics3?.orders[0].analytics[3].analytics[2].totalRevenue,
+      'tuần 4': dataAnalytics3?.orders[0].analytics[3].analytics[3].totalRevenue
     }
   ]
 
   const handleChange = (value: string) => {
     setIndex(Number(value))
+  }
+
+  const handleChange2 = (value: string) => {
+    setIndex2(Number(value))
   }
 
   const dataAnalyticMonth = (dataAnalytics3?.orders[1]?.analytics[0] as any)
@@ -482,6 +489,37 @@ const CardThree = ({ data }: CardThreeProps) => {
                 </div>
               </div>
             ))}
+
+          <CardTwo price={data2?.['doanh thu tháng này']['tổng doanh thu']} title={''} isCurrency={true} />
+
+          <CardOne data={data2?.['doanh thu tháng này']} />
+
+          <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
+            <div className='flex justify-between items-center'>
+              <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
+                {arrayIcons[index].icon}
+              </div>
+              <Select
+                defaultValue='0'
+                style={{ width: 120 }}
+                onChange={handleChange2}
+                options={[
+                  { value: '0', label: 'Ngày' },
+                  { value: '1', label: 'Tuần' },
+                  { value: '2', label: 'Tháng' }
+                ]}
+              />
+            </div>
+
+            <div className='mt-4 flex items-end justify-between'>
+              <div className=''>
+                <span className='text-base font-medium invisible'>Lorem ipsum</span>
+                <h4 className='text-title-md font-bold text-black dark:text-white'>
+                  {data.moneys[index2].value.toLocaleString()} VND
+                </h4>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className='w-full mt-6 h-full rounded-sm border grid gap-6 grid-cols-2 border-stroke bg-white pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5'>
