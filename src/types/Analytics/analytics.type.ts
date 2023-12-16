@@ -85,6 +85,7 @@ export interface IProductAnalytic {
   _id: string
   images: string[]
   price: number
+  name: string
 }
 
 export interface TopSell {
