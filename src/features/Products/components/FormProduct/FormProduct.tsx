@@ -16,6 +16,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { Loader } from '~/common'
 import { handleUploadImage } from '../..'
 import { useAppSelector } from '~/store/hooks'
+import { Loading } from '~/components'
 
 const { Option } = Select
 
@@ -42,7 +43,7 @@ const FormProduct = () => {
   const { data: dataSizeDefault } = useGetAllSizeDefaultQuery()
   const [createProduct, { isLoading: isCreateLoading }] = useCreateProductMutation()
   const { productsList } = useAppSelector((state: RootState) => state.products)
-  const [editProduct] = useEditProductMutation()
+  const [editProduct, { isLoading: isUpdating }] = useEditProductMutation()
 
   useEffect(() => {
     if (dataCategories && dataToppings && dataSizeDefault) {
@@ -144,6 +145,7 @@ const FormProduct = () => {
       title={`${productId === null ? 'Thêm' : 'Cập nhật'} sản phẩm`}
       placement='right'
       width={800}
+      destroyOnClose
       onClose={() => {
         dispatch(setOpenDrawer(false))
         dispatch(setProductId(null))
@@ -164,6 +166,7 @@ const FormProduct = () => {
         </Space>
       }
     >
+      {(isCreateLoading || isUpdating) && <Loading overlay />}
       <Form layout='vertical' autoComplete='off' form={form} onFinish={handleSubmitForm}>
         <Row gutter={16}>
           <Col span={12}>

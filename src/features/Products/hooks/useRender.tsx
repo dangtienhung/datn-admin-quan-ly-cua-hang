@@ -12,7 +12,7 @@ import {
 import { useRef, useState } from 'react'
 
 import type { ColumnType } from 'antd/es/table'
-import { DeleteIcon } from '~/components'
+import { DeleteIcon, Loading } from '~/components'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
 import { ICategoryRefProduct } from '~/types/Category'
@@ -31,7 +31,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const [restoreProduct] = useRestoreProductMutation()
   const [deleteProduct] = useDeleteProductMutation()
-  const [changeStatusProduct] = useEditProductMutation()
+  const [changeStatusProduct, { isLoading: isChangeStatus }] = useEditProductMutation()
 
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
@@ -273,7 +273,6 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   }
 
   const handleChangeStatusProduct = async (product: IProduct) => {
-    console.log(product)
     const newProduct: any = {
       name: product.name,
       category: product.category._id,
@@ -303,6 +302,7 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
         if (!deleteReal) {
           return (
             <Space>
+              {isChangeStatus && <Loading overlay />}
               <Tooltip title='Cập nhật sản phẩm'>
                 <ButtonAntd
                   size='large'
