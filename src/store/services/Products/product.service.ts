@@ -119,7 +119,7 @@ export const productApi = createApi({
         return {
           url: `/product/${id}`,
           method: 'PUT',
-          body: product
+          body: { ...product, _id: id }
         }
       },
       invalidatesTags: [{ type: 'Product', id: 'LIST' }]

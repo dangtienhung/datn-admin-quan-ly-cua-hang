@@ -14,9 +14,9 @@ import { useEffect, useState } from 'react'
 
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { Loader } from '~/common'
+import { Loading } from '~/components'
 import { handleUploadImage } from '../..'
 import { useAppSelector } from '~/store/hooks'
-import { Loading } from '~/components'
 
 const { Option } = Select
 
@@ -81,7 +81,7 @@ const FormProduct = () => {
       const data = {
         ...values,
         images: images.length > 0 ? images : productEdit.images,
-        size: values.size.map((size: any) => ({ name: size.name, price: Number(size.price) }))
+        size: values.size.map((size: any) => ({ name: size.name, price: Number(size.price), _id: size._id }))
       }
       try {
         const response = await editProduct({ id: productEdit._id, product: data }).unwrap()
@@ -124,12 +124,14 @@ const FormProduct = () => {
         category: productEdit.category._id,
         toppings: productEdit.toppings.map((topping) => topping._id),
         is_active: productEdit.is_active,
-        size: productEdit.sizes,
+        size: productEdit.sizes.filter((sizeItem) => !sizeItem.is_default),
+        sizeDefault: productEdit.sizes.filter((sizeItem) => sizeItem.is_default).map((sizeItem) => sizeItem._id),
         sale: productEdit.sale,
         description: productEdit.description
       })
     }
   }, [form, productEdit])
+  console.log('🚀 ~ file: FormProduct.tsx:130 ~ useEffect ~ productEdit.sizes:', productEdit ? productEdit.sizes : null)
 
   useEffect(() => {
     if (productId) {
