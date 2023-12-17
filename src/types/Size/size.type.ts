@@ -2,6 +2,7 @@ export interface ISizeRefProduct {
   _id: string
   name: string
   price: number
+  is_default: boolean
 }
 
 export interface ISize {
