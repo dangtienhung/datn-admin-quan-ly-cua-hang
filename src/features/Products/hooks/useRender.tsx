@@ -1,26 +1,21 @@
-import { AiFillEdit, AiOutlineUndo } from 'react-icons/ai'
 import { Button as ButtonAntd, Input, InputRef, Popconfirm, Space, Tag, Tooltip, message } from 'antd'
-import { IProduct, IRoleUser, ISizeRefProduct, IToppingRefProduct } from '~/types'
-import { RootState, useAppDispatch } from '~/store/store'
-import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
-import {
-  useDeleteFakeProductMutation,
-  useDeleteProductMutation,
-  useEditProductMutation,
-  useRestoreProductMutation
-} from '~/store/services'
 import { useRef, useState } from 'react'
+import { AiFillEdit, AiOutlineUndo } from 'react-icons/ai'
+import { useDeleteProductMutation, useEditProductMutation, useRestoreProductMutation } from '~/store/services'
+import { setOpenDrawer, setProductDetail, setProductId } from '~/store/slices'
+import { RootState, useAppDispatch } from '~/store/store'
+import { IProduct, IRoleUser, ISizeRefProduct, IToppingRefProduct } from '~/types'
 
+import { SearchOutlined, SyncOutlined } from '@ant-design/icons'
 import type { ColumnType } from 'antd/es/table'
-import { DeleteIcon, Loading } from '~/components'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import Highlighter from 'react-highlight-words'
-import { ICategoryRefProduct } from '~/types/Category'
-import { SearchOutlined, SyncOutlined } from '@ant-design/icons'
 import { TbBasketDiscount } from 'react-icons/tb'
-import clsxm from '~/utils/clsxm'
-import { formatCurrency } from '~/utils'
+import { DeleteIcon, Loading } from '~/components'
 import { useAppSelector } from '~/store/hooks'
+import { ICategoryRefProduct } from '~/types/Category'
+import { formatCurrency } from '~/utils'
+import clsxm from '~/utils/clsxm'
 
 export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   const dispatch = useAppDispatch()
@@ -28,7 +23,6 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   const [searchText, setSearchText] = useState<string>('')
   const [searchedColumn, setSearchedColumn] = useState<string>('')
 
-  const [deleteFakeProduct] = useDeleteFakeProductMutation()
   const [restoreProduct] = useRestoreProductMutation()
   const [deleteProduct] = useDeleteProductMutation()
   const [changeStatusProduct, { isLoading: isChangeStatus }] = useEditProductMutation()
@@ -239,16 +233,6 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   /* column admin */
   /* handle delete product */
   /*Xoa mem sản phẩm đi */
-  const handleDeleteProduct = async (id: string) => {
-    try {
-      const response = await deleteFakeProduct({ id }).unwrap()
-      if (response.message === 'success') {
-        message.success('Sản phẩm đã được chuyển vào thùng rác!')
-      }
-    } catch (error) {
-      message.error('Xóa sản phẩm thất bại')
-    }
-  }
 
   const handleRestoreProduct = async (id: string) => {
     try {
