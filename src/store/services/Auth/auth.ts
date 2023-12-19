@@ -17,7 +17,7 @@ export const AuthApi = createApi({
     }),
     logOut: builder.mutation<void, void>({
       query: () => ({
-        url: 'http://localhost:8000/auth/logout',
+        url: 'http://103.57.221.160:8000/auth/logout',
         method: 'POST',
         credentials: 'include'
       })
