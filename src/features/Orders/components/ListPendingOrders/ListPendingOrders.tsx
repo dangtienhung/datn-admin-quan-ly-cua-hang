@@ -47,7 +47,7 @@ const ListPendingOrders = () => {
       endDate: orderDate.endDate
     }))
   }, [orderDate])
-  const [cancelOrder] = useCancelOrderMutation()
+  const [cancelOrder, { isLoading: isCanceling }] = useCancelOrderMutation()
 
   useEffect(() => {
     ClientSocket.getPendingOrder(setPendingOrder, options)
@@ -138,7 +138,7 @@ const ListPendingOrders = () => {
   /*End Search */
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [confirmOrder] = useConfirmOrderMutation()
+  const [confirmOrder, { isLoading: isComfirming }] = useConfirmOrderMutation()
   const onConfirmOrder = ({ idOrder, idUser }: { idOrder: string; idUser: string }) => {
     confirmOrder(idOrder)
       .unwrap()
@@ -364,6 +364,7 @@ const ListPendingOrders = () => {
 
   return (
     <>
+      {(isComfirming || isCanceling) && <Loading overlay />}
       {hasSelected && (
         <Space>
           <Popconfirm

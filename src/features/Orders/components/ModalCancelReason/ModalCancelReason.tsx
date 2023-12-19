@@ -8,13 +8,14 @@ import { messageAlert } from '~/utils/messageAlert'
 import { useCancelOrderMutation } from '~/store/services/Orders'
 import { setOrderData } from '~/store/slices/Orders'
 import { ClientSocket } from '~/socket'
+import { Loading } from '~/components'
 
 const ModalCancelReason = () => {
   const dispatch = useAppDispatch()
   const { openModal } = useAppSelector((state) => state.modal)
   const { orderData } = useAppSelector((state) => state.orders)
   const { id } = useAppSelector((state) => state.orders)
-  const [cancelOrder] = useCancelOrderMutation()
+  const [cancelOrder, { isLoading: isCanceling }] = useCancelOrderMutation()
 
   const [reason, setReason] = useState('')
 
@@ -60,22 +61,24 @@ const ModalCancelReason = () => {
     dispatch(setOpenModal(false))
   }
   return (
-    <Modal
-      open={openModal}
-      title='Lý do hủy đơn hàng?'
-      destroyOnClose
-      centered
-      onCancel={onCancel}
-      footer={[
-        <Button hidden={!reason} key='cancel' onClick={onCancel}>
-          Hủy
-        </Button>,
-        <Button hidden={!reason} key='submit' className='bg-[#D34053] text-white hover:!text-white' onClick={onOK}>
-          Xác nhận
-        </Button>
-      ]}
-    >
-      {/* {listReason.map((reasonItem, index) => (
+    <>
+      {isCanceling && <Loading overlay />}
+      <Modal
+        open={openModal}
+        title='Lý do hủy đơn hàng?'
+        destroyOnClose
+        centered
+        onCancel={onCancel}
+        footer={[
+          <Button hidden={!reason} key='cancel' onClick={onCancel}>
+            Hủy
+          </Button>,
+          <Button hidden={!reason} key='submit' className='bg-[#D34053] text-white hover:!text-white' onClick={onOK}>
+            Xác nhận
+          </Button>
+        ]}
+      >
+        {/* {listReason.map((reasonItem, index) => (
         <Radio.Group
           key={index + reasonItem}
           optionType='button'
@@ -90,13 +93,14 @@ const ModalCancelReason = () => {
           </Radio>
         </Radio.Group>
       ))} */}
-      <Input.TextArea
-        placeholder='Nhập lý do hủy đơn hàng...'
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-        rows={5}
-      />
-    </Modal>
+        <Input.TextArea
+          placeholder='Nhập lý do hủy đơn hàng...'
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          rows={5}
+        />
+      </Modal>
+    </>
   )
 }
 
