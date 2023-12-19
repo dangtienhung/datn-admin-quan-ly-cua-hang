@@ -273,6 +273,9 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
   }
 
   const handleChangeStatusProduct = async (product: IProduct) => {
+    // console.log(product)
+    // return
+
     const newProduct: any = {
       name: product.name,
       category: product.category._id,
@@ -280,7 +283,10 @@ export const useRender = (productsList: IProduct[], deleteReal?: boolean) => {
       images: product.images,
       description: product.description,
       sale: product.sale,
-      size: product.sizes.map((size) => ({ name: size.name, price: size.price })),
+      size: product.sizes
+        .filter((size) => !size.is_default)
+        .map((size) => ({ _id: size._id, name: size.name, price: size.price })),
+      sizeDefault: product.sizes.filter((size) => size.is_default).map((size) => size._id),
       toppings: product.toppings.map((topping) => topping._id)
     }
     changeStatusProduct({ id: product._id, product: newProduct })
