@@ -140,7 +140,7 @@ const ListConfirmOrders = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { isError, isLoading } = useGetAllOrderConfirmQuery(options)
-  const [doneOrder] = useDoneOrderMutation()
+  const [doneOrder, { isLoading: isDoning }] = useDoneOrderMutation()
 
   const onDoneOrder = ({ idOrder, idUser }: { idOrder: string; idUser: string }) => {
     doneOrder(idOrder)
@@ -320,6 +320,7 @@ const ListConfirmOrders = () => {
   if (isError) return <NotFound />
   return (
     <>
+      {isDoning && <Loading overlay />}
       {hasSelected && (
         <Space>
           <Popconfirm
