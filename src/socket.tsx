@@ -1,6 +1,6 @@
 import { Socket, io } from 'socket.io-client'
 
-const socket: Socket = io('ws://103.57.221.160:8000/', {
+const socket: Socket = io('ws://sub.milk-tea-connect.click', {
   transports: ['websocket', 'pulling', 'flashsocket']
 })
 

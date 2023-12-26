@@ -17,7 +17,7 @@ export const AuthApi = createApi({
     }),
     logOut: builder.mutation<void, void>({
       query: () => ({
-        url: 'http://103.57.221.160:8000/auth/logout',
+        url: 'https://sub.milk-tea-connect.click/auth/logout',
         method: 'POST',
         credentials: 'include'
       })
